@@ -1,4 +1,7 @@
-export type DomainErrorCode = 'VALIDATION_ERROR' | 'COUNTRY_NOT_SUPPORTED';
+export type DomainErrorCode =
+  | 'VALIDATION_ERROR'
+  | 'COUNTRY_NOT_SUPPORTED'
+  | 'INVALID_TAX_ID';
 
 export class DomainError extends Error {
   constructor(
