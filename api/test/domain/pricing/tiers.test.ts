@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { DomainError } from '../../../src/domain/errors.js';
 import { calculateBaseCost } from '../../../src/domain/pricing/tiers.js';
 
 describe('calculateBaseCost', () => {
@@ -15,6 +16,15 @@ describe('calculateBaseCost', () => {
   });
 
   it.each([0, -5, 2.5])('rejects invalid user count: %s', (users) => {
-    expect(() => calculateBaseCost(users)).toThrow('usuarios no válidos');
+    let thrownError: unknown;
+
+    try {
+      calculateBaseCost(users);
+    } catch (error) {
+      thrownError = error;
+    }
+
+    expect(thrownError).toBeInstanceOf(DomainError);
+    expect(thrownError).toMatchObject({ code: 'VALIDATION_ERROR' });
   });
 });

@@ -1,3 +1,5 @@
+import { DomainError } from '../errors.js';
+
 const FIRST_TIER_LIMIT = 10;
 const SECOND_TIER_LIMIT = 50;
 
@@ -7,7 +9,7 @@ const THIRD_TIER_RATE_CENTS = 500;
 
 export function calculateBaseCost(users: number): number {
   if (!Number.isInteger(users) || users < 1) {
-    throw new Error('usuarios no válidos');
+    throw new DomainError('VALIDATION_ERROR', 'usuarios no válidos');
   }
 
   const firstTierUsers = Math.min(users, FIRST_TIER_LIMIT);

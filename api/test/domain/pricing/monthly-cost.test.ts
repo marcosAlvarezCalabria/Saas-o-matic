@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { DomainError } from '../../../src/domain/errors.js';
 import { calculateMonthlyCost } from '../../../src/domain/pricing/calculateMonthlyCost.js';
 
 describe('calculateMonthlyCost', () => {
@@ -13,6 +14,15 @@ describe('calculateMonthlyCost', () => {
   });
 
   it('rejects a country without a supported VAT rate', () => {
-    expect(() => calculateMonthlyCost('US', 15)).toThrow('país no soportado');
+    let thrownError: unknown;
+
+    try {
+      calculateMonthlyCost('US', 15);
+    } catch (error) {
+      thrownError = error;
+    }
+
+    expect(thrownError).toBeInstanceOf(DomainError);
+    expect(thrownError).toMatchObject({ code: 'COUNTRY_NOT_SUPPORTED' });
   });
 });

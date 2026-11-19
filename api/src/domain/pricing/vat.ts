@@ -1,3 +1,5 @@
+import { DomainError } from '../errors.js';
+
 const VAT_RATES: Readonly<Record<string, number>> = {
   ES: 21,
   PT: 23,
@@ -13,7 +15,7 @@ export function getVatRate(country: string): number {
   const vatRate = VAT_RATES[country];
 
   if (vatRate === undefined) {
-    throw new Error('país no soportado');
+    throw new DomainError('COUNTRY_NOT_SUPPORTED', 'país no soportado');
   }
 
   return vatRate;
