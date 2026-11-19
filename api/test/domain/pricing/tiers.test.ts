@@ -11,6 +11,7 @@ describe('calculateBaseCost', () => {
     { users: 15, expectedCents: 14_000 },
     { users: 50, expectedCents: 42_000 },
     { users: 51, expectedCents: 42_500 },
+    { users: 1000, expectedCents: 517_000 },
   ])('returns $expectedCents cents for $users users', ({ users, expectedCents }) => {
     expect(calculateBaseCost(users)).toBe(expectedCents);
   });
