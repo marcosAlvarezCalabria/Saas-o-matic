@@ -1,7 +1,3 @@
-# pricing.feature
-
-Escenarios de la tarificación por tramos e IVA. Ubicación prevista: `ai-workspace/01-specs/features/pricing.feature`. Cada escenario se convierte en un test del dominio (TDD).
-```gherkin
 # language: es
 Característica: Cálculo del coste mensual por tramos
   Como comercial
@@ -52,6 +48,5 @@ Característica: Cálculo del coste mensual por tramos
       Dado un cliente de un país que no está en la tabla de IVA
       Cuando calculo el coste mensual
       Entonces se rechaza con el error "país no soportado"
-```
 
-Nota: los importes se calculan internamente en céntimos (140,00 € = 14000).
+# Nota: los importes se calculan internamente en céntimos (140,00 € = 14000).
