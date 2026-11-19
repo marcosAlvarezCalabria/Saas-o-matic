@@ -1,0 +1,266 @@
+openapi: 3.1.0
+info:
+  title: SaaS-O-Matic API
+  version: 1.0.0
+  description: |
+    API interna para alta de clientes corporativos y simulación de costes.
+    Todos los importes van en céntimos de euro (enteros). La conversión de divisa
+    se hace solo en el frontend, para mostrar.
+    Detalle de cada operación en ../01-specs/01-casos-de-uso.md.
+servers:
+  - url: http://localhost:3000
+    description: Local
+
+tags:
+  - name: customers
+  - name: simulations
+  - name: health
+
+paths:
+  /health:
+    get:
+      tags: [health]
+      summary: Comprobación de vida (Docker y despliegue)
+      responses:
+        '200':
+          description: La API está levantada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, const: ok }
+
+  /customers:
+    post:
+      tags: [customers]
+      summary: UC1 · Crear cliente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateCustomerRequest' }
+            example:
+              companyName: Acme Ibérica S.L.
+              taxId: B58754201
+              email: compras@acme.es
+              country: ES
+              plan: pro
+      responses:
+        '201':
+          description: Cliente creado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Customer' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '409':
+          description: Ya existe un cliente con ese identificador fiscal (TAX_ID_ALREADY_EXISTS)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+    get:
+      tags: [customers]
+      summary: UC2 · Buscar clientes por nombre o identificador fiscal
+      parameters:
+        - name: search
+          in: query
+          required: false
+          description: Coincidencia parcial, sin distinguir mayúsculas ni tildes. Vacío = todos.
+          schema: { type: string, maxLength: 100 }
+      responses:
+        '200':
+          description: Lista de clientes, los más recientes primero (puede estar vacía)
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Customer' }
+
+  /customers/{id}:
+    get:
+      tags: [customers]
+      summary: UC3 · Ver cliente
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+      responses:
+        '200':
+          description: Cliente
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Customer' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '404': { $ref: '#/components/responses/CustomerNotFound' }
+
+  /customers/{id}/simulations:
+    get:
+      tags: [simulations]
+      summary: UC4 · Historial de simulaciones del cliente
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+      responses:
+        '200':
+          description: Simulaciones, las más recientes primero (puede estar vacía)
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Simulation' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '404': { $ref: '#/components/responses/CustomerNotFound' }
+
+  /simulations:
+    post:
+      tags: [simulations]
+      summary: UC6 · Calcular y guardar simulación
+      description: Cualquier importe enviado en el cuerpo se ignora; el backend recalcula siempre.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateSimulationRequest' }
+            example: { customerId: 1, users: 15, storageGb: 100, apiCalls: 50000 }
+      responses:
+        '201':
+          description: Simulación guardada
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Simulation' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '404': { $ref: '#/components/responses/CustomerNotFound' }
+
+  /simulations/preview:
+    post:
+      tags: [simulations]
+      summary: UC5 · Calcular sin guardar (slider en tiempo real)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PreviewRequest' }
+            example: { customerId: 1, users: 15 }
+      responses:
+        '200':
+          description: Desglose del coste mensual
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CostBreakdown' }
+              example: { baseCents: 14000, vatRate: 21, vatCents: 2940, totalCents: 16940 }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '404': { $ref: '#/components/responses/CustomerNotFound' }
+
+components:
+  parameters:
+    CustomerId:
+      name: id
+      in: path
+      required: true
+      schema: { type: integer, minimum: 1 }
+
+  responses:
+    BadRequest:
+      description: Entrada no válida (VALIDATION_ERROR, INVALID_TAX_ID, COUNTRY_NOT_SUPPORTED)
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          example:
+            error: { code: INVALID_TAX_ID, message: Identificador fiscal no válido }
+    CustomerNotFound:
+      description: El cliente no existe (CUSTOMER_NOT_FOUND)
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+
+  schemas:
+    Country:
+      type: string
+      description: |
+        ISO 3166-1 alfa-2. Solo países con IVA definido. La lista vive en el dominio (tabla de IVA);
+        un país de 2 letras fuera de ella devuelve 400 COUNTRY_NOT_SUPPORTED.
+      enum: [ES, PT, FR, DE, IT, NL, IE, GB]
+
+    Plan:
+      type: string
+      description: Informativo, no afecta al precio.
+      enum: [basic, pro, enterprise]
+
+    CreateCustomerRequest:
+      type: object
+      required: [companyName, taxId, email, country, plan]
+      properties:
+        companyName: { type: string, minLength: 2, maxLength: 100 }
+        taxId:
+          type: string
+          description: Se normaliza (mayúsculas, sin espacios ni guiones) y se valida según el país.
+        email: { type: string, format: email }
+        country: { $ref: '#/components/schemas/Country' }
+        plan: { $ref: '#/components/schemas/Plan' }
+
+    Customer:
+      type: object
+      required: [id, companyName, taxId, email, country, plan, createdAt]
+      properties:
+        id: { type: integer }
+        companyName: { type: string }
+        taxId: { type: string, description: Normalizado }
+        email: { type: string }
+        country: { $ref: '#/components/schemas/Country' }
+        plan: { $ref: '#/components/schemas/Plan' }
+        createdAt: { type: string, format: date-time }
+
+    PreviewRequest:
+      type: object
+      required: [customerId, users]
+      properties:
+        customerId: { type: integer, minimum: 1 }
+        users: { type: integer, minimum: 1 }
+
+    CreateSimulationRequest:
+      type: object
+      required: [customerId, users]
+      properties:
+        customerId: { type: integer, minimum: 1 }
+        users: { type: integer, minimum: 1 }
+        storageGb: { type: integer, minimum: 0, default: 0, description: Informativo }
+        apiCalls: { type: integer, minimum: 0, default: 0, description: Llamadas al mes, informativo }
+
+    CostBreakdown:
+      type: object
+      required: [baseCents, vatRate, vatCents, totalCents]
+      properties:
+        baseCents: { type: integer, description: Coste por tramos }
+        vatRate: { type: integer, description: Porcentaje, p. ej. 21 }
+        vatCents: { type: integer }
+        totalCents: { type: integer, description: baseCents + vatCents }
+
+    Simulation:
+      allOf:
+        - $ref: '#/components/schemas/CostBreakdown'
+        - type: object
+          required: [id, customerId, users, storageGb, apiCalls, createdAt]
+          properties:
+            id: { type: integer }
+            customerId: { type: integer }
+            users: { type: integer }
+            storageGb: { type: integer }
+            apiCalls: { type: integer }
+            createdAt: { type: string, format: date-time }
+
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+              enum:
+                - VALIDATION_ERROR
+                - INVALID_TAX_ID
+                - COUNTRY_NOT_SUPPORTED
+                - TAX_ID_ALREADY_EXISTS
+                - CUSTOMER_NOT_FOUND
+                - NOT_FOUND
+                - INTERNAL_ERROR
+            message: { type: string }

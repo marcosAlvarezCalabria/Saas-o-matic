@@ -40,6 +40,8 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 - `GET /customers?search=`: buscador por nombre o identificador fiscal (añadido).
 - `GET /customers/:id`: ficha del cliente (añadido).
 - `GET /customers/:id/simulations`: historial (añadido).
+- `GET /health`: comprobación de vida para Docker y despliegue (añadido).
+- Contrato completo en `../02-architecture/openapi.yaml`.
 
 ## 6. Reglas de negocio
 
@@ -53,6 +55,8 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 ### IVA
 
 - Tabla de IVA por país en el dominio. Se suma al coste base.
+- Países soportados y tipo general: ES 21 %, PT 23 %, FR 20 %, DE 19 %, IT 22 %, NL 21 %, IE 23 %, GB 20 %.
+- El IVA se guarda como porcentaje entero (21). Importe de IVA = round(base × tipo / 100), redondeo al céntimo más cercano.
 - País fuera de la tabla: error (no se inventan valores). Se rechaza ya al crear el cliente (400), así nunca existe un cliente que no se pueda simular.
 
 ### Validación fiscal
@@ -72,7 +76,8 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 
 ## 7. Supuestos por ambigüedad del enunciado
 
-- El plan es una lista cerrada (p. ej. Basic, Pro, Enterprise), se guarda como dato informativo y no afecta al precio.
+- El plan es una lista cerrada: `basic`, `pro`, `enterprise`. Se guarda como dato informativo y no afecta al precio.
+- Nombre de empresa: obligatorio, 2–100 caracteres tras recortar. Email: formato básico.
 - Almacenamiento (GB) y llamadas a la API (al mes) son informativos, opcionales (0 por defecto) y no afectan al precio.
 - Sin login ni autenticación: herramienta interna, fuera de alcance.
 
@@ -119,3 +124,4 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 - v0.8: el código lo escribe Codex con AGENTS.md; carpetas `src` en `api` y `web`; almacenamiento y llamadas opcionales.
 - v0.9: Gherkin de la validación fiscal (DNI, NIE, CIF y otros países); formato básico definido (4–20 alfanuméricos).
 - v1.0: país sin IVA definido se rechaza al crear el cliente.
+- v1.1: tabla de IVA con 8 países, redondeo del IVA, planes cerrados, validación de nombre y email, y `GET /health`.
