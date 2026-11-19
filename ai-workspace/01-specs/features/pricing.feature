@@ -22,6 +22,7 @@ Característica: Cálculo del coste mensual por tramos
         | 15       | 140   | ejemplo del enunciado       |
         | 50       | 420   | límite del tramo 2          |
         | 51       | 425   | entra en el tramo 3         |
+        | 1000     | 5170  | tercer tramo con muchos usuarios |
 
     Esquema del escenario: Número de usuarios no válido
       Dado que el cliente tiene <usuarios> usuarios activos

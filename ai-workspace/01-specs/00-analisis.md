@@ -48,7 +48,7 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 ### Tarificación acumulativa por tramos
 
 - Usuarios 1–10: 10 €/usuario. 11–50: 8 €/usuario. Más de 50: 5 €/usuario.
-- Ejemplos: 10 → 100 €; 11 → 108 €; 15 → 140 €; 50 → 420 €; 60 → 470 €.
+- Ejemplos: 10 → 100 €; 11 → 108 €; 15 → 140 €; 50 → 420 €; 1000 → 5170 €.
 - Usuarios: entero, mínimo 1.
 - Escenarios en `features/pricing.feature`.
 
@@ -90,7 +90,7 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 
 ## 9. Estrategia de tests
 
-- TDD estricto en el dominio: tramos (0, 1, 10, 11, 50, 51, 60), IVA, DNI/NIE/CIF.
+- TDD estricto en el dominio: tramos (0, 1, 10, 11, 50, 51, 1000), IVA, DNI/NIE/CIF.
 - Tests de integración de endpoints tras implementarlos (BD en memoria): 400, 404, 409 y persistencia del desglose.
 - Sin tests de configuración ni de UI trivial.
 
@@ -125,3 +125,5 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 - v0.9: Gherkin de la validación fiscal (DNI, NIE, CIF y otros países); formato básico definido (4–20 alfanuméricos).
 - v1.0: país sin IVA definido se rechaza al crear el cliente.
 - v1.1: tabla de IVA con 8 países, redondeo del IVA, planes cerrados, validación de nombre y email, y `GET /health`.
+- v1.2: el ejemplo de 60 usuarios se sustituye por 1000, para probar el tercer tramo con muchos usuarios y sin tope.
+- v1.3: corregido el importe de 1000 usuarios: 5170 € (100 + 320 + 4750), no 4750 €. Lo detectó el test.
