@@ -53,7 +53,7 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 ### IVA
 
 - Tabla de IVA por país en el dominio. Se suma al coste base.
-- País fuera de la tabla: error (no se inventan valores).
+- País fuera de la tabla: error (no se inventan valores). Se rechaza ya al crear el cliente (400), así nunca existe un cliente que no se pueda simular.
 
 ### Validación fiscal
 
@@ -61,6 +61,9 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 - Otros países: validación básica de formato.
 - Diseño abierto/cerrado: añadir un país = añadir un validador.
 - Identificador duplicado: error de conflicto (409).
+- Otros países: solo letras y dígitos, de 4 a 20 caracteres tras normalizar.
+- Fuera de alcance: NIF especiales K, L y M.
+- Escenarios en `features/tax-id.feature`.
 
 ### Simulación
 
@@ -114,3 +117,5 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 - v0.6: guía para el evaluador en el README.
 - v0.7: pnpm como gestor de paquetes.
 - v0.8: el código lo escribe Codex con AGENTS.md; carpetas `src` en `api` y `web`; almacenamiento y llamadas opcionales.
+- v0.9: Gherkin de la validación fiscal (DNI, NIE, CIF y otros países); formato básico definido (4–20 alfanuméricos).
+- v1.0: país sin IVA definido se rechaza al crear el cliente.

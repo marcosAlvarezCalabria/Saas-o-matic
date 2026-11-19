@@ -6,9 +6,9 @@ Un caso de uso por endpoint. Cada uno vive en `api/src/application` y solo depen
 
 - **Endpoint:** `POST /customers`
 - **Entrada:** companyName, taxId, email, country (ISO), plan.
-- **Pasos:** normalizar taxId (mayúsculas, sin espacios ni guiones) → validar campos → validar taxId según el país → comprobar que no existe otro cliente con ese taxId → guardar.
+- **Pasos:** normalizar taxId (mayúsculas, sin espacios ni guiones) → validar campos → comprobar que el país está en la tabla de IVA → validar taxId según el país → comprobar que no existe otro cliente con ese taxId → guardar.
 - **Salida:** 201 con el cliente creado.
-- **Errores:** 400 si un campo no es válido o el taxId no pasa la validación · 409 si el taxId ya existe.
+- **Errores:** 400 si un campo no es válido, el país no está en la tabla de IVA (`COUNTRY_NOT_SUPPORTED`) o el taxId no pasa la validación · 409 si el taxId ya existe.
 
 ## UC2. Buscar clientes
 
@@ -65,3 +65,4 @@ Un caso de uso por endpoint. Cada uno vive en `api/src/application` y solo depen
 - v0.4: columna de búsqueda normalizada para el nombre.
 - v0.5: 400 por id mal formado en UC3.
 - v0.6: storageGb y apiCalls opcionales con 0 por defecto.
+- v0.7: UC1 rechaza países sin IVA definido al crear el cliente.
