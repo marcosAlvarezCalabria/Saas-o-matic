@@ -5,6 +5,7 @@ import type {
   CustomerSearch,
   CustomerToCreate,
 } from '../../application/ports/CustomerRepository.js';
+import { ApplicationError } from '../../application/errors.js';
 import type { Customer, CustomerPlan } from '../../domain/customer.js';
 
 interface CustomerRow {
@@ -21,28 +22,39 @@ export class SqliteCustomerRepository implements CustomerRepository {
   constructor(private readonly database: Database.Database) {}
 
   create(customer: CustomerToCreate): Customer {
-    const result = this.database
-      .prepare(
-        `INSERT INTO customers (
-          company_name, company_name_search, tax_id, email, country, plan
-        ) VALUES (?, ?, ?, ?, ?, ?)`,
-      )
-      .run(
-        customer.companyName,
-        customer.companyNameSearch,
-        customer.taxId,
-        customer.email,
-        customer.country,
-        customer.plan,
-      );
+    try {
+      const result = this.database
+        .prepare(
+          `INSERT INTO customers (
+            company_name, company_name_search, tax_id, email, country, plan
+          ) VALUES (?, ?, ?, ?, ?, ?)`,
+        )
+        .run(
+          customer.companyName,
+          customer.companyNameSearch,
+          customer.taxId,
+          customer.email,
+          customer.country,
+          customer.plan,
+        );
 
-    const created = this.findById(Number(result.lastInsertRowid));
+      const created = this.findById(Number(result.lastInsertRowid));
 
-    if (created === null) {
-      throw new Error('Customer insert did not return a persisted customer');
+      if (created === null) {
+        throw new Error('Customer insert did not return a persisted customer');
+      }
+
+      return created;
+    } catch (error) {
+      if (isUniqueConstraintError(error)) {
+        throw new ApplicationError(
+          'TAX_ID_ALREADY_EXISTS',
+          'Ya existe un cliente con ese identificador fiscal',
+        );
+      }
+
+      throw error;
     }
-
-    return created;
   }
 
   findById(id: number): Customer | null {
@@ -79,6 +91,15 @@ export class SqliteCustomerRepository implements CustomerRepository {
 
 function containsPattern(value: string): string {
   return `%${value.replace(/[\\%_]/g, '\\$&')}%`;
+}
+
+function isUniqueConstraintError(error: unknown): boolean {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'code' in error &&
+    error.code === 'SQLITE_CONSTRAINT_UNIQUE'
+  );
 }
 
 function mapCustomer(row: CustomerRow): Customer {
