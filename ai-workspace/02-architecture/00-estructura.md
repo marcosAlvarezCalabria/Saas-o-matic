@@ -19,9 +19,12 @@ saas-o-matic/
 │   │   │   ├── customer.ts    tipo Customer, reglas de campos y nombre de búsqueda
 │   │   │   ├── simulation.ts  tipo Simulation
 │   │   │   └── errors.ts      DomainError con código
-│   │   ├── application/       un archivo por caso de uso (UC1–UC6)
-│   │   │   ├── errors.ts      ApplicationError: CUSTOMER_NOT_FOUND, TAX_ID_ALREADY_EXISTS
-│   │   │   └── ports/         CustomerRepository, SimulationRepository (interfaces)
+│   │   ├── application/
+│   │   │   ├── use-cases/     un archivo por caso de uso, agrupados por tema
+│   │   │   │   ├── customers/    createCustomer.ts, searchCustomers.ts, getCustomer.ts (UC1–UC3)
+│   │   │   │   └── simulations/  casos de uso de simulaciones (UC4–UC6)
+│   │   │   ├── ports/         CustomerRepository, SimulationRepository (interfaces, comunes)
+│   │   │   └── errors.ts      ApplicationError: CUSTOMER_NOT_FOUND, TAX_ID_ALREADY_EXISTS (común)
 │   │   ├── infrastructure/
 │   │   │   ├── db/            connection.ts, schema.ts, repositorios SQLite
 │   │   │   └── http/          app.ts, routes/, errorHandler.ts, validación de entrada
@@ -43,6 +46,7 @@ saas-o-matic/
 - `application` importa `domain` y `application/ports`. Nunca `infrastructure`.
 - `infrastructure` implementa los puertos y traduce HTTP ↔ casos de uso.
 - `main.ts` es el único sitio que conecta todo (inyección manual, sin librerías).
+- Los casos de uso van en `application/use-cases/`, agrupados por tema (`customers/`, `simulations/`), para que el nombre diga lo que hay dentro y todo lo de un tema esté junto. `ports/` y `errors.ts` quedan fuera porque los usan los dos temas.
 
 ## Errores
 

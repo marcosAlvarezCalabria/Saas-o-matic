@@ -16,3 +16,4 @@ Las reglas de negocio están en `../01-specs`. Si algo aquí contradice a las sp
 - v0.3: `application/errors.ts`, reparto de errores por capa y regla del logger en `00-estructura.md`.
 - v0.4: IVA en puntos básicos (modelo de datos, OpenAPI y actualización del ADR-003); enum `Country` con los 27 de la UE más GB y normalización a mayúsculas.
 - v0.5: `schema.ts` en lugar de `schema.sql` (actualización del ADR-005), duplicado por condición de carrera → 409, logger con ruta completa.
+- v0.6: casos de uso en `application/use-cases/`, agrupados por tema (`customers/` y `simulations/`); `ports/` y `errors.ts` se quedan en `application/`.
