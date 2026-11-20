@@ -23,8 +23,7 @@ export function parseCreateCustomerInput(body: unknown): CreateCustomerInput | n
 }
 
 export function parseCustomerId(value: string): number | null {
-  const id = Number(value);
-  return Number.isInteger(id) && id > 0 ? id : null;
+  return /^[1-9]\d*$/.test(value) ? Number(value) : null;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
