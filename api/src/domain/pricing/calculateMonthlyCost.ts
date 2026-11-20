@@ -1,21 +1,21 @@
 import { calculateBaseCost } from './tiers.js';
-import { calculateVat, getVatRate } from './vat.js';
+import { calculateVat, getVatRateBasisPoints } from './vat.js';
 
 export interface CostBreakdown {
   baseCents: number;
-  vatRate: number;
+  vatRateBasisPoints: number;
   vatCents: number;
   totalCents: number;
 }
 
 export function calculateMonthlyCost(country: string, users: number): CostBreakdown {
   const baseCents = calculateBaseCost(users);
-  const vatRate = getVatRate(country);
-  const vatCents = calculateVat(baseCents, vatRate);
+  const vatRateBasisPoints = getVatRateBasisPoints(country);
+  const vatCents = calculateVat(baseCents, vatRateBasisPoints);
 
   return {
     baseCents,
-    vatRate,
+    vatRateBasisPoints,
     vatCents,
     totalCents: baseCents + vatCents,
   };
