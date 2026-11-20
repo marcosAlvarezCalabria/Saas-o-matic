@@ -1,6 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import request from 'supertest';
 
+import { ApplicationError } from '../../src/application/errors.js';
+import { SqliteCustomerRepository } from '../../src/infrastructure/db/SqliteCustomerRepository.js';
 import { validCustomer } from './customerFixtures.js';
 import {
   createCustomerTestContext,
@@ -78,5 +80,29 @@ describe('POST /customers', () => {
       .expect(409);
 
     expect(response.body.error.code).toBe('TAX_ID_ALREADY_EXISTS');
+  });
+
+  it('translates a database unique constraint into a duplicate tax id error', () => {
+    const repository = new SqliteCustomerRepository(context.database);
+    const customer = {
+      companyName: 'Acme Ibérica S.L.',
+      companyNameSearch: 'acme iberica s.l.',
+      taxId: 'B58754201',
+      email: 'compras@acme.es',
+      country: 'ES',
+      plan: 'pro' as const,
+    };
+    repository.create(customer);
+
+    let thrownError: unknown;
+
+    try {
+      repository.create({ ...customer, companyName: 'Otra empresa' });
+    } catch (error) {
+      thrownError = error;
+    }
+
+    expect(thrownError).toBeInstanceOf(ApplicationError);
+    expect(thrownError).toMatchObject({ code: 'TAX_ID_ALREADY_EXISTS' });
   });
 });
