@@ -16,13 +16,14 @@ saas-o-matic/
 │   │   ├── domain/            funciones puras, sin dependencias
 │   │   │   ├── pricing/       tiers.ts, vat.ts, calculateMonthlyCost.ts
 │   │   │   ├── tax-id/        normalizeTaxId.ts, spanishTaxId.ts, genericTaxId.ts, validateTaxId.ts
-│   │   │   ├── customer.ts    tipo Customer y reglas de campos
+│   │   │   ├── customer.ts    tipo Customer, reglas de campos y nombre de búsqueda
 │   │   │   ├── simulation.ts  tipo Simulation
 │   │   │   └── errors.ts      DomainError con código
 │   │   ├── application/       un archivo por caso de uso (UC1–UC6)
+│   │   │   ├── errors.ts      ApplicationError: CUSTOMER_NOT_FOUND, TAX_ID_ALREADY_EXISTS
 │   │   │   └── ports/         CustomerRepository, SimulationRepository (interfaces)
 │   │   ├── infrastructure/
-│   │   │   ├── db/            connection.ts, schema.sql, repositorios SQLite
+│   │   │   ├── db/            connection.ts, schema.ts, repositorios SQLite
 │   │   │   └── http/          app.ts, routes/, errorHandler.ts, validación de entrada
 │   │   └── main.ts            composición: crea BD, repositorios, casos de uso y app
 │   └── test/
@@ -42,6 +43,15 @@ saas-o-matic/
 - `application` importa `domain` y `application/ports`. Nunca `infrastructure`.
 - `infrastructure` implementa los puertos y traduce HTTP ↔ casos de uso.
 - `main.ts` es el único sitio que conecta todo (inyección manual, sin librerías).
+
+## Errores
+
+- Cada capa tiene los suyos: `DomainError` en `domain/errors.ts` y `ApplicationError` en `application/errors.ts`.
+- Solo `infrastructure/http/errorHandler.ts` sabe de códigos HTTP. La tabla de traducción está en `01-specs/01-casos-de-uso.md`.
+
+## Logs
+
+- El logger de peticiones registra método, ruta completa (`/customers/1`, no la ruta relativa al router) y estado. Nunca la query string ni el cuerpo (ADR-006).
 
 ## Límites de tamaño (guía para Codex)
 

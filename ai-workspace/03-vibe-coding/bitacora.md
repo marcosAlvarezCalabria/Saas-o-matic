@@ -214,6 +214,148 @@ El prompt "si el test falla, para y avísame; no toques src" funcionó: es lo qu
 
 ---
 
+## 5. Codex se saltó el commit de la spec y fue directo al código
+
+**Fecha:** 2026-11-20
+
+**IA:** Codex
+
+&nbsp;
+
+**Qué pedí**
+
+Dos pasos numerados: primero, commit de la spec pendiente en `ai-workspace/`; después, ejecutar el prompt 04.
+
+&nbsp;
+
+**Qué hizo**
+
+Ejecutó el prompt 04 entero (9 commits de código) sin hacer el commit de la spec. Los 12 archivos de la spec siguieron sin commit.
+
+&nbsp;
+
+**Cómo lo detecté**
+
+Con `git log` y `git status` antes de revisar el código.
+
+&nbsp;
+
+**Por qué importa**
+
+La regla del proyecto es spec primero y código después. En el historial, el código del IVA en puntos básicos y de los clientes aparece antes que la spec que lo pide.
+
+&nbsp;
+
+**Corrección**
+
+El commit de la spec se hace después, y el desorden queda documentado aquí en lugar de reescribir el historial.
+
+&nbsp;
+
+**Lección**
+
+Un paso de "preparación" (como un commit) en el mismo mensaje que una tarea grande se pierde, igual que en la corrección #1. Los commits de spec los hago yo (Marcos) antes de pasarle el prompt a Codex, y lo compruebo con `git log`.
+
+&nbsp;
+
+---
+
+## 6. Tests en verde, pero la api compilada no arrancaba
+
+**Fecha:** 2026-11-20
+
+**IA:** Codex (código) y Claude (revisión)
+
+&nbsp;
+
+**Qué pedí**
+
+Prompt 04: clientes de punta a punta, con tests de integración.
+
+&nbsp;
+
+**Qué hizo**
+
+Los 81 tests pasaban, pero había cuatro fallos que ningún test veía:
+
+La api compilada (`node dist/main.js`) fallaba al arrancar: el esquema estaba en `schema.sql` y `tsc` no copia archivos `.sql` a `dist`.
+
+Si dos altas con el mismo NIF llegaban a la vez, la restricción `UNIQUE` de SQLite acababa en un 500 en lugar de un 409.
+
+El logger escribía `GET /` en vez de `GET /customers`, porque usaba la ruta relativa al router.
+
+La ficha aceptaba ids como `1.0`, `1e0` o `0x1`, porque `Number()` los convierte en 1.
+
+&nbsp;
+
+**Cómo lo detecté**
+
+En la revisión, Claude compiló y arrancó la api, y probó a mano los casos límite: condición de carrera, ids raros y la salida del logger.
+
+&nbsp;
+
+**Por qué importa**
+
+El fallo del esquema habría aparecido el domingo, al montar Docker, con poco margen para arreglarlo.
+
+&nbsp;
+
+**Corrección**
+
+Spec primero: esquema en `schema.ts` (actualización del ADR-005), escenario de condición de carrera, ids solo con dígitos y logger con ruta completa. Después, prompts 04b a 04e para Codex, uno por fallo.
+
+&nbsp;
+
+**Lección**
+
+Tests en verde no significa que funcione: los tests usan `tsx` y nunca ejecutan lo compilado. El CI tendrá un paso que compila, arranca `dist/main.js` y llama a `/health`.
+
+&nbsp;
+
+---
+
+## 7. Un prompt mezclaba dos tareas
+
+**Fecha:** 2026-11-20
+
+**IA:** Claude (redactó el prompt) · **Detectado por:** Marcos
+
+&nbsp;
+
+**Qué pasó**
+
+El prompt 04 se llamaba `04-clientes.md`, pero su paso 1 era otra tarea distinta: ampliar el IVA a la UE y pasarlo a puntos básicos.
+
+El nombre no decía lo que contenía, y el prompt juntaba dos objetivos.
+
+&nbsp;
+
+**Cómo lo detecté**
+
+Releyendo los prompts: el título y el objetivo no coincidían con el nombre del archivo.
+
+&nbsp;
+
+**Por qué importa**
+
+Las correcciones #1 y #5 tienen la misma causa: cuando un prompt mezcla tareas, Codex se salta alguna. Y un nombre que no dice lo que contiene hace más difícil seguir el historial.
+
+&nbsp;
+
+**Corrección**
+
+El archivo pasa a llamarse `04-iva-y-clientes.md`. No se reescribe su contenido porque ya está ejecutado.
+
+&nbsp;
+
+**Lección**
+
+Desde el prompt 05: un prompt por tarea, con un único objetivo y un nombre que lo diga. Igual que las specs.
+
+&nbsp;
+
+---
+
 ## Patrones que voy viendo
 
 Cuando una tarea mezcla una parte grande (mover carpetas) y una pequeña (una línea de configuración), la pequeña se pierde.
@@ -223,3 +365,7 @@ Solución: tareas cortas, numeradas y con un commit cada una.
 Lo que está en la arquitectura pero no en el prompt, Codex puede no aplicarlo. Solución: repetir en el prompt las reglas obligatorias.
 
 La IA que escribe la spec también se equivoca. Los tests escritos antes del código son los que lo destapan, siempre que el prompt prohíba tocar el código para que pasen.
+
+Los tests prueban lo que la spec describe, no lo que nadie ha pensado. La revisión tiene que salirse del camino feliz: compilar, arrancar y probar casos límite a mano.
+
+Un prompt, una tarea. Es la causa común de las correcciones #1, #5 y #7.

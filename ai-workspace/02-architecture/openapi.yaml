@@ -144,7 +144,7 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/CostBreakdown' }
-              example: { baseCents: 14000, vatRate: 21, vatCents: 2940, totalCents: 16940 }
+              example: { baseCents: 14000, vatRateBasisPoints: 2100, vatCents: 2940, totalCents: 16940 }
         '400': { $ref: '#/components/responses/BadRequest' }
         '404': { $ref: '#/components/responses/CustomerNotFound' }
 
@@ -174,9 +174,10 @@ components:
     Country:
       type: string
       description: |
-        ISO 3166-1 alfa-2. Solo países con IVA definido. La lista vive en el dominio (tabla de IVA);
-        un país de 2 letras fuera de ella devuelve 400 COUNTRY_NOT_SUPPORTED.
-      enum: [ES, PT, FR, DE, IT, NL, IE, GB]
+        ISO 3166-1 alfa-2: los 27 de la UE más GB (Grecia es GR, no EL). La lista vive en el
+        dominio (tabla de IVA). Se acepta en minúsculas o con espacios y se normaliza a mayúsculas.
+        Un país de 2 letras fuera de la tabla devuelve 400 COUNTRY_NOT_SUPPORTED.
+      enum: [AT, BE, BG, CY, CZ, DE, DK, EE, ES, FI, FR, GB, GR, HR, HU, IE, IT, LT, LU, LV, MT, NL, PL, PT, RO, SE, SI, SK]
 
     Plan:
       type: string
@@ -225,10 +226,10 @@ components:
 
     CostBreakdown:
       type: object
-      required: [baseCents, vatRate, vatCents, totalCents]
+      required: [baseCents, vatRateBasisPoints, vatCents, totalCents]
       properties:
         baseCents: { type: integer, description: Coste por tramos }
-        vatRate: { type: integer, description: Porcentaje, p. ej. 21 }
+        vatRateBasisPoints: { type: integer, description: 'Tipo de IVA en puntos básicos: 2100 = 21 %, 2550 = 25,5 %' }
         vatCents: { type: integer }
         totalCents: { type: integer, description: baseCents + vatCents }
 

@@ -27,7 +27,7 @@ Herramienta interna para el equipo comercial de una empresa SaaS. El comercial d
 ## 4. Modelo de datos
 
 - `customers`: id, company_name, company_name_search (minúsculas y sin tildes, solo para buscar), tax_id (único, normalizado), email, country (ISO), plan, created_at.
-- `simulations`: id, customer_id (FK), users, storage_gb, api_calls, base_cents, vat_rate, vat_cents, total_cents, created_at.
+- `simulations`: id, customer_id (FK), users, storage_gb, api_calls, base_cents, vat_rate_basis_points, vat_cents, total_cents, created_at.
 - Importes en céntimos (enteros). El IVA aplicado se guarda en cada simulación para preservar el histórico.
 
 ## 5. Endpoints
@@ -55,8 +55,30 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 ### IVA
 
 - Tabla de IVA por país en el dominio. Se suma al coste base.
-- Países soportados y tipo general: ES 21 %, PT 23 %, FR 20 %, DE 19 %, IT 22 %, NL 21 %, IE 23 %, GB 20 %.
-- El IVA se guarda como porcentaje entero (21). Importe de IVA = round(base × tipo / 100), redondeo al céntimo más cercano.
+- Países soportados: los 27 de la UE más Reino Unido, con su tipo general:
+
+| País | Código | IVA | País | Código | IVA |
+|---|---|---|---|---|---|
+| Alemania | DE | 19 % | Irlanda | IE | 23 % |
+| Austria | AT | 20 % | Italia | IT | 22 % |
+| Bélgica | BE | 21 % | Letonia | LV | 21 % |
+| Bulgaria | BG | 20 % | Lituania | LT | 21 % |
+| Chipre | CY | 19 % | Luxemburgo | LU | 17 % |
+| Croacia | HR | 25 % | Malta | MT | 18 % |
+| Dinamarca | DK | 25 % | Países Bajos | NL | 21 % |
+| Eslovaquia | SK | 23 % | Polonia | PL | 23 % |
+| Eslovenia | SI | 22 % | Portugal | PT | 23 % |
+| España | ES | 21 % | Reino Unido | GB | 20 % |
+| Estonia | EE | 24 % | República Checa | CZ | 21 % |
+| Finlandia | FI | 25,5 % | Rumanía | RO | 21 % |
+| Francia | FR | 20 % | Suecia | SE | 25 % |
+| Grecia | GR | 24 % | Hungría | HU | 27 % |
+
+- Fuentes: UE, [Your Europe](https://www.europa.eu/youreurope/business/taxation/vat/vat-rules-rates) (revisada el 13/07/2026); Reino Unido, [gov.uk](https://www.gov.uk/vat-rates). Los tipos cambian: se revisan antes de cada versión.
+- Grecia usa `GR` (ISO 3166-1), no `EL`, que es el código que usa la UE en temas de IVA. Todo el proyecto usa ISO.
+- El tipo se guarda en **puntos básicos** (centésimas de punto porcentual), como entero: 21 % = 2100; 25,5 % = 2550. Así Finlandia cabe sin decimales (ADR-003).
+- Importe de IVA = round(base × puntos básicos / 10 000), redondeo al céntimo más cercano.
+- Con tipos enteros el IVA sale siempre exacto, porque la base es múltiplo de 100 céntimos. Con Finlandia el redondeo sí actúa: 51 usuarios dan 42 500 × 25,5 % = 10 837,5 céntimos, que se redondean a 10 838.
 - País fuera de la tabla: error (no se inventan valores). Se rechaza ya al crear el cliente (400), así nunca existe un cliente que no se pueda simular.
 
 ### Validación fiscal
@@ -80,6 +102,8 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 - Nombre de empresa: obligatorio, 2–100 caracteres tras recortar. Email: formato básico.
 - Almacenamiento (GB) y llamadas a la API (al mes) son informativos, opcionales (0 por defecto) y no afectan al precio.
 - Sin login ni autenticación: herramienta interna, fuera de alcance.
+- Se aplica siempre el tipo general de IVA del país del cliente. No se aplica la inversión del sujeto pasivo entre empresas de distintos países de la UE (en la realidad, el IVA de esas ventas puede ser 0 %). Mejora futura: delegar en un servicio de impuestos.
+- El país se normaliza (recortar y mayúsculas), igual que el identificador fiscal.
 
 ## 8. Frontend
 
@@ -127,3 +151,6 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 - v1.1: tabla de IVA con 8 países, redondeo del IVA, planes cerrados, validación de nombre y email, y `GET /health`.
 - v1.2: el ejemplo de 60 usuarios se sustituye por 1000, para probar el tercer tramo con muchos usuarios y sin tope.
 - v1.3: corregido el importe de 1000 usuarios: 5170 € (100 + 320 + 4750), no 4750 €. Lo detectó el test.
+- v1.4: escenarios de la API (`customers.feature`, `simulations.feature`), nota sobre el redondeo del IVA.
+- v1.5: el país en minúsculas se normaliza; supuesto de no aplicar la inversión del sujeto pasivo.
+- v1.6: tabla de IVA con los 27 de la UE más GB, de fuentes oficiales; IVA en puntos básicos para admitir el 25,5 % de Finlandia.

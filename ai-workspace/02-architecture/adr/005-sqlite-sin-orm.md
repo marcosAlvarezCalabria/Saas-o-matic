@@ -8,4 +8,6 @@
 
 **Alternativas.** Prisma o Drizzle (migraciones y tipos, pero más capa que explicar y generar). sqlite3 asíncrono (más complejo sin ventaja aquí).
 
+**Actualización (2026-11-20).** El esquema pasa de `schema.sql` a `schema.ts`, una constante de texto con el mismo SQL. `tsc` no copia archivos `.sql` a `dist`, y la api compilada no arrancaba. Con `schema.ts` no hace falta ningún paso de copia, que además tendría que funcionar en Windows y en Linux.
+
 **Consecuencias.** Todo el SQL es visible y explicable en la presentación. Las sentencias preparadas evitan inyección SQL. Si el esquema creciera, se añadiría un sistema de migraciones (mejora futura).

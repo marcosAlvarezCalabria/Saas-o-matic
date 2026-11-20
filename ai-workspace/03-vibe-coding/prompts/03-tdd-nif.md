@@ -63,3 +63,17 @@ Hay un test por cada fila del `.feature` (salvo el duplicado).
 El CIF respeta la regla del tipo de control: A, B, E y H solo con dígito; N, P, Q, R, S y W solo con letra.
 
 Los rechazos son `DomainError` con `INVALID_TAX_ID`.
+
+&nbsp;
+
+**Resultado de la revisión**
+
+Correcto. Commits `ced2ff4` (tests) y `884e99b` (implementación), en ese orden.
+
+Un test por cada fila del `.feature`, sin el duplicado. Los rechazos son `DomainError` con `INVALID_TAX_ID`.
+
+El CIF respeta la regla del tipo de control. Las posiciones impares se doblan y se suman sus cifras, como dice el algoritmo.
+
+`validateTaxId` devuelve el identificador ya normalizado, listo para guardar.
+
+49 tests de dominio en verde (tramos, IVA y NIF).

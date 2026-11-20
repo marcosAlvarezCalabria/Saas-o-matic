@@ -36,14 +36,25 @@ Característica: Cálculo del coste mensual por tramos
         | 2.5      |
 
   Regla: Se suma el IVA del país del cliente
+    El tipo se expresa en puntos básicos: 21 % = 2100; 25,5 % = 2550.
+    Importe de IVA = round(base × puntos básicos / 10 000), al céntimo.
 
     Escenario: Cliente español con 15 usuarios
       Dado un cliente de "ES" con 15 usuarios activos
       Cuando calculo el coste mensual
       Entonces el coste base es 140,00 €
-      Y el IVA aplicado es del 21 %
+      Y el IVA aplicado es de 2100 puntos básicos (21 %)
       Y el importe de IVA es 29,40 €
       Y el total es 169,40 €
+
+    Escenario: Tipo con decimales y redondeo
+      Dado un cliente de "FI" con 51 usuarios activos
+      Cuando calculo el coste mensual
+      Entonces el coste base es 425,00 €
+      Y el IVA aplicado es de 2550 puntos básicos (25,5 %)
+      Y el importe de IVA es 108,38 €
+      Y el total es 533,38 €
+      # 42 500 × 2550 / 10 000 = 10 837,5 céntimos → se redondea a 10 838
 
     Escenario: País sin tipo de IVA definido
       Dado un cliente de un país que no está en la tabla de IVA

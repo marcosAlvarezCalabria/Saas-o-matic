@@ -13,3 +13,6 @@ Las reglas de negocio están en `../01-specs`. Si algo aquí contradice a las sp
 
 - v0.1: estructura, modelo de datos, OpenAPI y ADR 001–005.
 - v0.2: ADR-006 (búsqueda por GET); OpenAPI reordenado: health, clientes y simulaciones (crear antes que preview).
+- v0.3: `application/errors.ts`, reparto de errores por capa y regla del logger en `00-estructura.md`.
+- v0.4: IVA en puntos básicos (modelo de datos, OpenAPI y actualización del ADR-003); enum `Country` con los 27 de la UE más GB y normalización a mayúsculas.
+- v0.5: `schema.ts` en lugar de `schema.sql` (actualización del ADR-005), duplicado por condición de carrera → 409, logger con ruta completa.
