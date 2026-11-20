@@ -30,6 +30,9 @@ describe('GET /customers/:id', () => {
   it.each([
     { id: 'abc', status: 400, code: 'VALIDATION_ERROR' },
     { id: '0', status: 400, code: 'VALIDATION_ERROR' },
+    { id: '1.0', status: 400, code: 'VALIDATION_ERROR' },
+    { id: '1e0', status: 400, code: 'VALIDATION_ERROR' },
+    { id: '0x1', status: 400, code: 'VALIDATION_ERROR' },
     { id: '9999', status: 404, code: 'CUSTOMER_NOT_FOUND' },
   ])('returns $status and $code for customer id $id', async ({ id, status, code }) => {
     const response = await request(context.app).get(`/customers/${id}`).expect(status);
