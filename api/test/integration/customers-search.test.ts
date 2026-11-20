@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import request from 'supertest';
 
 import { registerSearchCustomers } from './customerFixtures.js';
@@ -47,5 +47,18 @@ describe('GET /customers', () => {
       .expect(200);
 
     expect(response.body).toEqual([]);
+  });
+
+  it('logs the complete path without the query string', async () => {
+    const consoleInfo = vi.spyOn(console, 'info').mockImplementation(() => undefined);
+
+    try {
+      await request(context.app).get('/customers').query({ search: 'x' }).expect(200);
+
+      expect(consoleInfo).toHaveBeenCalledOnce();
+      expect(consoleInfo).toHaveBeenCalledWith('GET /customers 200');
+    } finally {
+      consoleInfo.mockRestore();
+    }
   });
 });
