@@ -12,11 +12,12 @@ describe('calculateBaseCost', () => {
     { users: 50, expectedCents: 42_000 },
     { users: 51, expectedCents: 42_500 },
     { users: 1000, expectedCents: 517_000 },
+    { users: 100_000, expectedCents: 50_017_000 },
   ])('returns $expectedCents cents for $users users', ({ users, expectedCents }) => {
     expect(calculateBaseCost(users)).toBe(expectedCents);
   });
 
-  it.each([0, -5, 2.5])('rejects invalid user count: %s', (users) => {
+  it.each([0, -5, 2.5, 100_001])('rejects invalid user count: %s', (users) => {
     let thrownError: unknown;
 
     try {
