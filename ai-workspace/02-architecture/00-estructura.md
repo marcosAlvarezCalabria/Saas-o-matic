@@ -14,20 +14,21 @@ saas-o-matic/
 │   ├── Dockerfile
 │   ├── src/
 │   │   ├── domain/            funciones puras, sin dependencias
-│   │   │   ├── pricing/       tiers.ts, vat.ts, calculateMonthlyCost.ts
+│   │   │   ├── pricing/       tiers.ts (tramos y validateUsers), vat.ts, calculateMonthlyCost.ts
 │   │   │   ├── tax-id/        normalizeTaxId.ts, spanishTaxId.ts, genericTaxId.ts, validateTaxId.ts
 │   │   │   ├── customer.ts    tipo Customer, reglas de campos y nombre de búsqueda
-│   │   │   ├── simulation.ts  tipo Simulation
+│   │   │   ├── simulation.ts  tipo Simulation y validateUsage (almacenamiento y llamadas)
 │   │   │   └── errors.ts      DomainError con código
 │   │   ├── application/
 │   │   │   ├── use-cases/     un archivo por caso de uso, agrupados por tema
 │   │   │   │   ├── customers/    createCustomer.ts, searchCustomers.ts, getCustomer.ts (UC1–UC3)
-│   │   │   │   └── simulations/  casos de uso de simulaciones (UC4–UC6)
+│   │   │   │   └── simulations/  listCustomerSimulations.ts, previewSimulation.ts, createSimulation.ts (UC4–UC6)
 │   │   │   ├── ports/         CustomerRepository, SimulationRepository (interfaces, comunes)
 │   │   │   └── errors.ts      ApplicationError: CUSTOMER_NOT_FOUND, TAX_ID_ALREADY_EXISTS (común)
 │   │   ├── infrastructure/
 │   │   │   ├── db/            connection.ts, schema.ts, repositorios SQLite
-│   │   │   └── http/          app.ts, routes/, errorHandler.ts, validación de entrada
+│   │   │   └── http/          app.ts, routes/ (customers.ts, simulations.ts), errorHandler.ts,
+│   │   │                      inputValidation.ts (clientes), simulationInput.ts (simulaciones)
 │   │   └── main.ts            composición: crea BD, repositorios, casos de uso y app
 │   └── test/
 │       ├── domain/            TDD a partir de los .feature
@@ -52,6 +53,7 @@ saas-o-matic/
 
 - Cada capa tiene los suyos: `DomainError` en `domain/errors.ts` y `ApplicationError` en `application/errors.ts`.
 - Solo `infrastructure/http/errorHandler.ts` sabe de códigos HTTP. La tabla de traducción está en `01-specs/01-casos-de-uso.md`.
+- Un error inesperado (500) se registra entero en el servidor (`console.error`, con traza) y se responde con un mensaje genérico, sin traza.
 
 ## Logs
 
@@ -61,4 +63,5 @@ saas-o-matic/
 
 - Un archivo, una responsabilidad. Si pasa de ~150 líneas, se divide.
 - Las rutas HTTP no contienen lógica: validan la forma de la entrada, llaman al caso de uso y devuelven la respuesta.
+- Todas las rutas de simulaciones, incluida `GET /customers/:id/simulations`, viven en `routes/simulations.ts`: todo lo de un tema, junto.
 - Nada de `utils.ts` genéricos.

@@ -27,29 +27,35 @@ Un caso de uso por endpoint. Cada uno vive en `api/src/application` y solo depen
 ## UC4. Ver historial de simulaciones
 
 - **Endpoint:** `GET /customers/:id/simulations`
+- **Archivo:** `application/use-cases/simulations/listCustomerSimulations.ts`
+- **Pasos:** id solo con dígitos (capa HTTP, igual que UC3) → comprobar que el cliente existe → listar sus simulaciones.
 - **Salida:** 200 con las simulaciones del cliente y su desglose, las más recientes primero (empate en fecha → id mayor primero). Sin simulaciones: lista vacía, no error.
-- **Errores:** 404 si el cliente no existe.
+- **Errores:** 400 si el id está mal formado · 404 si el cliente no existe.
 
 ## UC5. Previsualizar simulación
 
 - **Endpoint:** `POST /simulations/preview`
-- **Entrada:** customerId, users.
-- **Pasos:** obtener el cliente → calcular coste base por tramos → aplicar IVA de su país. No guarda nada.
-- **Salida:** 200 con baseCents, vatRateBasisPoints, vatCents, totalCents.
-- **Errores:** 400 si users no es válido · 404 si el cliente no existe.
+- **Archivo:** `application/use-cases/simulations/previewSimulation.ts`
+- **Entrada:** customerId, users. Cualquier otro campo se ignora.
+- **Pasos:** forma (capa HTTP: customerId entero ≥ 1, users número) → users válido (dominio: entero de 1 a 100 000) → obtener el cliente → `calculateMonthlyCost(país, users)`. No guarda nada.
+- **Salida:** 200 solo con baseCents, vatRateBasisPoints, vatCents, totalCents.
+- **Errores:** 400 si la entrada no es válida · 404 si el cliente no existe.
 
 ## UC6. Crear simulación
 
 - **Endpoint:** `POST /simulations`
-- **Entrada:** customerId, users, storageGb y apiCalls (opcionales: enteros ≥ 0, por defecto 0; informativos, no afectan al precio).
-- **Pasos:** obtener el cliente → validar entrada → calcular igual que UC5 → guardar con el desglose y la fecha.
-- **Salida:** 201 con la simulación guardada.
+- **Archivo:** `application/use-cases/simulations/createSimulation.ts`
+- **Entrada:** customerId, users, storageGb y apiCalls (opcionales: enteros seguros ≥ 0, por defecto 0; informativos, no afectan al precio).
+- **Pasos:** forma (capa HTTP) → valores (dominio: users y uso) → obtener el cliente → calcular igual que UC5 → guardar con el desglose. La fecha la pone la BD.
+- **Salida:** 201 con la simulación guardada (`Simulation` en `openapi.yaml`).
 - **Errores:** 400 si la entrada no es válida · 404 si el cliente no existe.
-- **Regla:** el cálculo lo hace siempre el backend; se ignora cualquier importe que envíe el cliente.
+- **Regla:** el cálculo lo hace siempre el backend; se ignora cualquier importe o campo desconocido que envíe el cliente.
 
 ## Reglas comunes
 
 - UC5 y UC6 usan exactamente la misma función de dominio para calcular.
+- Orden de validación en UC5 y UC6: forma (400) → valores (400) → cliente (404). Con datos no válidos y un cliente inexistente gana el 400: no se consulta la BD con una entrada que se va a rechazar.
+- `customerId` es un identificador, no un valor de negocio: lo comprueba la capa HTTP (entero ≥ 1 en el cuerpo, solo dígitos en la ruta).
 - Errores con formato único: `{ "error": { "code": "...", "message": "..." } }`.
 - Cada capa lanza sus errores y solo `infrastructure/http/errorHandler.ts` los traduce a HTTP:
 
@@ -58,9 +64,11 @@ Un caso de uso por endpoint. Cada uno vive en `api/src/application` y solo depen
 | Dominio | `DomainError` | `VALIDATION_ERROR`, `COUNTRY_NOT_SUPPORTED`, `INVALID_TAX_ID` | 400 |
 | Aplicación | `ApplicationError` | `CUSTOMER_NOT_FOUND` | 404 |
 | Aplicación | `ApplicationError` | `TAX_ID_ALREADY_EXISTS` | 409 |
-| HTTP | — | `VALIDATION_ERROR` (cuerpo no es JSON, falta un campo, tipo incorrecto, id mal formado) | 400 |
+| HTTP | — | `VALIDATION_ERROR` (cuerpo no es JSON o no es un objeto, falta un campo, tipo incorrecto, id mal formado) | 400 |
 | HTTP | — | `NOT_FOUND` (ruta inexistente) | 404 |
 | Cualquier otro | — | `INTERNAL_ERROR`, sin traza en la respuesta | 500 |
+
+- En un 500, la respuesta lleva un mensaje genérico, sin el texto ni la traza del error. El `errorHandler` sí registra el error completo en el servidor (`console.error`, con traza), para poder diagnosticarlo en los logs del contenedor.
 
 - Reparto de la validación: la capa HTTP comprueba la forma (campo presente, tipo número o texto); el dominio comprueba los valores (entero ≥ 1, longitud, formato).
 - Importes siempre en céntimos (enteros).
@@ -68,7 +76,7 @@ Un caso de uso por endpoint. Cada uno vive en `api/src/application` y solo depen
 ## Escenarios
 
 - `features/customers.feature`: UC1, UC2 y UC3, y las reglas de campos del cliente.
-- `features/simulations.feature`: UC4, UC5, UC6 y los errores comunes.
+- `features/simulations.feature`: UC4, UC5, UC6, el uso informativo (almacenamiento y llamadas) y los errores comunes.
 
 ## Fuera de alcance
 
@@ -87,3 +95,4 @@ Un caso de uso por endpoint. Cada uno vive en `api/src/application` y solo depen
 - v0.9: el país en minúsculas se normaliza a mayúsculas en vez de rechazarse.
 - v0.10: el IVA de la salida pasa a `vatRateBasisPoints`.
 - v0.11: id válido = solo dígitos sin ceros a la izquierda; el duplicado detectado por la BD también es 409.
+- v0.12: simulaciones: archivo de cada caso de uso, orden de validación (400 antes que 404), tope de 100 000 usuarios, almacenamiento y llamadas como enteros seguros, campos desconocidos ignorados y el 500 se registra en el servidor.

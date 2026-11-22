@@ -50,7 +50,7 @@ CREATE INDEX IF NOT EXISTS idx_customers_name_search ON customers (company_name_
 CREATE TABLE IF NOT EXISTS simulations (
   id          INTEGER PRIMARY KEY AUTOINCREMENT,
   customer_id INTEGER NOT NULL REFERENCES customers (id),
-  users       INTEGER NOT NULL CHECK (users >= 1),
+  users       INTEGER NOT NULL CHECK (users BETWEEN 1 AND 100000),
   storage_gb  INTEGER NOT NULL DEFAULT 0 CHECK (storage_gb >= 0),
   api_calls   INTEGER NOT NULL DEFAULT 0 CHECK (api_calls >= 0),
   base_cents  INTEGER NOT NULL CHECK (base_cents >= 0),
@@ -70,6 +70,8 @@ CREATE INDEX IF NOT EXISTS idx_simulations_customer ON simulations (customer_id,
 - **`tax_id` único y normalizado.** La unicidad la garantiza la BD; el caso de uso comprueba antes para devolver un 409 claro, y la restricción cubre la condición de carrera: el repositorio traduce el error `SQLITE_CONSTRAINT_UNIQUE` de `tax_id` a `ApplicationError` `TAX_ID_ALREADY_EXISTS`, así también acaba en 409 y no en 500.
 - **`company_name_search`.** Minúsculas y sin tildes, calculada en el dominio al crear. La búsqueda usa `LIKE` sobre esta columna y sobre `tax_id`, con parámetros (nunca concatenando texto).
 - **CHECK en la BD.** Segunda barrera: el dominio valida primero, la BD impide datos imposibles aunque haya un bug.
+- **Tope de usuarios (1–100 000).** El mismo que el dominio. Como el esquema usa `CREATE TABLE IF NOT EXISTS`, una BD local creada antes no recibe el CHECK nuevo: hay que borrar el archivo `.sqlite` de desarrollo (aún no hay datos que conservar).
+- **Fecha de la simulación.** La pone la BD (`DEFAULT`), no el código: una sola fuente de la hora y en el mismo formato que `customers`.
 - **Fechas en ISO 8601 UTC.** Se ordenan bien como texto y el frontend las formatea.
 - **`PRAGMA foreign_keys = ON` en cada conexión.** SQLite lo trae desactivado por defecto; `connection.ts` lo activa al abrir, no solo en el esquema.
 - **Sin borrado.** No hay `ON DELETE`: el borrado de clientes está fuera de alcance.

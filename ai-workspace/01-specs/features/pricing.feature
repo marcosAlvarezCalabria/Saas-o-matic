@@ -8,6 +8,7 @@ Característica: Cálculo del coste mensual por tramos
     Tramo 1: usuarios 1 a 10 a 10 €
     Tramo 2: usuarios 11 a 50 a 8 €
     Tramo 3: a partir del usuario 51 a 5 €
+    Usuarios: entero de 1 a 100 000 (tope para que el importe sea siempre un entero exacto).
 
     Esquema del escenario: Coste base según el número de usuarios
       Dado que el cliente tiene <usuarios> usuarios activos
@@ -23,6 +24,7 @@ Característica: Cálculo del coste mensual por tramos
         | 50       | 420   | límite del tramo 2          |
         | 51       | 425   | entra en el tramo 3         |
         | 1000     | 5170  | tercer tramo con muchos usuarios |
+        | 100000   | 500170 | tope de usuarios            |
 
     Esquema del escenario: Número de usuarios no válido
       Dado que el cliente tiene <usuarios> usuarios activos
@@ -34,6 +36,7 @@ Característica: Cálculo del coste mensual por tramos
         | 0        |
         | -5       |
         | 2.5      |
+        | 100001   |
 
   Regla: Se suma el IVA del país del cliente
     El tipo se expresa en puntos básicos: 21 % = 2100; 25,5 % = 2550.

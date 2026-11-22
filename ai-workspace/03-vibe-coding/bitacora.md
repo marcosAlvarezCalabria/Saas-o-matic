@@ -356,6 +356,90 @@ Desde el prompt 05: un prompt por tarea, con un único objetivo y un nombre que 
 
 ---
 
+## 8. La spec no ponía tope a los usuarios
+
+**Fecha:** 2026-11-22
+
+**IA:** Claude (spec) · **Detectado por:** Claude, al preparar la spec de simulaciones
+
+&nbsp;
+
+**Qué pasó**
+
+La spec solo pedía que `users` fuera un entero ≥ 1. Los tests probaban 0, negativos y decimales, pero nada por arriba.
+
+Con 1e20 usuarios, `Number.isInteger` dice que sí, pero el importe ya no es un entero exacto en JavaScript. SQLite lo guardaría como REAL y el CHECK `total = base + IVA` podría fallar: un 500 por una entrada del usuario.
+
+Lo mismo pasaba con `storageGb` y `apiCalls`.
+
+&nbsp;
+
+**Cómo lo detecté**
+
+Repasando qué entradas llegan a la BD en las simulaciones y buscando valores límite por arriba, no solo por abajo.
+
+&nbsp;
+
+**Por qué importa**
+
+Una entrada de usuario nunca debería dar un 500. Y un importe que no es exacto en una herramienta de presupuestos es peor que un error.
+
+&nbsp;
+
+**Corrección**
+
+Tope de 100 000 usuarios (lo decidí yo, entre las opciones que propuso Claude), en el dominio y como CHECK en la BD. `storageGb` y `apiCalls` tienen que ser enteros seguros (`Number.isSafeInteger`). Escenarios nuevos en `pricing.feature` y `simulations.feature`, y prompt 05a.
+
+&nbsp;
+
+**Lección**
+
+Los casos límite también están arriba. Cada número que entra necesita un mínimo y un máximo.
+
+&nbsp;
+
+---
+
+## 9. Un error 500 no dejaba rastro
+
+**Fecha:** 2026-11-22
+
+**IA:** Codex (código) · **Detectado por:** Claude, al preparar la spec de simulaciones
+
+&nbsp;
+
+**Qué pasó**
+
+El `errorHandler` respondía bien a un error inesperado (500, sin traza), pero no lo registraba en ningún sitio. El logger de peticiones solo apunta el estado.
+
+&nbsp;
+
+**Cómo lo detecté**
+
+Leyendo `errorHandler.ts` para escribir el escenario "Error inesperado": la rama del 500 no hacía nada con el error.
+
+&nbsp;
+
+**Por qué importa**
+
+En el VPS, un 500 sería imposible de diagnosticar: solo se vería que algo falló, no qué.
+
+&nbsp;
+
+**Corrección**
+
+La spec dice ahora que el 500 se registra entero en el servidor (`console.error`, con traza) y que la respuesta sigue siendo genérica. Escenario actualizado y prompt 05e, con el test primero.
+
+&nbsp;
+
+**Lección**
+
+No enseñar la traza al usuario no quiere decir no guardarla. Un error tiene que llegar a quien lo puede arreglar.
+
+&nbsp;
+
+---
+
 ## Patrones que voy viendo
 
 Cuando una tarea mezcla una parte grande (mover carpetas) y una pequeña (una línea de configuración), la pequeña se pierde.

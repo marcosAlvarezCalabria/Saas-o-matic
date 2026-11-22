@@ -49,7 +49,7 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 
 - Usuarios 1–10: 10 €/usuario. 11–50: 8 €/usuario. Más de 50: 5 €/usuario.
 - Ejemplos: 10 → 100 €; 11 → 108 €; 15 → 140 €; 50 → 420 €; 1000 → 5170 €.
-- Usuarios: entero, mínimo 1.
+- Usuarios: entero de 1 a 100 000. El tope evita importes que dejan de ser enteros exactos en JavaScript (más allá de 2^53 − 1) y que acabarían en un 500; el tercer tramo sigue sin límite superior propio.
 - Escenarios en `features/pricing.feature`.
 
 ### IVA
@@ -95,12 +95,15 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 
 - Ligada a un cliente existente (customer_id en el cuerpo). Si no existe: 404.
 - El backend recalcula siempre; nunca confía en importes enviados por el cliente.
+- Se valida la entrada antes de buscar al cliente: datos no válidos dan 400 aunque el cliente no exista.
+- Escenarios en `features/simulations.feature`.
 
 ## 7. Supuestos por ambigüedad del enunciado
 
 - El plan es una lista cerrada: `basic`, `pro`, `enterprise`. Se guarda como dato informativo y no afecta al precio.
 - Nombre de empresa: obligatorio, 2–100 caracteres tras recortar. Email: formato básico.
-- Almacenamiento (GB) y llamadas a la API (al mes) son informativos, opcionales (0 por defecto) y no afectan al precio.
+- Almacenamiento (GB) y llamadas a la API (al mes) son informativos, opcionales (0 por defecto) y no afectan al precio. Enteros ≥ 0 y seguros en JavaScript (`Number.isSafeInteger`).
+- Tope de 100 000 usuarios por simulación: más es casi seguro un error de tecleo.
 - Sin login ni autenticación: herramienta interna, fuera de alcance.
 - Se aplica siempre el tipo general de IVA del país del cliente. No se aplica la inversión del sujeto pasivo entre empresas de distintos países de la UE (en la realidad, el IVA de esas ventas puede ser 0 %). Mejora futura: delegar en un servicio de impuestos.
 - El país se normaliza (recortar y mayúsculas), igual que el identificador fiscal.
@@ -155,3 +158,4 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 - v1.5: el país en minúsculas se normaliza; supuesto de no aplicar la inversión del sujeto pasivo.
 - v1.6: tabla de IVA con los 27 de la UE más GB, de fuentes oficiales; IVA en puntos básicos para admitir el 25,5 % de Finlandia.
 - v1.7: fecha de entrega corregida al 25 de noviembre.
+- v1.8: tope de 100 000 usuarios; almacenamiento y llamadas como enteros seguros; la entrada se valida antes de buscar al cliente.
