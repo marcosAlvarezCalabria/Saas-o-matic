@@ -17,18 +17,28 @@ export interface TestContext {
   database: Database.Database;
 }
 
-export function createTestContext(): TestContext {
+export interface TestUseCaseOverrides {
+  createCustomer?: Pick<CreateCustomer, 'execute'>;
+  getCustomer?: Pick<GetCustomer, 'execute'>;
+  searchCustomers?: Pick<SearchCustomers, 'execute'>;
+  createSimulation?: Pick<CreateSimulation, 'execute'>;
+  listCustomerSimulations?: Pick<ListCustomerSimulations, 'execute'>;
+  previewSimulation?: Pick<PreviewSimulation, 'execute'>;
+}
+
+export function createTestContext(overrides: TestUseCaseOverrides = {}): TestContext {
   const database = createDatabase(':memory:');
   const customers = new SqliteCustomerRepository(database);
   const simulations = new SqliteSimulationRepository(database);
-  const app = createApp({
+  const useCases = {
     createCustomer: new CreateCustomer(customers),
     getCustomer: new GetCustomer(customers),
     searchCustomers: new SearchCustomers(customers),
     createSimulation: new CreateSimulation(customers, simulations),
     listCustomerSimulations: new ListCustomerSimulations(customers, simulations),
     previewSimulation: new PreviewSimulation(customers),
-  });
+  };
+  const app = createApp(Object.assign(useCases, overrides));
 
   return { app, database };
 }
