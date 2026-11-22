@@ -26,6 +26,7 @@ export const errorHandler: ErrorRequestHandler = (error, _request, response, nex
     return;
   }
 
+  console.error(error);
   response.status(500).json(errorBody('INTERNAL_ERROR', 'Error interno'));
 };
 
