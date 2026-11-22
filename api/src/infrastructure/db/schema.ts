@@ -16,7 +16,7 @@ CREATE INDEX IF NOT EXISTS idx_customers_name_search ON customers (company_name_
 CREATE TABLE IF NOT EXISTS simulations (
   id          INTEGER PRIMARY KEY AUTOINCREMENT,
   customer_id INTEGER NOT NULL REFERENCES customers (id),
-  users       INTEGER NOT NULL CHECK (users >= 1),
+  users       INTEGER NOT NULL CHECK (users BETWEEN 1 AND 100000),
   storage_gb  INTEGER NOT NULL DEFAULT 0 CHECK (storage_gb >= 0),
   api_calls   INTEGER NOT NULL DEFAULT 0 CHECK (api_calls >= 0),
   base_cents  INTEGER NOT NULL CHECK (base_cents >= 0),
