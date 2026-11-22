@@ -3,8 +3,9 @@ import express from 'express';
 import { errorHandler, notFoundHandler } from './errorHandler.js';
 import { requestLogger } from './requestLogger.js';
 import { createCustomerRouter, type CustomerUseCases } from './routes/customers.js';
+import { createSimulationRouter, type SimulationUseCases } from './routes/simulations.js';
 
-export function createApp(useCases: CustomerUseCases) {
+export function createApp(useCases: CustomerUseCases & SimulationUseCases) {
   const app = express();
 
   app.use(requestLogger);
@@ -15,6 +16,7 @@ export function createApp(useCases: CustomerUseCases) {
   });
 
   app.use('/customers', createCustomerRouter(useCases));
+  app.use(createSimulationRouter(useCases));
   app.use(notFoundHandler);
   app.use(errorHandler);
 

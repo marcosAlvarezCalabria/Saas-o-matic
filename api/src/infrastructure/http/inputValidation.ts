@@ -26,6 +26,6 @@ export function parseCustomerId(value: string): number | null {
   return /^[1-9]\d*$/.test(value) ? Number(value) : null;
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
+export function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }

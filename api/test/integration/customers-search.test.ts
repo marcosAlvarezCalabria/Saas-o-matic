@@ -3,9 +3,9 @@ import request from 'supertest';
 
 import { registerSearchCustomers } from './customerFixtures.js';
 import {
-  createCustomerTestContext,
-  type CustomerTestContext,
-} from './customerTestContext.js';
+  createTestContext as createCustomerTestContext,
+  type TestContext as CustomerTestContext,
+} from './testContext.js';
 
 describe('GET /customers', () => {
   let context: CustomerTestContext;

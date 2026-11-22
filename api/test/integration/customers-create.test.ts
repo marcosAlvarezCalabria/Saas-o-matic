@@ -5,9 +5,9 @@ import { ApplicationError } from '../../src/application/errors.js';
 import { SqliteCustomerRepository } from '../../src/infrastructure/db/SqliteCustomerRepository.js';
 import { validCustomer } from './customerFixtures.js';
 import {
-  createCustomerTestContext,
-  type CustomerTestContext,
-} from './customerTestContext.js';
+  createTestContext as createCustomerTestContext,
+  type TestContext as CustomerTestContext,
+} from './testContext.js';
 
 describe('POST /customers', () => {
   let context: CustomerTestContext;
