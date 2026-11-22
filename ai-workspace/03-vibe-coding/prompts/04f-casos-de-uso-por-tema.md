@@ -32,8 +32,7 @@ No toques nada de ai-workspace/.
    imports relativos de dentro de esos tres archivos.
 3. ports/ y errors.ts se quedan en api/src/application/.
 4. No cambies ninguna línea de código que no sea un import.
-5. Incluye en el commit el borrado de api/src/application/.gitkeep.
-6. Ejecuta tests, typecheck y lint. Todo tiene que seguir en verde.
+5. Ejecuta tests, typecheck y lint. Todo tiene que seguir en verde.
 Commit: refactor(application): casos de uso de clientes en su carpeta
 
 Si algo falla, para y avísame.

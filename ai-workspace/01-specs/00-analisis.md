@@ -2,7 +2,7 @@
 
 Documento vivo. Fuente de verdad del proyecto para Codex, junto con el resto de archivos de `ai-workspace/01-specs`.
 
-Entrega: 23 de noviembre de 2026, 23:00 como muy tarde.
+Entrega: 25 de noviembre de 2026.
 
 ## 1. Qué es el producto
 
@@ -154,3 +154,4 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 - v1.4: escenarios de la API (`customers.feature`, `simulations.feature`), nota sobre el redondeo del IVA.
 - v1.5: el país en minúsculas se normaliza; supuesto de no aplicar la inversión del sujeto pasivo.
 - v1.6: tabla de IVA con los 27 de la UE más GB, de fuentes oficiales; IVA en puntos básicos para admitir el 25,5 % de Finlandia.
+- v1.7: fecha de entrega corregida al 25 de noviembre.
