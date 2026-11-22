@@ -9,6 +9,14 @@ export const validCustomer = {
   plan: 'pro',
 };
 
+export const validFrenchCustomer = {
+  companyName: 'Acme France S.A.',
+  taxId: 'FR12345678901',
+  email: 'achats@acme.fr',
+  country: 'FR',
+  plan: 'pro',
+};
+
 export async function registerSearchCustomers(app: Express): Promise<void> {
   const customers = [
     {

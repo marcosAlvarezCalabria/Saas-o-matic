@@ -34,4 +34,22 @@ describe('unexpected errors', () => {
       consoleError.mockRestore();
     }
   });
+
+  it('returns NOT_FOUND for an unknown route', async () => {
+    context = createTestContext();
+
+    const response = await request(context.app).get('/no-existe').expect(404);
+    expect(response.body.error.code).toBe('NOT_FOUND');
+  });
+
+  it('returns VALIDATION_ERROR for malformed JSON', async () => {
+    context = createTestContext();
+
+    const response = await request(context.app)
+      .post('/simulations')
+      .set('Content-Type', 'application/json')
+      .send('{"invalid"')
+      .expect(400);
+    expect(response.body.error.code).toBe('VALIDATION_ERROR');
+  });
 });
