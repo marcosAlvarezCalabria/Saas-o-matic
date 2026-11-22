@@ -1,6 +1,6 @@
-import { normalizeCompanyNameForSearch, type Customer } from '../domain/customer.js';
-import { normalizeTaxId } from '../domain/tax-id/normalizeTaxId.js';
-import type { CustomerRepository } from './ports/CustomerRepository.js';
+import { normalizeCompanyNameForSearch, type Customer } from '../../../domain/customer.js';
+import { normalizeTaxId } from '../../../domain/tax-id/normalizeTaxId.js';
+import type { CustomerRepository } from '../../ports/CustomerRepository.js';
 
 export class SearchCustomers {
   constructor(private readonly customers: CustomerRepository) {}

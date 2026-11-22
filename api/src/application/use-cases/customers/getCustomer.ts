@@ -1,6 +1,6 @@
-import type { Customer } from '../domain/customer.js';
-import { ApplicationError } from './errors.js';
-import type { CustomerRepository } from './ports/CustomerRepository.js';
+import type { Customer } from '../../../domain/customer.js';
+import { ApplicationError } from '../../errors.js';
+import type { CustomerRepository } from '../../ports/CustomerRepository.js';
 
 export class GetCustomer {
   constructor(private readonly customers: CustomerRepository) {}

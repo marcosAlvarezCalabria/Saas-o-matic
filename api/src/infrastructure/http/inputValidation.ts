@@ -1,4 +1,4 @@
-import type { CreateCustomerInput } from '../../application/createCustomer.js';
+import type { CreateCustomerInput } from '../../application/use-cases/customers/createCustomer.js';
 
 const CUSTOMER_FIELDS = ['companyName', 'taxId', 'email', 'country', 'plan'] as const;
 

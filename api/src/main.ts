@@ -1,6 +1,6 @@
-import { CreateCustomer } from './application/createCustomer.js';
-import { GetCustomer } from './application/getCustomer.js';
-import { SearchCustomers } from './application/searchCustomers.js';
+import { CreateCustomer } from './application/use-cases/customers/createCustomer.js';
+import { GetCustomer } from './application/use-cases/customers/getCustomer.js';
+import { SearchCustomers } from './application/use-cases/customers/searchCustomers.js';
 import { createDatabase } from './infrastructure/db/connection.js';
 import { SqliteCustomerRepository } from './infrastructure/db/SqliteCustomerRepository.js';
 import { createApp } from './infrastructure/http/app.js';

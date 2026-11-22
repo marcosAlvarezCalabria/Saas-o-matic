@@ -1,8 +1,8 @@
 import { Router } from 'express';
 
-import type { CreateCustomer } from '../../../application/createCustomer.js';
-import type { GetCustomer } from '../../../application/getCustomer.js';
-import type { SearchCustomers } from '../../../application/searchCustomers.js';
+import type { CreateCustomer } from '../../../application/use-cases/customers/createCustomer.js';
+import type { GetCustomer } from '../../../application/use-cases/customers/getCustomer.js';
+import type { SearchCustomers } from '../../../application/use-cases/customers/searchCustomers.js';
 import { validationErrorBody } from '../errorHandler.js';
 import { parseCreateCustomerInput, parseCustomerId } from '../inputValidation.js';
 
