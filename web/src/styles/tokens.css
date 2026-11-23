@@ -1,0 +1,73 @@
+@theme {
+  --color-*: initial;
+  --color-bg: #f2f2f7;
+  --color-surface: #ffffff;
+  --color-border: #eef0f6;
+  --color-text: #0d0d1a;
+  --color-text-muted: #4a4d56;
+  --color-primary: #4040e3;
+  --color-primary-hover: #1515dd;
+  --color-on-primary: #ffffff;
+  --color-link: #4040e3;
+  --color-primary-soft: #f1f1fe;
+  --color-success: #047857;
+  --color-success-soft: #e8f8ee;
+  --color-warning: #8a5a00;
+  --color-warning-soft: #fff3e0;
+  --color-danger: #b00038;
+  --color-danger-soft: #fde7ed;
+  --color-input-border: #83868f;
+  --color-scrim: rgb(13 13 26 / 50%);
+
+  --font-sans: "Montserrat Variable", sans-serif;
+
+  --text-title-lg: 28px;
+  --text-title-lg--line-height: 36px;
+  --text-title-lg--letter-spacing: -0.01em;
+  --text-title-lg--font-weight: 800;
+  --text-title-md: 22px;
+  --text-title-md--line-height: 28px;
+  --text-title-md--letter-spacing: 0em;
+  --text-title-md--font-weight: 800;
+  --text-title-sm: 18px;
+  --text-title-sm--line-height: 24px;
+  --text-title-sm--letter-spacing: 0em;
+  --text-title-sm--font-weight: 800;
+  --text-amount: 36px;
+  --text-amount--line-height: 44px;
+  --text-amount--letter-spacing: -0.02em;
+  --text-amount--font-weight: 800;
+  --text-label: 14px;
+  --text-label--line-height: 20px;
+  --text-label--letter-spacing: 0.01em;
+  --text-label--font-weight: 600;
+  --text-caption: 12px;
+  --text-caption--line-height: 16px;
+  --text-caption--letter-spacing: 0.02em;
+  --text-caption--font-weight: 600;
+
+  --radius-card: 12px;
+  --radius-field: 8px;
+  --radius-note: 6px;
+}
+
+[data-theme='dark'] {
+  --color-bg: #0d0d1a;
+  --color-surface: #1a1a2e;
+  --color-border: #44464f;
+  --color-text: #f5f7fb;
+  --color-text-muted: #babdc6;
+  --color-primary: #4040e3;
+  --color-primary-hover: #3838ec;
+  --color-on-primary: #ffffff;
+  --color-link: #8787f4;
+  --color-primary-soft: #1c1c3a;
+  --color-success: #0cb001;
+  --color-success-soft: #0f2a1c;
+  --color-warning: #ff9f00;
+  --color-warning-soft: #2c2410;
+  --color-danger: #ff5a7a;
+  --color-danger-soft: #2e0f19;
+  --color-input-border: #83868f;
+  --color-scrim: rgb(0 0 0 / 60%);
+}
