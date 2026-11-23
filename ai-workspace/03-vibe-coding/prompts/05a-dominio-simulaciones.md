@@ -67,3 +67,11 @@ El commit de test va antes que el de implementación.
 `9007199254740992` (2^53) se rechaza: `Number.isInteger` lo aceptaría, `Number.isSafeInteger` no.
 
 `domain/` sigue sin importar nada de fuera.
+
+&nbsp;
+
+**Resultado de la revisión**
+
+Hecho en `e57fca2` (test) y `6035617` (feat), en ese orden. Con el dominio antiguo, el test falla en 100 001 usuarios y en `simulation.test.ts`: el TDD es real.
+
+76 tests de dominio en verde, typecheck y lint sin errores. `validateUsers` usa `Number.isSafeInteger`, así que 2^53 también se rechaza en `users`.

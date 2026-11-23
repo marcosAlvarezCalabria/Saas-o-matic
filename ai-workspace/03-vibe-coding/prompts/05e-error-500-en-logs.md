@@ -53,3 +53,9 @@ El commit de test va antes que el del arreglo.
 La respuesta del 500 sigue siendo genérica.
 
 Solo se registra el 500.
+
+&nbsp;
+
+**Resultado de la revisión**
+
+Hecho en `de5485d` (test) y `41e8161` (fix). Con el `errorHandler` antiguo el test falla; con el arreglo pasa. Solo se registra el 500.

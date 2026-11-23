@@ -84,3 +84,11 @@ Un `totalCents` enviado no llega al caso de uso.
 El logger registra `/customers/1/simulations` completo.
 
 Probaré a mano el build compilado y los casos límite: `customerId: 1e20`, cuerpo `[]` y 9999 con `users: 0`.
+
+&nbsp;
+
+**Resultado de la revisión**
+
+Hecho en `90978d6`. La api compilada arranca. Probado a mano contra `dist/main.js`: `customerId: 1e20`, cuerpo `[]`, 9999 con `users: 0` (400 antes que 404), `users: 1e20`, `storageGb: 2^53`, `totalCents` enviado (se ignora), id `01` en el historial y JSON mal formado. Todo da lo que dice la spec, y el logger registra `/customers/1/simulations` completo.
+
+Detalle menor: los tests de clientes importan `createTestContext as createCustomerTestContext` para no tocar más que los imports, como pedía el prompt.

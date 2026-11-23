@@ -110,20 +110,23 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 
 ## 8. Frontend
 
-- Dos vistas: Dashboard (buscador + tarjetas de clientes + alta en modal) y Detalle del cliente (datos, simulador con slider y selector de divisa, historial).
+- Dos vistas: Dashboard (buscador + tarjetas de clientes + alta en modal) y Detalle del cliente (datos, simulador con slider e historial). Divisa y tema claro/oscuro, en la cabecera.
 - Tipos de cambio: open.er-api.com con base EUR, una sola llamada al cargar la app.
 - Estados de carga, vacío y error. Si falla la API de divisas: aviso y todo en EUR.
 - Se guarda siempre en EUR; la conversión es solo de visualización.
+- Estilo basado en la identidad visual de Roams, con tema claro y oscuro.
+- Detalle completo en `02-interfaz.md`.
 
 ## 9. Estrategia de tests
 
 - TDD estricto en el dominio: tramos (0, 1, 10, 11, 50, 51, 1000), IVA, DNI/NIE/CIF.
 - Tests de integración de endpoints tras implementarlos (BD en memoria): 400, 404, 409 y persistencia del desglose.
+- Frontend: tests de la lógica pura (conversión de divisa, tema, cliente HTTP); los componentes se revisan a mano con la lista de `02-interfaz.md`.
 - Sin tests de configuración ni de UI trivial.
 
 ## 10. CI/CD y Docker
 
-- CI con GitHub Actions en cada push y pull request: instalar dependencias, lint, comprobación de tipos TypeScript, tests de `api` y build de `web`. Si falla, no se fusiona.
+- CI con GitHub Actions en cada push y pull request: instalar dependencias, lint, comprobación de tipos TypeScript, tests de `api` y de `web`, y build de los dos. Si falla, no se fusiona.
 - Badge de estado del CI en el README.
 - CD en v1: la misma pipeline despliega `web` en Netlify y `api` en el VPS Hetzner con Docker.
 - `api` con Dockerfile y `docker-compose.yml` con volumen para el archivo SQLite (los datos persisten entre reinicios).
@@ -159,3 +162,4 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 - v1.6: tabla de IVA con los 27 de la UE más GB, de fuentes oficiales; IVA en puntos básicos para admitir el 25,5 % de Finlandia.
 - v1.7: fecha de entrega corregida al 25 de noviembre.
 - v1.8: tope de 100 000 usuarios; almacenamiento y llamadas como enteros seguros; la entrada se valida antes de buscar al cliente.
+- v1.9: frontend detallado en `02-interfaz.md` (estilo de Roams, tema claro y oscuro); tests de lógica pura en `web`; CORS en la api.

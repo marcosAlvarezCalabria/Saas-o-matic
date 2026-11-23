@@ -54,3 +54,9 @@ Ningún SQL se construye concatenando texto.
 El desempate por `id DESC` está en la consulta.
 
 **Antes de arrancar la api en local:** borrar el `.sqlite` de desarrollo. Con `CREATE TABLE IF NOT EXISTS`, una BD antigua no recibe el CHECK nuevo.
+
+&nbsp;
+
+**Resultado de la revisión**
+
+Hecho en `f4e839f`. Sentencias preparadas, `INSERT … RETURNING *` (la fecha sale de la BD) y `ORDER BY created_at DESC, id DESC`. CHECK de 1 a 100 000 en `schema.ts`.

@@ -56,3 +56,9 @@ Hay un test por cada escenario y cada fila de ejemplos de `simulations.feature`.
 Ningún valor esperado se ha cambiado.
 
 El test del historial con 15, 40 y 51 pasa aunque las tres se creen en el mismo milisegundo.
+
+&nbsp;
+
+**Resultado de la revisión**
+
+Hecho en `fd5fe8c`. Un test por escenario y por fila de ejemplos de `simulations.feature`, sin valores esperados cambiados. 138 tests en verde en total.

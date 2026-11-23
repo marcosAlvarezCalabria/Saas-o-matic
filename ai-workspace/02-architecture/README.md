@@ -18,3 +18,4 @@ Las reglas de negocio están en `../01-specs`. Si algo aquí contradice a las sp
 - v0.5: `schema.ts` en lugar de `schema.sql` (actualización del ADR-005), duplicado por condición de carrera → 409, logger con ruta completa.
 - v0.6: casos de uso en `application/use-cases/`, agrupados por tema (`customers/` y `simulations/`); `ports/` y `errors.ts` se quedan en `application/`.
 - v0.7: simulaciones: archivos de casos de uso y rutas, tope de 100 000 usuarios (CHECK en la BD), límites de `storageGb` y `apiCalls` en el OpenAPI, fecha puesta por la BD.
+- v0.8: estructura de `web` (hooks, contexto de divisa, `lib/` con tests, tokens de tema), CORS en la api y ADR-007.

@@ -72,11 +72,13 @@ Un caso de uso por endpoint. Cada uno vive en `api/src/application` y solo depen
 
 - Reparto de la validación: la capa HTTP comprueba la forma (campo presente, tipo número o texto); el dominio comprueba los valores (entero ≥ 1, longitud, formato).
 - Importes siempre en céntimos (enteros).
+- CORS: la api solo acepta peticiones del navegador desde los orígenes de `CORS_ORIGINS` (detalle en `02-interfaz.md`, sección 10, y `features/cors.feature`).
 
 ## Escenarios
 
 - `features/customers.feature`: UC1, UC2 y UC3, y las reglas de campos del cliente.
 - `features/simulations.feature`: UC4, UC5, UC6, el uso informativo (almacenamiento y llamadas) y los errores comunes.
+- `features/cors.feature`: orígenes permitidos.
 
 ## Fuera de alcance
 
@@ -96,3 +98,4 @@ Un caso de uso por endpoint. Cada uno vive en `api/src/application` y solo depen
 - v0.10: el IVA de la salida pasa a `vatRateBasisPoints`.
 - v0.11: id válido = solo dígitos sin ceros a la izquierda; el duplicado detectado por la BD también es 409.
 - v0.12: simulaciones: archivo de cada caso de uso, orden de validación (400 antes que 404), tope de 100 000 usuarios, almacenamiento y llamadas como enteros seguros, campos desconocidos ignorados y el 500 se registra en el servidor.
+- v0.13: regla de CORS para el front desplegado en otro dominio.

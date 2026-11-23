@@ -74,3 +74,9 @@ Preview y crear usan la misma función, `calculateMonthlyCost`.
 Ningún importe sale de la entrada: todos se calculan.
 
 `application/` no importa nada de `infrastructure/`.
+
+&nbsp;
+
+**Resultado de la revisión**
+
+Hecho en `60ada91`. `validateUsers` y `validateUsage` van antes que `findById`, y preview y crear usan `calculateMonthlyCost`. `application/` no importa nada de `infrastructure/`.
