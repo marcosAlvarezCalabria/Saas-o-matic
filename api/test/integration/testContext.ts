@@ -28,12 +28,20 @@ export interface TestUseCaseOverrides {
 
 export interface TestAppOptions {
   corsOrigins?: string[];
+  rateLimits?: {
+    windowMs: number;
+    writeLimit: number;
+    generalLimit: number;
+  };
+  trustProxy?: number;
 }
 
 export function createTestContext(
   overrides: TestUseCaseOverrides = {},
   options: TestAppOptions = {},
 ): TestContext {
+  void options.rateLimits;
+  void options.trustProxy;
   const database = createDatabase(':memory:');
   const customers = new SqliteCustomerRepository(database);
   const simulations = new SqliteSimulationRepository(database);
