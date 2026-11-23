@@ -34,7 +34,7 @@ export function validationErrorBody(message: string) {
   return errorBody('VALIDATION_ERROR', message);
 }
 
-function errorBody(code: string, message: string) {
+export function errorBody(code: string, message: string) {
   return { error: { code, message } };
 }
 

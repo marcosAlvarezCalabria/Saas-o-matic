@@ -11,6 +11,7 @@ import { createDatabase } from '../../src/infrastructure/db/connection.js';
 import { SqliteCustomerRepository } from '../../src/infrastructure/db/SqliteCustomerRepository.js';
 import { SqliteSimulationRepository } from '../../src/infrastructure/db/SqliteSimulationRepository.js';
 import { createApp } from '../../src/infrastructure/http/app.js';
+import type { RateLimitOptions } from '../../src/infrastructure/http/rateLimits.js';
 
 export interface TestContext {
   app: Express;
@@ -28,11 +29,7 @@ export interface TestUseCaseOverrides {
 
 export interface TestAppOptions {
   corsOrigins?: string[];
-  rateLimits?: {
-    windowMs: number;
-    writeLimit: number;
-    generalLimit: number;
-  };
+  rateLimits?: RateLimitOptions;
   trustProxy?: number;
 }
 
@@ -40,8 +37,6 @@ export function createTestContext(
   overrides: TestUseCaseOverrides = {},
   options: TestAppOptions = {},
 ): TestContext {
-  void options.rateLimits;
-  void options.trustProxy;
   const database = createDatabase(':memory:');
   const customers = new SqliteCustomerRepository(database);
   const simulations = new SqliteSimulationRepository(database);
@@ -55,6 +50,12 @@ export function createTestContext(
   };
   const app = createApp(Object.assign(useCases, overrides), {
     corsOrigins: options.corsOrigins ?? ['http://localhost:5173'],
+    rateLimits: options.rateLimits ?? {
+      windowMs: 60_000,
+      writeLimit: 1_000_000,
+      generalLimit: 1_000_000,
+    },
+    trustProxy: options.trustProxy ?? 0,
   });
 
   return { app, database };

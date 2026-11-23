@@ -23,7 +23,10 @@ const app = createApp(
     listCustomerSimulations: new ListCustomerSimulations(customers, simulations),
     previewSimulation: new PreviewSimulation(customers),
   },
-  { corsOrigins: parseCorsOrigins(process.env.CORS_ORIGINS) },
+  {
+    corsOrigins: parseCorsOrigins(process.env.CORS_ORIGINS),
+    trustProxy: Number(process.env.TRUST_PROXY ?? 0),
+  },
 );
 
 app.listen(port, () => {
