@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express from 'express';
 
 import { errorHandler, notFoundHandler } from './errorHandler.js';
@@ -5,10 +6,21 @@ import { requestLogger } from './requestLogger.js';
 import { createCustomerRouter, type CustomerUseCases } from './routes/customers.js';
 import { createSimulationRouter, type SimulationUseCases } from './routes/simulations.js';
 
-export function createApp(useCases: CustomerUseCases & SimulationUseCases) {
+export interface AppOptions {
+  corsOrigins: string[];
+}
+
+export function createApp(useCases: CustomerUseCases & SimulationUseCases, options: AppOptions) {
   const app = express();
 
   app.use(requestLogger);
+  app.use(
+    cors({
+      origin: options.corsOrigins,
+      methods: ['GET', 'POST', 'OPTIONS'],
+      allowedHeaders: ['Content-Type'],
+    }),
+  );
   app.use(express.json());
 
   app.get('/health', (_request, response) => {

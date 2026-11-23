@@ -34,7 +34,6 @@ export function createTestContext(
   overrides: TestUseCaseOverrides = {},
   options: TestAppOptions = {},
 ): TestContext {
-  void options;
   const database = createDatabase(':memory:');
   const customers = new SqliteCustomerRepository(database);
   const simulations = new SqliteSimulationRepository(database);
@@ -46,7 +45,9 @@ export function createTestContext(
     listCustomerSimulations: new ListCustomerSimulations(customers, simulations),
     previewSimulation: new PreviewSimulation(customers),
   };
-  const app = createApp(Object.assign(useCases, overrides));
+  const app = createApp(Object.assign(useCases, overrides), {
+    corsOrigins: options.corsOrigins ?? ['http://localhost:5173'],
+  });
 
   return { app, database };
 }
