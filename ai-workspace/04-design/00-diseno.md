@@ -15,7 +15,7 @@ Documento vivo. Cómo se ve cada pieza del frontend: medidas, tipografía, compo
 | `title-lg` | 28 / 36 px, `-0.01em` | 800 | Título de página y nombre del cliente en el detalle |
 | `title-md` | 22 / 28 px | 800 | Título de tarjeta (Simulador, Historial) y del modal |
 | `title-sm` | 18 / 24 px | 800 | Nombre de empresa en su tarjeta, totales del historial |
-| `amount` | 36 / 44 px, `-0.02em` (32 px en móvil) | 800 | Total del simulador |
+| `amount` | 36 / 44 px, `-0.02em` (`amount-sm`: 32 / 40 px en móvil) | 800 | Total del simulador |
 | `body` | 16 / 24 px | 400 | Texto y campos |
 | `body-medium` | 16 / 24 px | 500 | Botones, datos destacados |
 | `small` | 14 / 20 px | 400–500 | Texto secundario, tarjetas, tabla |
@@ -228,7 +228,7 @@ Todo va en el `@theme` de `styles/tokens.css` (ADR-008):
 | Escala | Variables del tema | Clases |
 |---|---|---|
 | Colores | `--color-bg`, `--color-surface`, `--color-link`… (tabla de `02-interfaz.md`) | `bg-surface`, `text-link`, `border-input-border`… |
-| Tipografía | `--text-title-lg: 28px` con `--text-title-lg--line-height: 36px`, y así cada nivel de la sección 1 | `text-title-lg`, `text-amount`, `text-caption`… (el peso, con `font-extrabold`, `font-semibold`…) |
+| Tipografía | `--text-title-lg: 28px` con `--text-title-lg--line-height: 36px`, y así cada nivel de la sección 1 | `text-title-lg`, `text-amount`, `text-caption`… El total: `text-amount-sm lg:text-amount` |
 | Fuente | `--font-sans: "Montserrat Variable", sans-serif` | por defecto en todo |
 | Radios | `--radius-card: 12px`, `--radius-field: 8px`, `--radius-note: 6px` | `rounded-card`, `rounded-field`, `rounded-note`, `rounded-full` |
 | Espaciado | el de Tailwind (múltiplos de 4 px) | `p-4`, `gap-6`… |
@@ -261,3 +261,4 @@ Todo va en el `@theme` de `styles/tokens.css` (ADR-008):
 ## Registro de cambios
 
 - v0.1: escalas, componentes, vistas y tema oscuro a partir de la maqueta de Stitch (segunda versión), con lo que no se toma; `lucide-react`, 2 columnas desde 768 px, `--color-scrim` y cómo se lleva a Tailwind.
+- v0.2: `amount-sm` (32 / 40 px) para el total en móvil, para no escribir el tamaño a mano.

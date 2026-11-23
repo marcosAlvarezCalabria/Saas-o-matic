@@ -75,3 +75,13 @@ Los dos commits, test antes que implementación.
 La lista de países es la misma que la tabla de IVA de `00-analisis.md`.
 
 `pnpm test` en la raíz pasa también los tests de `web`.
+
+&nbsp;
+
+**Resultado de la revisión**
+
+Hecho en `ebd4934` (test) y `abdfc01` (feat), en ese orden. Sin la implementación fallan los cuatro archivos de test: el TDD es real. 10 tests en verde.
+
+La lista de países es idéntica a la tabla de IVA de la api, no solo de la misma longitud. `formatMoney` no redondea antes de `Intl`, y `formatVatRate` da "25,5 %" con Finlandia.
+
+Detalle menor: no hay test de que `saveTheme` aguante un `localStorage` que falla; es el mismo `try/catch` que sí está probado en `readStoredTheme`.

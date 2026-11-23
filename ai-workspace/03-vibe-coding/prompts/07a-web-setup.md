@@ -76,3 +76,13 @@ Commit: chore(web): setup de Vite, React, Tailwind y tema
 Poniendo a mano `data-theme="dark"` en `<html>`, la página cambia de colores sin tocar ninguna clase.
 
 Solo están las dependencias de la lista.
+
+&nbsp;
+
+**Resultado de la revisión**
+
+Hecho en `aaa5575`. Solo las dependencias de la lista. Lint, typecheck y build en verde.
+
+`tokens.css` coincide valor por valor con la tabla de `02-interfaz.md`, en claro y en oscuro. En el CSS compilado no hay paleta por defecto (`bg-blue-500` no genera nada) y sí están las clases del tema. Probado en el navegador: con `data-theme="dark"` en `<html>`, la página pasa a oscuro sin tocar ninguna clase.
+
+Al revisarlo salió que el total del simulador en móvil (32 px) no tenía variable en el tema: se añade `--text-amount-sm` en el 07h, para no escribir el tamaño a mano.

@@ -49,6 +49,9 @@ Haz solo este prompt y para.
    formatVatRate y total con Money y aria-live="polite"). "Entre 1 y 100 000
    usuarios" si el valor no es válido. Error con InlineAlert y "Reintentar".
    Deja preparado el sitio del botón de guardar (07i).
+   El total mide 32 px en móvil y 36 px desde lg: añade a styles/tokens.css
+   --text-amount-sm (32px, line-height 40px, letter-spacing -0.02em,
+   font-weight 800) y usa text-amount-sm lg:text-amount. Nada de text-[32px].
 6. pages/CustomerDetailPage.tsx: "← Clientes", CustomerSummary y, debajo,
    la rejilla de 12 columnas en lg (simulador 7, historial 5; el historial,
    de momento, una Card vacía con su título). "Cliente no encontrado." con
