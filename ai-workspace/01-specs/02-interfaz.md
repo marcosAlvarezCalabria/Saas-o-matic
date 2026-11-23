@@ -1,6 +1,6 @@
 # 02 Interfaz (frontend)
 
-Documento vivo. Qué muestra cada vista, qué puede hacer el comercial, sus estados (carga, vacío, error) y el estilo. El contrato con la api está en `../02-architecture/openapi.yaml`; las reglas de negocio, en `00-analisis.md` y `01-casos-de-uso.md`.
+Documento vivo. Qué muestra cada vista, qué puede hacer el comercial, sus estados (carga, vacío, error) y el estilo. Cómo se ve cada pieza (medidas, componentes, textos) está en `../04-design/00-diseno.md`, con las capturas de la maqueta. El contrato con la api está en `../02-architecture/openapi.yaml`; las reglas de negocio, en `00-analisis.md` y `01-casos-de-uso.md`.
 
 Principio: **el frontend casi no tiene lógica**. No calcula precios ni valida reglas de negocio: pide los datos a la api, los muestra y convierte la divisa solo para mostrarla (ADR-004, ADR-007).
 
@@ -8,8 +8,9 @@ Principio: **el frontend casi no tiene lógica**. No calcula precios ni valida r
 
 - React + Vite + TypeScript, en `web/`, dentro del monorepo de pnpm.
 - `react-router` para las dos vistas. Sin librería de estado ni de peticiones: `fetch` y hooks propios (ADR-007).
-- Estilos: CSS Modules por componente y un único archivo de variables (`styles/tokens.css`). Sin librería de estilos.
+- Estilos: Tailwind CSS v4, con el tema (colores de los dos temas y escalas) en `styles/tokens.css` (ADR-008).
 - Tipografía Montserrat, servida por el propio build (`@fontsource-variable/montserrat`): sin peticiones a Google.
+- Iconos con `lucide-react`: también van en el build.
 - Tests con Vitest solo para la lógica pura (sección 9).
 
 ## 2. Configuración
@@ -73,8 +74,8 @@ Principio: **el frontend casi no tiene lógica**. No calcula precios ni valida r
 
 ### Tarjetas de clientes
 
-- Rejilla: 1 columna en móvil (< 640 px), 2 en tablet (640–1023 px), 3 en escritorio (≥ 1024 px).
-- Cada tarjeta: nombre de la empresa, identificador fiscal, país (nombre en español), plan (pastilla) y email.
+- Rejilla: 1 columna en móvil (< 768 px), 2 en tablet (768–1023 px), 3 en escritorio (≥ 1024 px).
+- Cada tarjeta: país (código y nombre en español, sin bandera), plan (pastilla), nombre de la empresa, identificador fiscal y email.
 - Toda la tarjeta es un enlace al detalle, accesible con teclado.
 
 ### Estados de la lista
@@ -83,13 +84,14 @@ Principio: **el frontend casi no tiene lógica**. No calcula precios ni valida r
 |---|---|
 | Cargando | "Cargando clientes…" (sin parpadeo si tarda menos de 200 ms) |
 | Vacío, sin búsqueda | "Aún no hay clientes." y botón "Nuevo cliente" |
-| Vacío, con búsqueda | "Ningún cliente coincide con «{texto}»." |
+| Vacío, con búsqueda | "Ningún cliente coincide con «{texto}»." y botón "Limpiar búsqueda" |
 | Error | "No se pudieron cargar los clientes." y botón "Reintentar" |
 
 ### Alta de cliente (modal)
 
 - Botón "Nuevo cliente" junto al buscador. Abre un `<dialog>` nativo: se cierra con Escape o "Cancelar", y el foco va al primer campo.
-- Campos: nombre de la empresa, identificador fiscal, email, país (desplegable con los 28 países de la tabla de IVA, por nombre en español) y plan (Basic, Pro, Enterprise).
+- Campos, en este orden: nombre de la empresa, país (desplegable con los 28 países de la tabla de IVA, como "España (ES)"), identificador fiscal, email y plan (Basic, Pro y Enterprise, como grupo de tres botones de opción). El país va antes que el identificador porque este se valida según el país.
+- En móvil (< 768 px), el modal se abre como hoja desde abajo.
 - En el front solo se comprueba que los campos estén rellenos (`required`) y el tipo `email`. Las reglas de verdad las aplica la api.
 - Mientras se envía: botón "Guardando…" desactivado (no hay doble envío).
 - Errores de la api:
@@ -142,7 +144,7 @@ Basado en la identidad visual de Roams (roams.es, revisada el 22/11/2026): azul 
 
 ### Variables (todas en `styles/tokens.css`)
 
-Ningún componente escribe un color a mano: solo `var(--color-…)`.
+Son el tema de Tailwind: cada `--color-x` da las clases `bg-x`, `text-x` y `border-x`. Ningún componente escribe un color a mano: ni `bg-[#…]` ni la paleta por defecto de Tailwind, que está desactivada (ADR-008).
 
 | Variable | Claro | Oscuro |
 |---|---|---|
@@ -160,6 +162,7 @@ Ningún componente escribe un color a mano: solo `var(--color-…)`.
 | `--color-warning` / `-soft` | `#8A5A00` / `#FFF3E0` | `#FF9F00` / `#2C2410` |
 | `--color-danger` / `-soft` | `#B00038` / `#FDE7ED` | `#FF5A7A` / `#2E0F19` |
 | `--color-input-border` | `#83868F` | `#83868F` |
+| `--color-scrim` (fondo del modal) | `#0D0D1A` al 50 % | `#000000` al 60 % |
 
 - Origen: los tokens de roams.es (`--p-lavanda-*`, `--p-neutral-*`, `--p-feedback-*`, incluidos sus `*-soft-dark`). `--color-surface` y `--color-primary-soft` del tema oscuro son propuesta propia.
 - En oscuro, el azul de marca como texto no se lee (2,5:1): por eso existe `--color-link`.
@@ -226,3 +229,4 @@ La demo se publica con un enlace abierto y la api no tiene login: sin límite, c
 
 - v0.1: vistas, estados, tipos de cambio, alta, simulador, historial, estilo de Roams con tema claro y oscuro, tests de lógica pura y CORS.
 - v0.2: fuera MXN; límite de peticiones en la api (429 y su mensaje en el front) y `TRUST_PROXY`.
+- v0.3: Tailwind para los estilos (ADR-008); medidas y componentes en `../04-design/00-diseno.md`; 2 columnas desde 768 px; país antes que el identificador; plan como grupo de opciones; modal como hoja en móvil; "Limpiar búsqueda"; país sin bandera; `lucide-react`; `--color-scrim`.

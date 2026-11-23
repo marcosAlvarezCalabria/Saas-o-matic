@@ -9,7 +9,7 @@ saas-o-matic/
 ├── pnpm-workspace.yaml        workspaces: api, web
 ├── docker-compose.yml         api + volumen SQLite
 ├── .github/workflows/ci.yml   lint, tipos, tests, build
-├── ai-workspace/              specs, arquitectura y vibe coding
+├── ai-workspace/              specs, arquitectura, vibe coding y diseño (04-design)
 ├── api/
 │   ├── Dockerfile
 │   ├── src/
@@ -45,7 +45,7 @@ saas-o-matic/
         ├── components/        Header, CurrencySelector, ThemeToggle, CustomerCard,
         │                      CustomerFormDialog, Simulator, SimulationHistory, Money, StatusMessage
         ├── pages/             DashboardPage, CustomerDetailPage, NotFoundPage
-        ├── styles/            tokens.css (variables de color de los dos temas), global.css
+        ├── styles/            tokens.css (tema de Tailwind: colores de los dos temas y escalas), global.css
         ├── App.tsx            rutas
         └── main.tsx
 ```
@@ -72,7 +72,7 @@ saas-o-matic/
 
 - Un archivo, una responsabilidad. Si pasa de ~150 líneas, se divide.
 - Las rutas HTTP no contienen lógica: validan la forma de la entrada, llaman al caso de uso y devuelven la respuesta.
-- En `web`, los componentes no llaman a `fetch`: lo hacen los hooks a través de `api/`. Los componentes solo usan variables CSS de `tokens.css`, nunca colores escritos a mano.
+- En `web`, los componentes no llaman a `fetch`: lo hacen los hooks a través de `api/`. Los componentes solo usan clases del tema de `tokens.css`, nunca colores ni medidas escritos a mano (`bg-[#…]`). Las combinaciones de clases que se repiten van en componentes (`Button`, `Field`, `Card`, `Badge`).
 - La api lee `CORS_ORIGINS` en `main.ts` y se la pasa a `createApp`, como los casos de uso.
 - Todas las rutas de simulaciones, incluida `GET /customers/:id/simulations`, viven en `routes/simulations.ts`: todo lo de un tema, junto.
 - Nada de `utils.ts` genéricos.

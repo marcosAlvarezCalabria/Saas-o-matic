@@ -1,6 +1,6 @@
 # ADR-007 · Frontend sin librerías de estado, de peticiones ni de estilos
 
-**Estado:** aceptado
+**Estado:** aceptado. La parte de estilos la sustituye el ADR-008 (Tailwind).
 
 **Contexto.** El frontend tiene dos vistas, cinco llamadas a la api y una a la de divisas. Tengo que poder explicar cada línea, y el enunciado valora que no haya deuda técnica ni código innecesario.
 
