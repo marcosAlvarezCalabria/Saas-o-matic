@@ -26,7 +26,15 @@ export interface TestUseCaseOverrides {
   previewSimulation?: Pick<PreviewSimulation, 'execute'>;
 }
 
-export function createTestContext(overrides: TestUseCaseOverrides = {}): TestContext {
+export interface TestAppOptions {
+  corsOrigins?: string[];
+}
+
+export function createTestContext(
+  overrides: TestUseCaseOverrides = {},
+  options: TestAppOptions = {},
+): TestContext {
+  void options;
   const database = createDatabase(':memory:');
   const customers = new SqliteCustomerRepository(database);
   const simulations = new SqliteSimulationRepository(database);
