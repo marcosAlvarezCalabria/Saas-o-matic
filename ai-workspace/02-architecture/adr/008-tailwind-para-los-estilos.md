@@ -7,7 +7,7 @@
 **Decisión.**
 - Tailwind CSS v4 con su plugin de Vite (`@tailwindcss/vite`). Sin archivo de configuración en JavaScript: el tema va en CSS.
 - **Los colores siguen siendo las variables de `02-interfaz.md`**, ahora como tema de Tailwind en `styles/tokens.css`:
-  - `@theme { --color-*: initial; … }` borra la paleta por defecto de Tailwind y define solo la nuestra, así que `bg-surface`, `text-muted` o `border-input-border` existen y `bg-blue-500` no.
+  - `@theme { --color-*: initial; … }` borra la paleta por defecto de Tailwind y define solo la nuestra, así que `bg-surface`, `text-text-muted` o `border-input-border` existen y `bg-blue-500` no.
   - `[data-theme="dark"] { … }` cambia los valores de esas variables. Las clases son las mismas en los dos temas: no hace falta llenar el código de `dark:`.
 - Las escalas de `04-design/00-diseno.md` (tipografía, radios) también van en el `@theme`, con sus mismos nombres: `text-title-lg`, `rounded-card`, `rounded-field`. Los puntos de corte por defecto de Tailwind (`md` = 768 px, `lg` = 1024 px) coinciden con los de la spec.
 - Prohibido escribir valores a mano (`bg-[#4040E3]`, `p-[13px]`): solo clases del tema. Se revisa en cada prompt.
