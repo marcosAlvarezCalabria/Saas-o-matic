@@ -104,7 +104,7 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 - Nombre de empresa: obligatorio, 2–100 caracteres tras recortar. Email: formato básico.
 - Almacenamiento (GB) y llamadas a la API (al mes) son informativos, opcionales (0 por defecto) y no afectan al precio. Enteros ≥ 0 y seguros en JavaScript (`Number.isSafeInteger`).
 - Tope de 100 000 usuarios por simulación: más es casi seguro un error de tecleo.
-- Sin login ni autenticación: herramienta interna, fuera de alcance.
+- Sin login ni autenticación: herramienta interna. Como la demo se publica con un enlace abierto, la api limita las peticiones por IP para evitar abusos. Mejora futura: login, con la api solo accesible para usuarios autenticados.
 - Se aplica siempre el tipo general de IVA del país del cliente. No se aplica la inversión del sujeto pasivo entre empresas de distintos países de la UE (en la realidad, el IVA de esas ventas puede ser 0 %). Mejora futura: delegar en un servicio de impuestos.
 - El país se normaliza (recortar y mayúsculas), igual que el identificador fiscal.
 
@@ -163,3 +163,4 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 - v1.7: fecha de entrega corregida al 25 de noviembre.
 - v1.8: tope de 100 000 usuarios; almacenamiento y llamadas como enteros seguros; la entrada se valida antes de buscar al cliente.
 - v1.9: frontend detallado en `02-interfaz.md` (estilo de Roams, tema claro y oscuro); tests de lógica pura en `web`; CORS en la api.
+- v1.10: límite de peticiones por IP en la api, porque la demo se publica con un enlace abierto.

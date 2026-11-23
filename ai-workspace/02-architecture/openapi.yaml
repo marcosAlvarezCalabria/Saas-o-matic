@@ -1,12 +1,14 @@
 openapi: 3.1.0
 info:
   title: SaaS-O-Matic API
-  version: 1.1.0
+  version: 1.2.0
   description: |
     API interna para alta de clientes corporativos y simulación de costes.
     Todos los importes van en céntimos de euro (enteros). La conversión de divisa
     se hace solo en el frontend, para mostrar.
     Detalle de cada operación en ../01-specs/01-casos-de-uso.md.
+    Límite de peticiones por IP: 30/min en POST /customers y POST /simulations, 120/min en
+    todas (salvo /health). Al superarlo: 429 RATE_LIMITED con la cabecera Retry-After.
 servers:
   - url: http://localhost:3000
     description: Local
@@ -265,5 +267,6 @@ components:
                 - TAX_ID_ALREADY_EXISTS
                 - CUSTOMER_NOT_FOUND
                 - NOT_FOUND
+                - RATE_LIMITED
                 - INTERNAL_ERROR
             message: { type: string }

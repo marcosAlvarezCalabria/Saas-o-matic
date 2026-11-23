@@ -66,12 +66,14 @@ Un caso de uso por endpoint. Cada uno vive en `api/src/application` y solo depen
 | Aplicación | `ApplicationError` | `TAX_ID_ALREADY_EXISTS` | 409 |
 | HTTP | — | `VALIDATION_ERROR` (cuerpo no es JSON o no es un objeto, falta un campo, tipo incorrecto, id mal formado) | 400 |
 | HTTP | — | `NOT_FOUND` (ruta inexistente) | 404 |
+| HTTP | — | `RATE_LIMITED` (límite de peticiones superado) | 429 |
 | Cualquier otro | — | `INTERNAL_ERROR`, sin traza en la respuesta | 500 |
 
 - En un 500, la respuesta lleva un mensaje genérico, sin el texto ni la traza del error. El `errorHandler` sí registra el error completo en el servidor (`console.error`, con traza), para poder diagnosticarlo en los logs del contenedor.
 
 - Reparto de la validación: la capa HTTP comprueba la forma (campo presente, tipo número o texto); el dominio comprueba los valores (entero ≥ 1, longitud, formato).
 - Importes siempre en céntimos (enteros).
+- Límite de peticiones por IP: 30 por minuto en las rutas que escriben (`POST /customers` y `POST /simulations`) y 120 por minuto en todas, incluido el preview. Al superarlo, 429 con la cabecera `Retry-After`. `/health` queda fuera. Detalle en `02-interfaz.md`, sección 10, y `features/rate-limit.feature`.
 - CORS: la api solo acepta peticiones del navegador desde los orígenes de `CORS_ORIGINS` (detalle en `02-interfaz.md`, sección 10, y `features/cors.feature`).
 
 ## Escenarios
@@ -79,6 +81,7 @@ Un caso de uso por endpoint. Cada uno vive en `api/src/application` y solo depen
 - `features/customers.feature`: UC1, UC2 y UC3, y las reglas de campos del cliente.
 - `features/simulations.feature`: UC4, UC5, UC6, el uso informativo (almacenamiento y llamadas) y los errores comunes.
 - `features/cors.feature`: orígenes permitidos.
+- `features/rate-limit.feature`: límite de peticiones.
 
 ## Fuera de alcance
 
@@ -99,3 +102,4 @@ Un caso de uso por endpoint. Cada uno vive en `api/src/application` y solo depen
 - v0.11: id válido = solo dígitos sin ceros a la izquierda; el duplicado detectado por la BD también es 409.
 - v0.12: simulaciones: archivo de cada caso de uso, orden de validación (400 antes que 404), tope de 100 000 usuarios, almacenamiento y llamadas como enteros seguros, campos desconocidos ignorados y el 500 se registra en el servidor.
 - v0.13: regla de CORS para el front desplegado en otro dominio.
+- v0.14: límite de peticiones por IP (429 `RATE_LIMITED`).

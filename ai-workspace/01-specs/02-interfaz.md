@@ -18,6 +18,7 @@ Principio: **el frontend casi no tiene lógica**. No calcula precios ni valida r
 |---|---|---|---|
 | `VITE_API_URL` | web | `http://localhost:3000` | URL de la api |
 | `CORS_ORIGINS` | api | `http://localhost:5173` | Orígenes que pueden llamar a la api, separados por comas (sección 10) |
+| `TRUST_PROXY` | api | `0` | Proxies delante de la api; `1` en el VPS (sección 10) |
 
 ## 3. Rutas
 
@@ -35,7 +36,7 @@ Principio: **el frontend casi no tiene lógica**. No calcula precios ni valida r
 
 ### Selector de divisa
 
-- Divisas: EUR, USD, GBP, CHF, SEK, PLN, MXN. Solo se muestran las que vengan en la respuesta de la api de divisas.
+- Divisas: EUR, USD, GBP, CHF, SEK, PLN. Solo se muestran las que vengan en la respuesta de la api de divisas.
 - Por defecto, EUR. La elección dura mientras la app está abierta (no se guarda).
 - Afecta a todos los importes de la app a la vez (estado global en un contexto de React).
 
@@ -99,6 +100,7 @@ Principio: **el frontend casi no tiene lógica**. No calcula precios ni valida r
 | 400 `COUNTRY_NOT_SUPPORTED` | bajo el país | "No hay IVA definido para ese país." |
 | 400 `VALIDATION_ERROR` | arriba del formulario | el `message` de la api |
 | 409 `TAX_ID_ALREADY_EXISTS` | bajo el identificador fiscal | "Ya existe un cliente con ese identificador fiscal." |
+| 429 `RATE_LIMITED` | arriba del formulario | "Demasiadas peticiones. Espera un momento y vuelve a intentarlo." |
 | 500 o sin conexión | arriba del formulario | "No se pudo guardar. Inténtalo de nuevo." |
 
 - Al crear: se cierra el modal y se navega al detalle del cliente nuevo.
@@ -124,8 +126,8 @@ Principio: **el frontend casi no tiene lógica**. No calcula precios ni valida r
 - Estados:
   - **Primera carga:** "Calculando…".
   - **Recalculando:** se mantiene el último resultado, atenuado. Sin parpadeos.
-  - **Error:** "No se pudo calcular el precio." con "Reintentar". Los campos siguen editables.
-- Botón "Guardar simulación": `POST /simulations` con usuarios, almacenamiento y llamadas. Mientras guarda, desactivado ("Guardando…"). Al guardar: "Simulación guardada" y el historial se vuelve a pedir. Si falla: mensaje junto al botón.
+  - **Error:** "No se pudo calcular el precio." con "Reintentar". Los campos siguen editables. Si es un 429, el mensaje de la sección 10.
+- Botón "Guardar simulación": `POST /simulations` con usuarios, almacenamiento y llamadas. Mientras guarda, desactivado ("Guardando…"). Al guardar: "Simulación guardada" y el historial se vuelve a pedir. Si falla: mensaje junto al botón (un 429, con el de la sección 10).
 
 ### Historial (tarjeta)
 
@@ -188,7 +190,9 @@ Vitest, solo lógica pura en `web/src/lib/`, con el test antes que el código:
 
 Sin tests de componentes: se revisan a mano con la lista de la sección 11.
 
-## 10. Cambio necesario en la api: CORS
+## 10. Cambios necesarios en la api: CORS y límite de peticiones
+
+### CORS
 
 En producción el front (Netlify) y la api (VPS) están en dominios distintos, y el navegador bloquea las peticiones si la api no lo permite.
 
@@ -197,6 +201,17 @@ En producción el front (Netlify) y la api (VPS) están en dominios distintos, y
 - Un origen que no está en la lista no recibe la cabecera, y el navegador bloquea la respuesta.
 - Nunca `*`.
 - Escenarios en `features/cors.feature`.
+
+### Límite de peticiones
+
+La demo se publica con un enlace abierto y la api no tiene login: sin límite, cualquiera podría llenar la BD de clientes falsos o saturar el VPS.
+
+- Por IP: 30 peticiones por minuto en las rutas que escriben (`POST /customers` y `POST /simulations`) y 120 por minuto en todas, incluido el preview. Una escritura cuenta en los dos.
+- Al superarlo: 429 `RATE_LIMITED` con la cabecera `Retry-After`. `/health` queda fuera.
+- La respuesta 429 lleva las cabeceras CORS, para que el front pueda leerla y mostrar el mensaje.
+- En el VPS la api está detrás de un proxy: con `TRUST_PROXY=1` toma la IP real del cliente. Sin proxy se deja en 0, porque si no cualquiera podría cambiar su IP con la cabecera `X-Forwarded-For` y saltarse el límite.
+- En el front, cualquier 429 muestra: "Demasiadas peticiones. Espera un momento y vuelve a intentarlo."
+- Escenarios en `features/rate-limit.feature`.
 
 ## 11. Lista de revisión manual
 
@@ -210,3 +225,4 @@ En producción el front (Netlify) y la api (VPS) están en dominios distintos, y
 ## Registro de cambios
 
 - v0.1: vistas, estados, tipos de cambio, alta, simulador, historial, estilo de Roams con tema claro y oscuro, tests de lógica pura y CORS.
+- v0.2: fuera MXN; límite de peticiones en la api (429 y su mensaje en el front) y `TRUST_PROXY`.
