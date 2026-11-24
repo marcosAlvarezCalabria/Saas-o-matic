@@ -4,7 +4,8 @@
 |---|---|
 | `00-estructura.md` | Carpetas, reglas de dependencia entre capas y límites de tamaño |
 | `01-modelo-datos.md` | Tablas, DDL y por qué de cada decisión |
-| `openapi.yaml` | Contrato de la API (6 endpoints + health) |
+| `openapi.yaml` | Contrato de la API (8 endpoints + health) |
+| `02-despliegue.md` | Docker, Caddy, Netlify, CI y CD, variables y pasos a mano en el VPS |
 | `adr/` | Decisiones de arquitectura con alternativas descartadas |
 
 Las reglas de negocio están en `../01-specs`. Si algo aquí contradice a las specs, mandan las specs.
@@ -22,3 +23,4 @@ Las reglas de negocio están en `../01-specs`. Si algo aquí contradice a las sp
 - v0.9: límite de peticiones en el OpenAPI (`RATE_LIMITED`, 429).
 - v0.10: `ai-workspace/04-design/` con la spec de diseño y las capturas de la maqueta.
 - v0.11: ADR-008 (Tailwind para los estilos).
+- v0.12: `02-despliegue.md` y ADR-009 (Docker Compose con Caddy en el VPS).

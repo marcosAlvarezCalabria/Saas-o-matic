@@ -147,6 +147,7 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 - En local, `docker compose up` levanta todo con un solo comando (además de la opción sin Docker).
 - `web` no usa Docker: Netlify la construye directamente.
 - El despliegue en el VPS se hace al final, cuando la app ya funcione en local.
+- Detalle, variables y pasos a mano en `../02-architecture/02-despliegue.md`; Caddy delante de la api para el HTTPS (ADR-009).
 
 ## 11. Método de trabajo
 
@@ -180,3 +181,4 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 - v1.10: límite de peticiones por IP en la api, porque la demo se publica con un enlace abierto.
 - v1.11: supuestos del identificador de otros países, simulaciones repetidas y envío por correo; lista de mejoras futuras para el README.
 - v1.12: las simulaciones se archivan y se recuperan, no se borran (detectado en la prueba manual).
+- v1.13: despliegue concretado en `02-despliegue.md` (Docker Compose con Caddy, CI y CD con GitHub Actions).

@@ -7,8 +7,11 @@ saas-o-matic/
 ├── AGENTS.md                  reglas para Codex
 ├── README.md                  guía para el evaluador
 ├── pnpm-workspace.yaml        workspaces: api, web
-├── docker-compose.yml         api + volumen SQLite
-├── .github/workflows/ci.yml   lint, tipos, tests, build
+├── netlify.toml               build de web y redirección de la SPA
+├── docker-compose.yml         api + volumen SQLite; Caddy en el perfil prod (02-despliegue.md)
+├── .env.example               variables del VPS: API_DOMAIN, CORS_ORIGINS, TRUST_PROXY
+├── deploy/Caddyfile           HTTPS automático y proxy a api:3000
+├── .github/workflows/ci.yml   checks (lint, tipos, tests, build e imagen) y deploy al VPS
 ├── ai-workspace/              specs, arquitectura, vibe coding y diseño (04-design)
 ├── api/
 │   ├── Dockerfile
