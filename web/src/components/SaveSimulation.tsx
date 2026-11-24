@@ -85,7 +85,7 @@ export function SaveSimulation({
   }
 
   return (
-    <div className="flex min-h-12 flex-col gap-4">
+    <div className="flex min-h-12 flex-col gap-4 lg:flex-row-reverse lg:items-center">
       {notice === 'success' ? (
         <InlineAlert variant="success" onClose={() => setNotice(null)}>
           Simulación guardada
@@ -117,7 +117,7 @@ export function SaveSimulation({
       </Button>
       {duplicate ? (
         <p
-          className="text-center text-caption text-text-muted md:text-right"
+          className="text-center text-caption text-text-muted md:text-right lg:flex-1 lg:text-left"
           id={duplicateMessageId}
         >
           Ya hay una simulación guardada con estos valores.

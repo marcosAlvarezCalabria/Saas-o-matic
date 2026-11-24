@@ -79,14 +79,14 @@ export function CustomerDetailPage() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-4 py-8 md:px-6 lg:px-12 lg:py-12">
+    <div className="mx-auto w-full max-w-7xl px-4 py-8 md:px-6 lg:px-12 lg:py-6">
       <Link className="text-label text-link hover:underline" to="/">
         ← Clientes
       </Link>
-      <div className="mt-6">
+      <div className="mt-6 lg:mt-4">
         <CustomerSummary customer={customer} />
       </div>
-      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-12">
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:mt-2 lg:grid-cols-12 lg:gap-4">
         <div className="lg:col-span-7">
           <Simulator
             customerId={customerId}

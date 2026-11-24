@@ -4,11 +4,10 @@ import { Info, Settings2 } from 'lucide-react';
 import { useDebouncedValue } from '../hooks/useDebouncedValue';
 import { usePreview } from '../hooks/usePreview';
 import type { Simulation } from '../api/types';
-import { formatVatRate } from '../lib/vatRate';
-import { Money } from './Money';
+import { PriceSummary } from './PriceSummary';
 import { SaveSimulation } from './SaveSimulation';
 import { UsersSlider } from './UsersSlider';
-import { Card, Icon, InlineAlert, NumberField } from './ui';
+import { Card, Icon, NumberField } from './ui';
 
 function parseUsers(value: string): number | null {
   if (value.trim() === '') {
@@ -59,13 +58,13 @@ export function Simulator({
     result && validUsers !== debouncedUsers ? 'refreshing' : status;
 
   return (
-    <Card>
-      <div className="flex items-center gap-3 border-b border-border pb-4">
+    <Card padding="compact">
+      <div className="flex items-center gap-3 border-b border-border pb-4 lg:pb-2">
         <Icon className="text-link" icon={Settings2} size={24} />
         <h2 className="text-title-md text-text">Simulador</h2>
       </div>
 
-      <div className="mt-6 flex flex-col gap-6">
+      <div className="mt-6 flex flex-col gap-6 lg:mt-4 lg:gap-4">
         <UsersSlider error={usersError} value={users} onChange={setUsers} />
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -107,45 +106,13 @@ export function Simulator({
           </p>
         </div>
 
-        {usersError ? null : previewStatus === 'error' ? (
-          <InlineAlert
-            action={{ label: 'Reintentar', onClick: retry }}
-            variant="error"
-          >
-            {rateLimited
-              ? 'Demasiadas peticiones. Espera un momento y vuelve a intentarlo.'
-              : 'No se pudo calcular el precio.'}
-          </InlineAlert>
-        ) : result ? (
-          <div
-            aria-live="polite"
-            className={`rounded-card border border-border bg-primary-soft p-6 transition-opacity duration-150 ${previewStatus === 'refreshing' ? 'opacity-50' : ''}`}
-          >
-            <div className="flex justify-between gap-4 text-sm font-medium text-text-muted">
-              <span>Base</span>
-              <span className="text-text">
-                <Money cents={result.baseCents} />
-              </span>
-            </div>
-            <div className="mt-3 flex justify-between gap-4 text-sm font-medium text-text-muted">
-              <span>IVA ({formatVatRate(result.vatRateBasisPoints)})</span>
-              <span className="text-text">
-                <Money cents={result.vatCents} />
-              </span>
-            </div>
-            <div className="mt-5 flex items-end justify-between gap-4 border-t border-border pt-5">
-              <span className="text-caption uppercase text-text-muted">
-                Total mensual
-              </span>
-              <span className="text-right text-amount-sm text-text lg:text-amount">
-                <Money cents={result.totalCents} suffix="/ mes" />
-              </span>
-            </div>
-          </div>
-        ) : (
-          <div className="rounded-card border border-border bg-primary-soft p-6 text-center font-medium text-text-muted">
-            Calculando…
-          </div>
+        {usersError ? null : (
+          <PriceSummary
+            rateLimited={rateLimited}
+            result={result}
+            status={previewStatus}
+            onRetry={retry}
+          />
         )}
 
         <SaveSimulation

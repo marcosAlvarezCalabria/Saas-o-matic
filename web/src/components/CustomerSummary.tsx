@@ -30,46 +30,64 @@ export function CustomerSummary({ customer }: CustomerSummaryProps) {
     customer.country;
 
   return (
-    <Card>
-      <div className="flex flex-wrap items-center gap-4">
-        <span className="flex h-12 w-12 items-center justify-center rounded-card bg-primary-soft text-title-md text-link">
-          {getInitials(customer.companyName)}
-        </span>
-        <h1 className="min-w-0 flex-1 text-title-lg text-text">
-          {customer.companyName}
-        </h1>
-        <PlanBadge plan={customer.plan} />
-      </div>
+    <Card padding="compact">
+      <div className="lg:flex lg:items-center lg:gap-6">
+        <div className="flex min-w-0 flex-wrap items-center gap-4 lg:w-1/3 lg:flex-nowrap">
+          <span className="flex h-12 w-12 items-center justify-center rounded-card bg-primary-soft text-title-md text-link">
+            {getInitials(customer.companyName)}
+          </span>
+          <h1
+            className="min-w-0 flex-1 text-title-lg text-text lg:truncate lg:text-title-md"
+            title={customer.companyName}
+          >
+            {customer.companyName}
+          </h1>
+          <PlanBadge plan={customer.plan} />
+        </div>
 
-      <dl className="mt-6 grid grid-cols-1 gap-6 border-t border-border pt-6 md:grid-cols-2 lg:grid-cols-4">
-        <div>
-          <dt className="text-caption uppercase text-text-muted">NIF / CIF</dt>
-          <dd className="mt-1 font-medium text-text">{customer.taxId}</dd>
-        </div>
-        <div>
-          <dt className="text-caption uppercase text-text-muted">País</dt>
-          <dd className="mt-1 flex items-center gap-2 font-medium text-text">
-            <Icon icon={Globe2} size={18} />
-            {countryName}
-          </dd>
-        </div>
-        <div className="min-w-0">
-          <dt className="text-caption uppercase text-text-muted">Email</dt>
-          <dd className="mt-1 truncate font-medium">
-            <a className="text-link hover:underline" href={`mailto:${customer.email}`}>
-              {customer.email}
-            </a>
-          </dd>
-        </div>
-        <div>
-          <dt className="text-caption uppercase text-text-muted">
-            Fecha de alta
-          </dt>
-          <dd className="mt-1 font-medium text-text">
-            {formatCreatedAt(customer.createdAt)}
-          </dd>
-        </div>
-      </dl>
+        <dl className="mt-6 grid grid-cols-1 gap-6 border-t border-border pt-6 md:grid-cols-2 lg:mt-0 lg:w-2/3 lg:grid-cols-4 lg:border-0 lg:pt-0">
+          <div className="min-w-0">
+            <dt className="text-caption uppercase text-text-muted">NIF / CIF</dt>
+            <dd
+              className="mt-1 truncate font-medium text-text"
+              title={customer.taxId}
+            >
+              {customer.taxId}
+            </dd>
+          </div>
+          <div className="min-w-0">
+            <dt className="text-caption uppercase text-text-muted">País</dt>
+            <dd className="mt-1 flex min-w-0 items-center gap-2 font-medium text-text">
+              <Icon className="shrink-0" icon={Globe2} size={18} />
+              <span className="truncate" title={countryName}>
+                {countryName}
+              </span>
+            </dd>
+          </div>
+          <div className="min-w-0">
+            <dt className="text-caption uppercase text-text-muted">Email</dt>
+            <dd className="mt-1 truncate font-medium">
+              <a
+                className="text-link hover:underline"
+                href={`mailto:${customer.email}`}
+              >
+                {customer.email}
+              </a>
+            </dd>
+          </div>
+          <div>
+            <dt className="text-caption uppercase text-text-muted">
+              Fecha de alta
+            </dt>
+            <dd
+              className="mt-1 truncate font-medium text-text"
+              title={formatCreatedAt(customer.createdAt)}
+            >
+              {formatCreatedAt(customer.createdAt)}
+            </dd>
+          </div>
+        </dl>
+      </div>
     </Card>
   );
 }

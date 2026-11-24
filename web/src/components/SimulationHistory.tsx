@@ -57,8 +57,8 @@ export function SimulationHistory({
   const refreshing = status === 'loading' && simulations.length > 0;
 
   return (
-    <Card className={className}>
-      <div className="flex items-center justify-between gap-4 border-b border-border pb-4">
+    <Card className={className} padding="compact">
+      <div className="flex items-center justify-between gap-4 border-b border-border pb-4 lg:pb-2">
         <div className="flex items-center gap-3">
           <Icon className="text-link" icon={History} size={24} />
           <h2 className="text-title-md text-text">Historial</h2>
@@ -68,7 +68,7 @@ export function SimulationHistory({
         </span>
       </div>
 
-      <div className="mt-6">
+      <div className="mt-6 lg:mt-4">
         {initialLoading ? (
           <div className="flex min-h-48 flex-col items-center justify-center gap-4 text-text-muted">
             <Spinner label="Cargando historial" />
