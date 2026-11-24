@@ -37,6 +37,10 @@
   --text-amount--line-height: 44px;
   --text-amount--letter-spacing: -0.02em;
   --text-amount--font-weight: 800;
+  --text-amount-sm: 32px;
+  --text-amount-sm--line-height: 40px;
+  --text-amount-sm--letter-spacing: -0.02em;
+  --text-amount-sm--font-weight: 800;
   --text-label: 14px;
   --text-label--line-height: 20px;
   --text-label--letter-spacing: 0.01em;

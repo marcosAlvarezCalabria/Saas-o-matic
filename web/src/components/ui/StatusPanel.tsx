@@ -6,6 +6,7 @@ interface StatusPanelProps {
   icon?: ReactNode;
   action?: ReactNode;
   className?: string;
+  titleSize?: 'sm' | 'lg';
 }
 
 export function StatusPanel({
@@ -14,13 +15,16 @@ export function StatusPanel({
   icon,
   action,
   className,
+  titleSize = 'sm',
 }: StatusPanelProps) {
   return (
     <section
       className={`mx-auto flex max-w-xl flex-col items-center rounded-card border border-border bg-surface p-12 text-center ${className ?? ''}`}
     >
       {icon ? <div className="mb-4">{icon}</div> : null}
-      <h2 className="text-title-sm text-text">{title}</h2>
+      <h2 className={`${titleSize === 'lg' ? 'text-title-lg' : 'text-title-sm'} text-text`}>
+        {title}
+      </h2>
       {text ? <p className="mt-2 max-w-prose text-sm text-text-muted">{text}</p> : null}
       {action ? <div className="mt-6">{action}</div> : null}
     </section>
