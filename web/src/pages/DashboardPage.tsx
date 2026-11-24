@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Building2, CloudOff, Plus, Search } from 'lucide-react';
 
 import { CustomerCard } from '../components/CustomerCard';
+import { CustomerFormDialog } from '../components/CustomerFormDialog';
 import { Button, Icon, Spinner, StatusPanel } from '../components/ui';
 import { useCustomers } from '../hooks/useCustomers';
 import { useDebouncedValue } from '../hooks/useDebouncedValue';
@@ -30,6 +31,7 @@ function StatusIcon({
 
 export function DashboardPage() {
   const [search, setSearch] = useState('');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const debouncedSearch = useDebouncedValue(search, 300);
   const { status, customers, retry } = useCustomers(debouncedSearch);
   const hasSearch = debouncedSearch.trim().length > 0;
@@ -64,7 +66,11 @@ export function DashboardPage() {
               onChange={(event) => setSearch(event.target.value)}
             />
           </div>
-          <Button className="w-full md:w-auto" icon={Plus}>
+          <Button
+            className="w-full md:w-auto"
+            icon={Plus}
+            onClick={() => setIsDialogOpen(true)}
+          >
             Nuevo cliente
           </Button>
         </div>
@@ -93,7 +99,11 @@ export function DashboardPage() {
 
         {status === 'success' && customers.length === 0 && !hasSearch ? (
           <StatusPanel
-            action={<Button icon={Plus}>Nuevo cliente</Button>}
+            action={
+              <Button icon={Plus} onClick={() => setIsDialogOpen(true)}>
+                Nuevo cliente
+              </Button>
+            }
             icon={<StatusIcon icon={Building2} variant="primary" />}
             text="Da de alta el primero para empezar a simular."
             title="Aún no hay clientes."
@@ -122,6 +132,10 @@ export function DashboardPage() {
           </div>
         ) : null}
       </div>
+      <CustomerFormDialog
+        open={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+      />
     </div>
   );
 }
