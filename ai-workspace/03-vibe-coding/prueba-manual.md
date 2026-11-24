@@ -8,8 +8,8 @@ Marca cada paso con ✅ o ❌. Si algo falla, anota qué viste y sigue: los fall
 
 ## 0. Arranque
 
-- [] En la raíz: `pnpm dev`. Se levantan la api en `:3000` y la web en `:5173`. La web usa `web/.env` con `VITE_API_URL=http://localhost:3000`.
-- [ ] Abre `http://localhost:5173` con las herramientas del navegador abiertas (Consola y Red). Durante toda la prueba, ningún error rojo en Consola.
+- [x] En la raíz: `pnpm dev`. Se levantan la api en `:3000` y la web en `:5173`. La web usa `web/.env` con `VITE_API_URL=http://localhost:3000`.
+- [ x] Abre `http://localhost:5173` con las herramientas del navegador abiertas (Consola y Red). Durante toda la prueba, ningún error rojo en Consola.
 
 ## 1. Dashboard y alta
 
@@ -68,6 +68,18 @@ Con el modo responsive de las herramientas del navegador, en claro y en oscuro:
 - [ ] 375 px: dashboard, modal y detalle sin scroll lateral.
 - [ ] 768 px: lo mismo.
 - [ ] 1280 × 800 px: el detalle de Nube Norte (con 5 o más simulaciones) se ve entero sin scroll vertical.
+
+## 9. Archivar y recuperar (después del 09c)
+
+Borra antes `api/saas-o-matic.sqlite` y lanza `pnpm --filter api seed`: la BD vieja no tiene la columna `archived_at`.
+
+- [ ] Nube Norte: 6 activas (2 páginas) y, en "Archivadas", 1 con su fecha.
+- [ ] Archiva una: desaparece de "Activas" y sale "Simulación archivada." con "Deshacer". "Deshacer" la devuelve.
+- [ ] Archiva la única de la página 2: pasa sola a la página 1.
+- [ ] En "Archivadas", "Recuperar" la devuelve a "Activas".
+- [ ] Archiva una y guarda en el simulador sus mismos valores: deja guardar (la archivada no cuenta como duplicada).
+- [ ] Con la api parada, "Archivar" muestra el error y la lista sigue igual.
+- [ ] Todo con teclado: Tab hasta "Activas/Archivadas", "Archivar", "Deshacer" y "Recuperar".
 
 &nbsp;
 

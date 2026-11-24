@@ -39,7 +39,8 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 - `POST /simulations/preview`: calcula sin guardar, para el slider en tiempo real (añadido).
 - `GET /customers?search=`: buscador por nombre o identificador fiscal (añadido).
 - `GET /customers/:id`: ficha del cliente (añadido).
-- `GET /customers/:id/simulations`: historial (añadido).
+- `GET /customers/:id/simulations`: historial; con `?archived=true`, las archivadas (añadido).
+- `POST /simulations/:id/archive` y `POST /simulations/:id/restore`: archivar y recuperar una simulación (añadido).
 - `GET /health`: comprobación de vida para Docker y despliegue (añadido).
 - Contrato completo en `../02-architecture/openapi.yaml`.
 
@@ -96,6 +97,7 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 - Ligada a un cliente existente (customer_id en el cuerpo). Si no existe: 404.
 - El backend recalcula siempre; nunca confía en importes enviados por el cliente.
 - Se valida la entrada antes de buscar al cliente: datos no válidos dan 400 aunque el cliente no exista.
+- No se borra: se archiva. Una archivada deja de salir en el historial y en la comprobación de duplicados, pero sigue en la BD y se puede recuperar.
 - Escenarios en `features/simulations.feature`.
 
 ## 7. Supuestos por ambigüedad del enunciado
@@ -109,6 +111,7 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 - El país se normaliza (recortar y mayúsculas), igual que el identificador fiscal.
 - Identificador fiscal de otros países: solo se comprueba el formato básico, porque el enunciado solo exige el algoritmo de España. Por eso un DNI español con el país Irlanda se acepta.
 - Simulaciones repetidas: el front no deja guardar una simulación con los mismos usuarios, almacenamiento y llamadas que otra del mismo cliente, porque daría el mismo importe. La api no lo impide.
+- Las simulaciones no se borran, se archivan: son el historial de lo que se ha presupuestado al cliente (puede que ya se le enviara), y sin login un borrado en la demo pública permitiría vaciar los datos. Archivar las quita de la vista sin perder la traza. Se detectó en la prueba manual del 24/11.
 - Enviar una simulación: el front abre el programa de correo (`mailto:`) con un resumen en texto plano. No hay enlace a la simulación porque la app es interna y el cliente no podría abrirlo.
 
 ### Mejoras futuras (para el README)
@@ -117,6 +120,7 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 - Login, con la api solo accesible para usuarios autenticados.
 - Enviar el correo de una simulación desde la api, con HTML (por ejemplo, con Resend), en lugar de `mailto:`.
 - Delegar el IVA en un servicio de impuestos (inversión del sujeto pasivo).
+- Borrado real de simulaciones, solo para un rol de administrador, cuando haya login.
 
 ## 8. Frontend
 
@@ -175,3 +179,4 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 - v1.9: frontend detallado en `02-interfaz.md` (estilo de Roams, tema claro y oscuro); tests de lógica pura en `web`; CORS en la api.
 - v1.10: límite de peticiones por IP en la api, porque la demo se publica con un enlace abierto.
 - v1.11: supuestos del identificador de otros países, simulaciones repetidas y envío por correo; lista de mejoras futuras para el README.
+- v1.12: las simulaciones se archivan y se recuperan, no se borran (detectado en la prueba manual).

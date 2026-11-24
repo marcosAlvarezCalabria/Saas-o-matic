@@ -28,9 +28,10 @@ Un caso de uso por endpoint. Cada uno vive en `api/src/application` y solo depen
 
 - **Endpoint:** `GET /customers/:id/simulations`
 - **Archivo:** `application/use-cases/simulations/listCustomerSimulations.ts`
-- **Pasos:** id solo con dígitos (capa HTTP, igual que UC3) → comprobar que el cliente existe → listar sus simulaciones.
-- **Salida:** 200 con las simulaciones del cliente y su desglose, las más recientes primero (empate en fecha → id mayor primero). Sin simulaciones: lista vacía, no error.
-- **Errores:** 400 si el id está mal formado · 404 si el cliente no existe.
+- **Entrada:** `?archived=true|false` opcional (por defecto `false`).
+- **Pasos:** id solo con dígitos y `archived` ausente, `true` o `false` (capa HTTP) → comprobar que el cliente existe → listar sus simulaciones activas o, con `archived=true`, solo las archivadas.
+- **Salida:** 200 con las simulaciones y su desglose, las más recientes primero (empate en fecha → id mayor primero). Sin simulaciones: lista vacía, no error.
+- **Errores:** 400 si el id está mal formado o `archived` tiene otro valor · 404 si el cliente no existe.
 
 ## UC5. Previsualizar simulación
 
@@ -51,6 +52,24 @@ Un caso de uso por endpoint. Cada uno vive en `api/src/application` y solo depen
 - **Errores:** 400 si la entrada no es válida · 404 si el cliente no existe.
 - **Regla:** el cálculo lo hace siempre el backend; se ignora cualquier importe o campo desconocido que envíe el cliente.
 
+## UC7. Archivar simulación
+
+- **Endpoint:** `POST /simulations/:id/archive` (sin cuerpo)
+- **Archivo:** `application/use-cases/simulations/archiveSimulation.ts`
+- **Pasos:** id solo con dígitos (capa HTTP) → marcar la simulación como archivada. La fecha la pone la BD.
+- **Salida:** 200 con la simulación y su `archivedAt`.
+- **Idempotente:** archivar una ya archivada vuelve a dar 200 y conserva la fecha de la primera vez.
+- **Errores:** 400 si el id está mal formado · 404 `SIMULATION_NOT_FOUND` si no existe.
+
+## UC8. Recuperar simulación
+
+- **Endpoint:** `POST /simulations/:id/restore` (sin cuerpo)
+- **Archivo:** `application/use-cases/simulations/restoreSimulation.ts`
+- **Pasos:** igual que UC7, pero deja `archivedAt` a `null`.
+- **Salida:** 200 con la simulación y `archivedAt: null`.
+- **Idempotente:** recuperar una que no está archivada vuelve a dar 200.
+- **Errores:** 400 si el id está mal formado · 404 `SIMULATION_NOT_FOUND` si no existe.
+
 ## Reglas comunes
 
 - UC5 y UC6 usan exactamente la misma función de dominio para calcular.
@@ -62,7 +81,7 @@ Un caso de uso por endpoint. Cada uno vive en `api/src/application` y solo depen
 | Origen | Clase | Código | HTTP |
 |---|---|---|---|
 | Dominio | `DomainError` | `VALIDATION_ERROR`, `COUNTRY_NOT_SUPPORTED`, `INVALID_TAX_ID` | 400 |
-| Aplicación | `ApplicationError` | `CUSTOMER_NOT_FOUND` | 404 |
+| Aplicación | `ApplicationError` | `CUSTOMER_NOT_FOUND`, `SIMULATION_NOT_FOUND` | 404 |
 | Aplicación | `ApplicationError` | `TAX_ID_ALREADY_EXISTS` | 409 |
 | HTTP | — | `VALIDATION_ERROR` (cuerpo no es JSON o no es un objeto, falta un campo, tipo incorrecto, id mal formado) | 400 |
 | HTTP | — | `NOT_FOUND` (ruta inexistente) | 404 |
@@ -73,19 +92,20 @@ Un caso de uso por endpoint. Cada uno vive en `api/src/application` y solo depen
 
 - Reparto de la validación: la capa HTTP comprueba la forma (campo presente, tipo número o texto); el dominio comprueba los valores (entero ≥ 1, longitud, formato).
 - Importes siempre en céntimos (enteros).
-- Límite de peticiones por IP: 30 por minuto en las rutas que escriben (`POST /customers` y `POST /simulations`) y 120 por minuto en todas, incluido el preview. Al superarlo, 429 con la cabecera `Retry-After`. `/health` queda fuera. Detalle en `02-interfaz.md`, sección 10, y `features/rate-limit.feature`.
+- Límite de peticiones por IP: 30 por minuto en las rutas que escriben (`POST /customers`, `POST /simulations`, y archivar y recuperar) y 120 por minuto en todas, incluido el preview. Al superarlo, 429 con la cabecera `Retry-After`. `/health` queda fuera. Detalle en `02-interfaz.md`, sección 10, y `features/rate-limit.feature`.
 - CORS: la api solo acepta peticiones del navegador desde los orígenes de `CORS_ORIGINS` (detalle en `02-interfaz.md`, sección 10, y `features/cors.feature`).
 
 ## Escenarios
 
 - `features/customers.feature`: UC1, UC2 y UC3, y las reglas de campos del cliente.
-- `features/simulations.feature`: UC4, UC5, UC6, el uso informativo (almacenamiento y llamadas) y los errores comunes.
+- `features/simulations.feature`: UC4 a UC8, el uso informativo (almacenamiento y llamadas) y los errores comunes.
 - `features/cors.feature`: orígenes permitidos.
 - `features/rate-limit.feature`: límite de peticiones.
 
 ## Fuera de alcance
 
 - CRUD completo de clientes (editar, borrar): el enunciado solo pide registrar. Borrar un cliente eliminaría su historial de simulaciones. Posible mejora futura: editar y archivar clientes.
+- Borrar simulaciones: se archivan (UC7) y se recuperan (UC8), nunca se borran (supuesto de `00-analisis.md`).
 
 ## Registro de cambios
 
@@ -103,3 +123,4 @@ Un caso de uso por endpoint. Cada uno vive en `api/src/application` y solo depen
 - v0.12: simulaciones: archivo de cada caso de uso, orden de validación (400 antes que 404), tope de 100 000 usuarios, almacenamiento y llamadas como enteros seguros, campos desconocidos ignorados y el 500 se registra en el servidor.
 - v0.13: regla de CORS para el front desplegado en otro dominio.
 - v0.14: límite de peticiones por IP (429 `RATE_LIMITED`).
+- v0.15: UC7 y UC8, archivar y recuperar simulaciones; UC4 con `?archived=`; `SIMULATION_NOT_FOUND`.

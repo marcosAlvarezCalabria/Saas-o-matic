@@ -131,7 +131,7 @@ Principio: **el frontend casi no tiene lógica**. No calcula precios ni valida r
   - **Recalculando:** se mantiene el último resultado, atenuado. Sin parpadeos.
   - **Error:** "No se pudo calcular el precio." con "Reintentar". Los campos siguen editables. Si es un 429, el mensaje de la sección 10.
 - Botón "Guardar simulación": `POST /simulations` con usuarios, almacenamiento y llamadas. Mientras guarda, desactivado ("Guardando…"). Al guardar: "Simulación guardada" y el historial se vuelve a pedir y vuelve a la página 1. Si falla: mensaje junto al botón (un 429, con el de la sección 10).
-- **Sin duplicados:** si en el historial ya hay una simulación con los mismos usuarios, almacenamiento y llamadas, el botón se desactiva y debajo pone "Ya hay una simulación guardada con estos valores.". Se compara con todo el historial, no solo con la página que se ve. El precio solo depende de esos valores y del IVA del país, así que repetirla no aporta nada. Es una regla del front: la api sigue aceptando duplicados (supuesto de `00-analisis.md`).
+- **Sin duplicados:** si en el historial (solo las activas, no las archivadas) ya hay una simulación con los mismos usuarios, almacenamiento y llamadas, el botón se desactiva y debajo pone "Ya hay una simulación guardada con estos valores.". Se compara con todo el historial, no solo con la página que se ve. El precio solo depende de esos valores y del IVA del país, así que repetirla no aporta nada. Es una regla del front: la api sigue aceptando duplicados (supuesto de `00-analisis.md`).
 - Los campos numéricos no muestran las flechas del navegador para subir y bajar. Las flechas del teclado siguen funcionando.
 
 ### Historial (tarjeta)
@@ -142,6 +142,10 @@ Principio: **el frontend casi no tiene lógica**. No calcula precios ni valida r
 - **Botón "Enviar" en cada simulación:** un enlace `mailto:` al email del cliente que abre el programa de correo con el asunto y el cuerpo ya escritos (texto plano, el formato está en la sección 6 bis). No pasa por la api.
 - Importes en la divisa elegida, con la misma regla de la sección 4.
 - Estados: "Cargando historial…", vacío "Todavía no hay simulaciones guardadas.", error con "Reintentar". Al recargar después de guardar, la lista se mantiene a la vista (atenuada) en vez de cambiar a "Cargando historial…".
+- **Activas y archivadas:** en la cabecera, dos botones "Activas" y "Archivadas" (con `aria-pressed`). Por defecto, "Activas". Las archivadas se piden (`?archived=true`) solo al abrir esa vista, y otra vez cada vez que se abre. Al cambiar de vista se vuelve a la página 1 y se quita el aviso. El contador "{n} simulaciones" es el de la vista abierta. Vacío en archivadas: "No hay simulaciones archivadas.".
+- **Archivar:** en cada simulación activa, un botón "Archivar" junto a "Enviar" (`aria-label` "Archivar la simulación del {fecha}"). Archiva al momento, sin confirmación: el botón se desactiva mientras tanto y, al terminar, sobre la lista sale "Simulación archivada." con el botón "Deshacer", que la recupera. El aviso se queda hasta que se cierra, se archiva otra o se cambia de vista. Después se vuelve a pedir el historial, sin volver a la página 1 (si la página se queda vacía, `paginate` pasa a la anterior).
+- **Recuperar:** en la vista "Archivadas", cada simulación muestra "Archivada el {fecha}" en lugar de "Enviar" y un botón "Recuperar". Al terminar: "Simulación recuperada." y se vuelven a pedir las dos listas.
+- Si archivar o recuperar falla: "No se pudo archivar la simulación. Inténtalo de nuevo." o "No se pudo recuperar la simulación. Inténtalo de nuevo." en el mismo sitio. Un 429, con el mensaje de la sección 10.
 
 ### 6 bis. Correo de una simulación
 
@@ -262,10 +266,12 @@ La demo se publica con un enlace abierto y la api no tiene login: sin límite, c
 - Con 6 simulaciones o más aparece la paginación, y guardar vuelve a la página 1.
 - Pulsar "Guardar simulación" dos veces con los mismos valores solo guarda una.
 - "Enviar" abre el correo con el destinatario, el asunto y el cuerpo bien escritos (tildes y € incluidos).
+- Archivar quita la simulación de "Activas" y "Deshacer" la devuelve. En "Archivadas" se ve con su fecha y "Recuperar" la devuelve a "Activas". Una archivada no bloquea guardar los mismos valores.
 
 ## Registro de cambios
 
 - v0.1: vistas, estados, tipos de cambio, alta, simulador, historial, estilo de Roams con tema claro y oscuro, tests de lógica pura y CORS.
 - v0.2: fuera MXN; límite de peticiones en la api (429 y su mensaje en el front) y `TRUST_PROXY`.
 - v0.3: Tailwind para los estilos (ADR-008); medidas y componentes en `../04-design/00-diseno.md`; 2 columnas desde 768 px; país antes que el identificador; plan como grupo de opciones; modal como hoja en móvil; "Limpiar búsqueda"; país sin bandera; `lucide-react`; `--color-scrim`.
+- v0.5: archivar (con "Deshacer") y recuperar simulaciones, con las vistas "Activas" y "Archivadas" en el historial.
 - v0.4: detalle en una pantalla en escritorio; historial como lista en todos los anchos, paginado de 5 en 5 y con botón "Enviar" (`mailto:`); sin duplicados al guardar; campos numéricos sin flechas.

@@ -1,13 +1,13 @@
 openapi: 3.1.0
 info:
   title: SaaS-O-Matic API
-  version: 1.2.0
+  version: 1.3.0
   description: |
     API interna para alta de clientes corporativos y simulación de costes.
     Todos los importes van en céntimos de euro (enteros). La conversión de divisa
     se hace solo en el frontend, para mostrar.
     Detalle de cada operación en ../01-specs/01-casos-de-uso.md.
-    Límite de peticiones por IP: 30/min en POST /customers y POST /simulations, 120/min en
+    Límite de peticiones por IP: 30/min en POST /customers, POST /simulations y archivar/recuperar, 120/min en
     todas (salvo /health). Al superarlo: 429 RATE_LIMITED con la cabecera Retry-After.
 servers:
   - url: http://localhost:3000
@@ -99,6 +99,11 @@ paths:
       summary: UC4 · Historial de simulaciones del cliente
       parameters:
         - $ref: '#/components/parameters/CustomerId'
+        - name: archived
+          in: query
+          required: false
+          description: Sin él o con false, las activas; con true, solo las archivadas. Otro valor da 400.
+          schema: { type: string, enum: ['true', 'false'], default: 'false' }
       responses:
         '200':
           description: Simulaciones, las más recientes primero (puede estar vacía)
@@ -130,6 +135,36 @@ paths:
         '400': { $ref: '#/components/responses/BadRequest' }
         '404': { $ref: '#/components/responses/CustomerNotFound' }
 
+  /simulations/{id}/archive:
+    post:
+      tags: [simulations]
+      summary: UC7 · Archivar simulación (idempotente, conserva la primera fecha)
+      parameters:
+        - $ref: '#/components/parameters/SimulationId'
+      responses:
+        '200':
+          description: Simulación archivada
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Simulation' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '404': { $ref: '#/components/responses/SimulationNotFound' }
+
+  /simulations/{id}/restore:
+    post:
+      tags: [simulations]
+      summary: UC8 · Recuperar simulación archivada (idempotente)
+      parameters:
+        - $ref: '#/components/parameters/SimulationId'
+      responses:
+        '200':
+          description: Simulación activa (archivedAt null)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Simulation' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '404': { $ref: '#/components/responses/SimulationNotFound' }
+
   /simulations/preview:
     post:
       tags: [simulations]
@@ -157,6 +192,11 @@ components:
       in: path
       required: true
       schema: { type: integer, minimum: 1 }
+    SimulationId:
+      name: id
+      in: path
+      required: true
+      schema: { type: integer, minimum: 1 }
 
   responses:
     BadRequest:
@@ -168,6 +208,11 @@ components:
             error: { code: INVALID_TAX_ID, message: Identificador fiscal no válido }
     CustomerNotFound:
       description: El cliente no existe (CUSTOMER_NOT_FOUND)
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    SimulationNotFound:
+      description: La simulación no existe (SIMULATION_NOT_FOUND)
       content:
         application/json:
           schema: { $ref: '#/components/schemas/Error' }
@@ -241,7 +286,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/CostBreakdown'
         - type: object
-          required: [id, customerId, users, storageGb, apiCalls, createdAt]
+          required: [id, customerId, users, storageGb, apiCalls, createdAt, archivedAt]
           properties:
             id: { type: integer }
             customerId: { type: integer }
@@ -249,6 +294,10 @@ components:
             storageGb: { type: integer }
             apiCalls: { type: integer }
             createdAt: { type: string, format: date-time }
+            archivedAt:
+              type: [string, 'null']
+              format: date-time
+              description: null si está activa
 
     Error:
       type: object
@@ -266,6 +315,7 @@ components:
                 - COUNTRY_NOT_SUPPORTED
                 - TAX_ID_ALREADY_EXISTS
                 - CUSTOMER_NOT_FOUND
+                - SIMULATION_NOT_FOUND
                 - NOT_FOUND
                 - RATE_LIMITED
                 - INTERNAL_ERROR

@@ -199,6 +199,76 @@ Característica: Simulación y historial
         | 0   |
         | 1.0 |
 
+  Regla: Archivar y recuperar (POST /simulations/:id/archive y /restore)
+    Archivar no borra: la simulación deja de salir en el historial normal y sale con ?archived=true.
+    Las dos operaciones son idempotentes.
+
+    Antecedentes:
+      Dado un cliente de "ES" registrado
+      Y que creo simulaciones de 15 y 40 usuarios para el cliente de "ES", en ese orden
+
+    @integracion
+    Escenario: Archivar una simulación
+      Cuando archivo la simulación de 15 usuarios
+      Entonces la respuesta es 200 con la simulación y una fecha en archivedAt
+      Y el historial del cliente de "ES" solo tiene la de 40 usuarios
+      Y el historial con archived=true solo tiene la de 15 usuarios
+
+    @integracion
+    Escenario: Archivar dos veces conserva la primera fecha
+      Dado que archivo la simulación de 15 usuarios
+      Cuando la archivo otra vez
+      Entonces la respuesta es 200 con el mismo archivedAt
+
+    @integracion
+    Escenario: Recuperar una simulación archivada
+      Dado que archivo la simulación de 15 usuarios
+      Cuando la recupero
+      Entonces la respuesta es 200 con archivedAt null
+      Y el historial del cliente de "ES" tiene 2 simulaciones
+      Y el historial con archived=true está vacío
+
+    @integracion
+    Escenario: Recuperar una que no está archivada
+      Cuando recupero la simulación de 40 usuarios
+      Entonces la respuesta es 200 con archivedAt null
+
+    @integracion
+    Escenario: Una simulación nueva no está archivada
+      Cuando creo una simulación de 15 usuarios para el cliente de "ES"
+      Entonces la respuesta es 201 con archivedAt null
+
+    @integracion
+    Esquema del escenario: Simulación inexistente
+      Cuando hago <operación> de la simulación 9999
+      Entonces la respuesta es 404 con el código "SIMULATION_NOT_FOUND"
+
+      Ejemplos:
+        | operación |
+        | archive   |
+        | restore   |
+
+    @integracion
+    Esquema del escenario: Id mal formado
+      Cuando hago archive de la simulación "<id>"
+      Entonces la respuesta es 400 con el código "VALIDATION_ERROR"
+
+      Ejemplos:
+        | id  |
+        | abc |
+        | 0   |
+        | 1.0 |
+
+    @integracion
+    Esquema del escenario: Valor de archived no válido
+      Cuando pido el historial del cliente de "ES" con archived=<valor>
+      Entonces la respuesta es 400 con el código "VALIDATION_ERROR"
+
+      Ejemplos:
+        | valor |
+        | si    |
+        | 1     |
+
   Regla: Errores comunes
 
     @integracion

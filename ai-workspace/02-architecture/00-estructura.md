@@ -22,7 +22,8 @@ saas-o-matic/
 │   │   ├── application/
 │   │   │   ├── use-cases/     un archivo por caso de uso, agrupados por tema
 │   │   │   │   ├── customers/    createCustomer.ts, searchCustomers.ts, getCustomer.ts (UC1–UC3)
-│   │   │   │   └── simulations/  listCustomerSimulations.ts, previewSimulation.ts, createSimulation.ts (UC4–UC6)
+│   │   │   │   └── simulations/  listCustomerSimulations.ts, previewSimulation.ts, createSimulation.ts,
+│   │   │   │                     archiveSimulation.ts, restoreSimulation.ts (UC4–UC8)
 │   │   │   ├── ports/         CustomerRepository, SimulationRepository (interfaces, comunes)
 │   │   │   └── errors.ts      ApplicationError: CUSTOMER_NOT_FOUND, TAX_ID_ALREADY_EXISTS (común)
 │   │   ├── infrastructure/

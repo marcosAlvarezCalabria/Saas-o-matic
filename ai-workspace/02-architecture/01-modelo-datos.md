@@ -26,6 +26,7 @@ erDiagram
     INTEGER vat_cents
     INTEGER total_cents
     TEXT created_at
+    TEXT archived_at
   }
 ```
 
@@ -57,7 +58,8 @@ CREATE TABLE IF NOT EXISTS simulations (
   vat_rate_basis_points INTEGER NOT NULL CHECK (vat_rate_basis_points >= 0),
   vat_cents   INTEGER NOT NULL CHECK (vat_cents >= 0),
   total_cents INTEGER NOT NULL CHECK (total_cents = base_cents + vat_cents),
-  created_at  TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+  created_at  TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
+  archived_at TEXT
 );
 
 CREATE INDEX IF NOT EXISTS idx_simulations_customer ON simulations (customer_id, created_at DESC);
@@ -75,6 +77,7 @@ CREATE INDEX IF NOT EXISTS idx_simulations_customer ON simulations (customer_id,
 - **Fechas en ISO 8601 UTC.** Se ordenan bien como texto y el frontend las formatea.
 - **`PRAGMA foreign_keys = ON` en cada conexión.** SQLite lo trae desactivado por defecto; `connection.ts` lo activa al abrir, no solo en el esquema.
 - **Sin borrado.** No hay `ON DELETE`: el borrado de clientes está fuera de alcance.
+- **Simulaciones archivadas, no borradas.** `archived_at` es `NULL` si está activa y la fecha de archivado si no. La fecha la pone la BD, como `created_at`, y archivar dos veces conserva la primera (`COALESCE`). Como el esquema usa `CREATE TABLE IF NOT EXISTS`, la BD local creada antes no recibe la columna: hay que borrar el `.sqlite` de desarrollo y volver a lanzar el seed.
 
 ## Mapeo BD ↔ API
 

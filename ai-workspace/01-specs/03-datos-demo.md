@@ -52,3 +52,5 @@ Qué enseña cada uno:
 - **9 · Nordvik:** 30 · 120 · 60 000
 
 En total, 9 clientes y 19 simulaciones.
+
+**Archivada:** la de 5 usuarios de Nube Norte, con `ArchiveSimulation`, para que la vista "Archivadas" tenga algo que enseñar. Nube Norte se queda con 6 activas, así que la paginación se sigue viendo. (Se añade en el prompt 09b, cuando exista archivar.)
