@@ -28,9 +28,19 @@ export function createSimulation(
 
 export function listSimulations(
   customerId: number,
+  { archived = false }: { archived?: boolean } = {},
   signal?: AbortSignal,
 ): Promise<Simulation[]> {
-  return request<Simulation[]>(`/customers/${customerId}/simulations`, {
+  const query = archived ? '?archived=true' : '';
+  return request<Simulation[]>(`/customers/${customerId}/simulations${query}`, {
     signal,
   });
+}
+
+export function archiveSimulation(id: number): Promise<Simulation> {
+  return request<Simulation>(`/simulations/${id}/archive`, { method: 'POST' });
+}
+
+export function restoreSimulation(id: number): Promise<Simulation> {
+  return request<Simulation>(`/simulations/${id}/restore`, { method: 'POST' });
 }

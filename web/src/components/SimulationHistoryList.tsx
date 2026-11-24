@@ -1,4 +1,4 @@
-import { Mail } from 'lucide-react';
+import { Archive, ArchiveRestore, Mail } from 'lucide-react';
 
 import type { Customer, Simulation } from '../api/types';
 import type { SimulationConversion } from '../lib/simulationEmail';
@@ -9,13 +9,19 @@ import {
   formatSimulationDate,
   formatSimulationUsage,
 } from './simulationHistoryFormat';
-import { AnchorButton } from './ui';
+import { AnchorButton, Button, Icon } from './ui';
+
+export type SimulationHistoryView = 'active' | 'archived';
 
 interface SimulationHistoryListProps {
   customer: Customer;
   simulations: Simulation[];
   conversion: SimulationConversion | null;
   refreshing: boolean;
+  view: SimulationHistoryView;
+  busyId: number | null;
+  onArchive: (simulation: Simulation) => void;
+  onRestore: (simulation: Simulation) => void;
 }
 
 export function SimulationHistoryList({
@@ -23,6 +29,10 @@ export function SimulationHistoryList({
   simulations,
   conversion,
   refreshing,
+  view,
+  busyId,
+  onArchive,
+  onRestore,
 }: SimulationHistoryListProps) {
   return (
     <div aria-busy={refreshing}>
@@ -36,10 +46,10 @@ export function SimulationHistoryList({
       >
         {simulations.map((simulation) => (
           <li
-            className="py-3 first:pt-0 last:pb-0 lg:grid lg:grid-cols-4 lg:items-center lg:gap-x-3 lg:gap-y-1"
+            className="py-3 first:pt-0 last:pb-0 lg:grid lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-x-3 lg:gap-y-0"
             key={simulation.id}
           >
-            <div className="flex items-start justify-between gap-4 lg:col-span-3 lg:items-center">
+            <div className="flex items-start justify-between gap-4 lg:items-center">
               <time
                 className="text-sm font-medium text-text"
                 dateTime={simulation.createdAt}
@@ -52,7 +62,7 @@ export function SimulationHistoryList({
             </div>
 
             <div className="mt-2 flex flex-wrap items-end justify-between gap-3 lg:contents">
-              <div className="min-w-0 text-caption text-text-muted lg:col-span-3 lg:row-start-2 lg:flex lg:items-center lg:gap-3">
+              <div className="min-w-0 text-caption text-text-muted lg:row-start-2 lg:block">
                 <p>
                   {simulation.users} usuarios ·{' '}
                   {formatSimulationUsage(
@@ -70,19 +80,59 @@ export function SimulationHistoryList({
                   </span>
                 </p>
               </div>
-              <AnchorButton
-                className="w-full md:w-auto lg:col-start-4 lg:row-span-2 lg:row-start-1 lg:px-4"
-                href={buildSimulationMailto(customer, simulation, conversion)}
-                icon={Mail}
-                size="compact"
-                variant="soft"
-              >
-                Enviar
-              </AnchorButton>
+              <div className="flex w-full flex-col gap-2 md:w-auto lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:flex-row lg:items-center lg:gap-1">
+                {view === 'active' ? (
+                  <>
+                    <AnchorButton
+                      href={buildSimulationMailto(customer, simulation, conversion)}
+                      size="compact"
+                      variant="soft"
+                    >
+                      <Icon icon={Mail} size={18} />
+                      <span className="lg:sr-only">Enviar</span>
+                    </AnchorButton>
+                    <Button
+                      aria-label={`Archivar la simulación del ${formatSimulationDate(simulation.createdAt)}`}
+                      disabled={busyId !== null}
+                      size="compact"
+                      variant="secondary"
+                      onClick={() => onArchive(simulation)}
+                    >
+                      <Icon className="lg:hidden" icon={Archive} size={18} />
+                      <span>Archivar</span>
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <span className="text-center text-caption text-text-muted">
+                      {archivedDateLabel(simulation.archivedAt)}
+                    </span>
+                    <Button
+                      disabled={busyId !== null}
+                      size="compact"
+                      variant="secondary"
+                      onClick={() => onRestore(simulation)}
+                    >
+                      <Icon
+                        className="lg:hidden"
+                        icon={ArchiveRestore}
+                        size={18}
+                      />
+                      <span>Recuperar</span>
+                    </Button>
+                  </>
+                )}
+              </div>
             </div>
           </li>
         ))}
       </ul>
     </div>
   );
+}
+
+function archivedDateLabel(archivedAt: string | null): string {
+  return archivedAt === null
+    ? 'Archivada'
+    : `Archivada el ${formatSimulationDate(archivedAt)}`;
 }

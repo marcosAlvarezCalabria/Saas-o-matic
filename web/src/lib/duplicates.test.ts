@@ -14,6 +14,7 @@ const simulation: Simulation = {
   vatCents: 2_940,
   totalCents: 16_940,
   createdAt: '2026-11-22T12:00:00.000Z',
+  archivedAt: null,
 };
 
 const values = { users: 15, storageGb: 100, apiCalls: 50_000 };

@@ -62,6 +62,7 @@ export interface Simulation extends CostBreakdown {
   storageGb: number;
   apiCalls: number;
   createdAt: string;
+  archivedAt: string | null;
 }
 
 export interface PreviewInput {
@@ -80,6 +81,7 @@ export type ApiErrorCode =
   | 'COUNTRY_NOT_SUPPORTED'
   | 'TAX_ID_ALREADY_EXISTS'
   | 'CUSTOMER_NOT_FOUND'
+  | 'SIMULATION_NOT_FOUND'
   | 'NOT_FOUND'
   | 'RATE_LIMITED'
   | 'INTERNAL_ERROR'

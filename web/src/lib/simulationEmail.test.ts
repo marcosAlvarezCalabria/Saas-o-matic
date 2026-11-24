@@ -24,6 +24,7 @@ const simulation: Simulation = {
   vatCents: 2_940,
   totalCents: 16_940,
   createdAt: '2026-11-22T12:00:00.000Z',
+  archivedAt: null,
 };
 
 function decodeMailto(mailto: string) {
