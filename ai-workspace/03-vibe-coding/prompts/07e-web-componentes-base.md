@@ -68,3 +68,13 @@ Ningún componente tiene colores ni medidas a mano (busco `[#` y `px]` en `src/`
 Todos los controles tienen 44 px de alto como mínimo y foco visible.
 
 `Field` enlaza la etiqueta y el error con el campo.
+
+&nbsp;
+
+**Resultado de la revisión**
+
+Hecho en `9f7a4f5`. Lint, typecheck y build en verde; sin colores ni medidas a mano. Los ocho componentes están, con 44 px en los controles, foco visible, `Field` enlazando etiqueta y error (`aria-invalid` y `aria-describedby`) y el indicador de carga quieto con `prefers-reduced-motion`.
+
+Para la ronda de correcciones del final:
+- `Field.tsx` tiene 220 líneas, por encima de las ~150 de `00-estructura.md`, y repite en sus tres variantes el mismo icono de error y la misma unión de `aria-describedby`. Se divide en `FieldShell` y un archivo por variante, o se saca lo repetido.
+- `NumberField` reserva el hueco del sufijo aunque no tenga sufijo.

@@ -73,3 +73,13 @@ Los dos commits, test antes que implementación.
 Ningún archivo fuera de `api/` usa `fetch`.
 
 Un `AbortError` nunca acaba como mensaje de error en pantalla.
+
+&nbsp;
+
+**Resultado de la revisión**
+
+Hecho en `4754ec6` (test) y `08f47d5` (feat), en ese orden. Sin la implementación fallan los dos archivos de test. 20 tests de `web` en verde; lint, typecheck y build sin errores. Ningún archivo fuera de `api/` usa `fetch`.
+
+Probado además contra la api real arrancada (`dist/main.js`): alta, búsqueda con tilde, preview de 15 usuarios (16 940 céntimos), 409 `TAX_ID_ALREADY_EXISTS`, 404 `CUSTOMER_NOT_FOUND`, una petición cancelada que llega como `AbortError` y un servidor caído que da `NetworkError`.
+
+Detalles menores, sin cambios: una respuesta 2xx con un cuerpo que no es JSON se relanza como `SyntaxError` (la api siempre devuelve JSON); y `VITE_API_URL` se fija al compilar, así que en Netlify hay que definirla antes del build.

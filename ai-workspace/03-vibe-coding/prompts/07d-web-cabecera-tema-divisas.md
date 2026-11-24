@@ -75,3 +75,15 @@ Con los tipos de cambio bloqueados: aviso, "Reintentar" funciona y todo en EUR.
 El botón de tema tiene `aria-label` y cambia de icono.
 
 Ningún componente lee `localStorage` directamente: solo `lib/theme.ts` y el script de `index.html`.
+
+&nbsp;
+
+**Resultado de la revisión**
+
+Hecho en `5672c19`. Lint, typecheck y build en verde; sin colores ni medidas a mano. El script del tema queda en el HTML compilado antes del CSS y del JavaScript de React.
+
+Pendiente de probar en el navegador: que recargar en oscuro no da destello, y que con open.er-api.com bloqueado sale el aviso y todo queda en euros.
+
+Detalles para la ronda de correcciones del final:
+- `useTheme` cambia el atributo de `<html>` y guarda el tema dentro de la función que actualiza el estado; debería hacerlo en el manejador del clic.
+- El selector de divisa son dos `<select>` (móvil y escritorio) que se muestran o se ocultan con CSS; podría ser uno.
