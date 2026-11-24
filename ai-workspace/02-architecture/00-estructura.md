@@ -27,9 +27,11 @@ saas-o-matic/
 │   │   │   └── errors.ts      ApplicationError: CUSTOMER_NOT_FOUND, TAX_ID_ALREADY_EXISTS (común)
 │   │   ├── infrastructure/
 │   │   │   ├── db/            connection.ts, schema.ts, repositorios SQLite
+│   │   │   ├── seed/          demoData.ts (solo datos), seedDemoData.ts (usa los casos de uso)
 │   │   │   └── http/          app.ts, routes/ (customers.ts, simulations.ts), errorHandler.ts,
 │   │   │                      inputValidation.ts (clientes), simulationInput.ts (simulaciones)
-│   │   └── main.ts            composición: crea BD, repositorios, casos de uso y app
+│   │   ├── main.ts            composición: crea BD, repositorios, casos de uso y app
+│   │   └── seed.ts            composición del seed: `pnpm --filter api seed` (03-datos-demo.md)
 │   └── test/
 │       ├── domain/            TDD a partir de los .feature
 │       └── integration/       endpoints con BD en memoria
@@ -55,7 +57,7 @@ saas-o-matic/
 - `domain` no importa nada del proyecto ni de librerías externas.
 - `application` importa `domain` y `application/ports`. Nunca `infrastructure`.
 - `infrastructure` implementa los puertos y traduce HTTP ↔ casos de uso.
-- `main.ts` es el único sitio que conecta todo (inyección manual, sin librerías).
+- `main.ts` (y `seed.ts` para los datos de demostración) son los únicos sitios que conectan todo (inyección manual, sin librerías).
 - Los casos de uso van en `application/use-cases/`, agrupados por tema (`customers/`, `simulations/`), para que el nombre diga lo que hay dentro y todo lo de un tema esté junto. `ports/` y `errors.ts` quedan fuera porque los usan los dos temas.
 
 ## Errores
