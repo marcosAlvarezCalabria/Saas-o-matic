@@ -112,6 +112,7 @@ Principio: **el frontend casi no tiene lógica**. No calcula precios ni valida r
 
 - Enlace "← Clientes" arriba.
 - Escritorio (≥ 1024 px): datos del cliente a todo el ancho; debajo, simulador a la izquierda e historial a la derecha. Móvil y tablet: todo en una columna, en ese orden.
+- **En escritorio, el detalle cabe en una pantalla:** con una ventana de 1280 × 800 px, los datos del cliente, el simulador entero (con el botón de guardar) y el historial se ven sin scroll vertical. El pie puede quedar por debajo. Para eso el detalle es más compacto que el Dashboard (`04-design`, sección 6).
 - Si la api responde 404 o 400: "Cliente no encontrado." con enlace a `/`.
 
 ### Datos del cliente (tarjeta)
@@ -129,14 +130,44 @@ Principio: **el frontend casi no tiene lógica**. No calcula precios ni valida r
   - **Primera carga:** "Calculando…".
   - **Recalculando:** se mantiene el último resultado, atenuado. Sin parpadeos.
   - **Error:** "No se pudo calcular el precio." con "Reintentar". Los campos siguen editables. Si es un 429, el mensaje de la sección 10.
-- Botón "Guardar simulación": `POST /simulations` con usuarios, almacenamiento y llamadas. Mientras guarda, desactivado ("Guardando…"). Al guardar: "Simulación guardada" y el historial se vuelve a pedir. Si falla: mensaje junto al botón (un 429, con el de la sección 10).
+- Botón "Guardar simulación": `POST /simulations` con usuarios, almacenamiento y llamadas. Mientras guarda, desactivado ("Guardando…"). Al guardar: "Simulación guardada" y el historial se vuelve a pedir y vuelve a la página 1. Si falla: mensaje junto al botón (un 429, con el de la sección 10).
+- **Sin duplicados:** si en el historial ya hay una simulación con los mismos usuarios, almacenamiento y llamadas, el botón se desactiva y debajo pone "Ya hay una simulación guardada con estos valores.". Se compara con todo el historial, no solo con la página que se ve. El precio solo depende de esos valores y del IVA del país, así que repetirla no aporta nada. Es una regla del front: la api sigue aceptando duplicados (supuesto de `00-analisis.md`).
+- Los campos numéricos no muestran las flechas del navegador para subir y bajar. Las flechas del teclado siguen funcionando.
 
 ### Historial (tarjeta)
 
 - `GET /customers/:id/simulations`, las más recientes primero.
-- Escritorio: tabla con fecha, usuarios, GB, llamadas, base, IVA y total. Móvil: una mini tarjeta por simulación con los mismos datos.
+- **Una lista, en todos los anchos** (no una tabla): cada simulación es una fila compacta con la fecha y el total arriba, y debajo los usuarios, GB, llamadas, base e IVA. Así nunca hay scroll lateral, también con importes en otra divisa, que ocupan dos líneas.
+- **Paginación de 5 en 5**, en el front (la api devuelve todas). Debajo de la lista: "Anterior", "Página {n} de {total}" y "Siguiente"; los botones se desactivan en la primera y en la última página. Con 5 o menos, no se muestra. Al guardar una simulación se vuelve a la página 1.
+- **Botón "Enviar" en cada simulación:** un enlace `mailto:` al email del cliente que abre el programa de correo con el asunto y el cuerpo ya escritos (texto plano, el formato está en la sección 6 bis). No pasa por la api.
 - Importes en la divisa elegida, con la misma regla de la sección 4.
-- Estados: "Cargando historial…", vacío "Todavía no hay simulaciones guardadas.", error con "Reintentar".
+- Estados: "Cargando historial…", vacío "Todavía no hay simulaciones guardadas.", error con "Reintentar". Al recargar después de guardar, la lista se mantiene a la vista (atenuada) en vez de cambiar a "Cargando historial…".
+
+### 6 bis. Correo de una simulación
+
+- **Para:** el email del cliente.
+- **Asunto:** `Simulación de SaaS-O-Matic para {nombre de la empresa}`
+- **Cuerpo** (texto plano, líneas separadas con CRLF, todo codificado con `encodeURIComponent`):
+
+```
+Hola,
+
+Te envío la simulación del coste mensual de vuestra suscripción:
+
+Fecha: {fecha, es-ES}
+Usuarios: {usuarios}
+Almacenamiento: {GB} GB (informativo)
+Llamadas a la API: {llamadas} / mes (informativo)
+
+Base: {base en EUR}
+IVA ({porcentaje}): {IVA en EUR}
+Total mensual: {total en EUR}
+
+Un saludo
+```
+
+- Los importes van siempre en euros, que es lo que se factura. Si en la app está elegida otra divisa, debajo del total va una línea más: `Equivale a ≈ {total convertido} al tipo de cambio del {fecha de los tipos}.`
+- Se construye con una función pura de `lib/` (sección 9).
 
 ## 7. Estilo
 
@@ -190,6 +221,9 @@ Vitest, solo lógica pura en `web/src/lib/`, con el test antes que el código:
 - `money`: conversión de céntimos con un tipo, formato `es-ES` en EUR y en USD, redondeo solo al formatear.
 - `theme`: lo guardado manda sobre el sistema; sin nada guardado o con un valor raro, se sigue al sistema.
 - `apiClient`: una respuesta de error de la api se convierte en un error con `status` y `code`; un fallo de red, en un error propio.
+- `pagination`: páginas de 5, número de páginas, y una página fuera de rango se ajusta a la última válida.
+- `duplicates`: una simulación con los mismos usuarios, almacenamiento y llamadas cuenta como guardada; si cambia cualquiera de los tres, no.
+- `simulationEmail`: el `mailto:` tiene el destinatario, el asunto y el cuerpo de la sección 6 bis, bien codificados, con y sin la línea de otra divisa.
 
 Sin tests de componentes: se revisan a mano con la lista de la sección 11.
 
@@ -224,9 +258,14 @@ La demo se publica con un enlace abierto y la api no tiene login: sin límite, c
 - Buscar rápido no deja resultados de una búsqueda antigua.
 - Mover el slider deprisa lanza pocas peticiones (pestaña Red) y el total final es el del último valor.
 - Todo el alta y el guardado de una simulación se pueden hacer solo con teclado.
+- A 1280 × 800 px, el detalle de un cliente con 5 o más simulaciones se ve entero sin scroll vertical, y el historial no tiene scroll lateral en ninguna divisa.
+- Con 6 simulaciones o más aparece la paginación, y guardar vuelve a la página 1.
+- Pulsar "Guardar simulación" dos veces con los mismos valores solo guarda una.
+- "Enviar" abre el correo con el destinatario, el asunto y el cuerpo bien escritos (tildes y € incluidos).
 
 ## Registro de cambios
 
 - v0.1: vistas, estados, tipos de cambio, alta, simulador, historial, estilo de Roams con tema claro y oscuro, tests de lógica pura y CORS.
 - v0.2: fuera MXN; límite de peticiones en la api (429 y su mensaje en el front) y `TRUST_PROXY`.
 - v0.3: Tailwind para los estilos (ADR-008); medidas y componentes en `../04-design/00-diseno.md`; 2 columnas desde 768 px; país antes que el identificador; plan como grupo de opciones; modal como hoja en móvil; "Limpiar búsqueda"; país sin bandera; `lucide-react`; `--color-scrim`.
+- v0.4: detalle en una pantalla en escritorio; historial como lista en todos los anchos, paginado de 5 en 5 y con botón "Enviar" (`mailto:`); sin duplicados al guardar; campos numéricos sin flechas.

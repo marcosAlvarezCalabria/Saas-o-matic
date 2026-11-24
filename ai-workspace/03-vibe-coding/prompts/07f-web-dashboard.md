@@ -63,3 +63,9 @@ Escribir "acme" deprisa lanza una sola petición (pestaña Red).
 Los cuatro estados se ven, cada uno con su texto de `04-design`.
 
 La rejilla pasa de 1 a 2 columnas a 768 px y a 3 a 1024 px.
+
+&nbsp;
+
+**Resultado de la revisión**
+
+Hecho en `016a955`. Lint, typecheck y build en verde; sin valores a mano ni textos de la maqueta. Buscador con debounce de 300 ms; `useCustomers` cancela la búsqueda anterior, ignora las cancelaciones y solo enseña "Cargando…" si tarda más de 200 ms. Los cuatro estados con sus textos y acciones (incluido "Limpiar búsqueda"); rejilla de 1, 2 (`md`) y 3 (`lg`) columnas; la tarjeta entera es un enlace.

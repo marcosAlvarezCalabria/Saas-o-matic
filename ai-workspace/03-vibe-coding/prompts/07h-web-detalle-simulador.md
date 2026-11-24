@@ -76,3 +76,11 @@ El preview no se lanza al cambiar almacenamiento ni llamadas.
 El total no parpadea al mover el slider.
 
 Un cliente de Finlandia muestra "IVA (25,5 %)".
+
+&nbsp;
+
+**Resultado de la revisión**
+
+Hecho en `e3bdac6`. `--text-amount-sm` añadida al tema y usada como `text-amount-sm lg:text-amount`. El id de la URL se valida antes de llamar a la api (`/customers/abc` no hace ninguna petición). El preview lleva debounce de 250 ms, cancela el anterior y solo depende de los usuarios. Mientras recalcula, el último resultado se queda al 50 % de opacidad. IVA con `formatVatRate` y total con `aria-live`.
+
+Detalle: `Simulator.tsx` tiene 156 líneas, algo por encima de las ~150 de la guía.

@@ -86,6 +86,7 @@ Documento vivo. Cómo se ve cada pieza del frontend: medidas, tipografía, compo
 | Pastilla | Píldora de 24–28 px de alto, relleno lateral 12 px, `caption` |
 | Campo | 44 px, relleno 12 × 16 px, radio 8 px, borde 1 px `--color-input-border`, fondo `--color-surface`, `body`. Etiqueta encima en `label`, separada 6 px |
 | Campo con sufijo | Como el campo, con la unidad dentro a la derecha en `caption` y `--color-text-muted` ("usuarios", "GB", "/ mes") |
+| Campo numérico | Sin las flechas del navegador (`appearance: textfield` y sin `::-webkit-inner-spin-button`), en `global.css` |
 | Campo con error | Borde 2 px `--color-danger` e icono de error dentro, a la derecha. Debajo, a 6 px, caja de radio 6 px con fondo `--color-danger-soft`, icono de aviso y el mensaje en `caption` `--color-danger`. Enlazada con `aria-describedby` y `aria-invalid="true"` |
 | Aviso en línea | Caja de radio 12 px, borde 1 px del color del tipo al 20 %, relleno 16 px, icono + texto en `small` 500. Variantes: éxito (con botón cerrar), error (con "Reintentar") e información |
 
@@ -181,18 +182,23 @@ Todos centrados en un panel de 12 px de radio, máximo 576 px de ancho, relleno 
 ### Historial
 
 - Cabecera: icono de historial + "Historial" en `title-md`, y "{n} simulaciones" en `caption` muted a la derecha. Separador.
-- **Escritorio y tablet**, tabla:
-  - Columnas: Fecha · Usuarios · Base · IVA · Total. Cabeceras en `caption` mayúsculas muted; las de importes, alineadas a la derecha.
-  - Fecha: "24/05/2026" en `small` 500 y, debajo, "250 GB · 50.000 / mes" en `caption` muted.
-  - Usuarios: centrado, "15 usuarios".
-  - Base en `small`; IVA en `small` muted; total en `title-sm`.
-  - Filas separadas por `--color-border`, con 16 px de alto de relleno.
-- **Móvil**: una mini tarjeta por simulación, separadas por una línea:
-  - Fila 1: fecha a la izquierda, total en `title-sm` a la derecha.
-  - Fila 2: "15 usuarios" a la izquierda, "250 GB · 50.000 / mes" a la derecha.
-  - Fila 3: "Base: 140,00 €" a la izquierda, "IVA (21 %): 29,40 €" a la derecha, en `caption` muted.
+- **Una lista en todos los anchos** (sin tabla), filas separadas por `--color-border` y 12 px de alto de relleno:
+  - Fila 1: fecha en `small` 500 a la izquierda; total en `title-sm` a la derecha.
+  - Fila 2, en `caption` muted: "15 usuarios · 250 GB · 50.000 / mes" a la izquierda; "Base 140,00 € · IVA (21 %) 29,40 €" a la derecha (en móvil, debajo).
+  - A la derecha de la fila 2, el botón "Enviar": suave, 44 px de alto, con el icono de correo (en móvil, a todo el ancho debajo).
+- **Paginación** bajo la lista, centrada: botón secundario "Anterior", "Página 1 de 3" en `caption` muted y botón secundario "Siguiente"; desactivados en los extremos. Solo con más de 5 simulaciones.
+- Recargando tras guardar: la lista al 50 % de opacidad, como el precio del simulador.
 - Vacío: panel con borde discontinuo `--color-border`, radio 12 px, icono de carpeta y "Todavía no hay simulaciones guardadas." en `body-medium`, con "Mueve el slider y pulsa «Guardar simulación»." debajo en `small` muted.
 - Los importes del historial se convierten igual que los del simulador (sección 4 de `../01-specs/02-interfaz.md`).
+
+### Detalle compacto en escritorio
+
+Para que el detalle quepa en 1280 × 800 px sin scroll (`02-interfaz.md`, sección 6), desde `lg`:
+- Márgenes verticales de la página de 24 px (en vez de 48).
+- Las tarjetas del detalle con 24 px de relleno (en vez de 32).
+- Tarjeta del cliente en una sola fila: iniciales, nombre (`title-md`) y plan a la izquierda; NIF, país, email y fecha de alta a la derecha, sin separador.
+- Simulador: usuarios a todo el ancho; almacenamiento y llamadas en una fila; la nota informativa en una línea; la caja del precio con 16 px de relleno; el total en `amount-sm`.
+- Separación de 16 px entre bloques del simulador (en vez de 24).
 
 ### Cliente no encontrado
 
@@ -262,3 +268,4 @@ Todo va en el `@theme` de `styles/tokens.css` (ADR-008):
 
 - v0.1: escalas, componentes, vistas y tema oscuro a partir de la maqueta de Stitch (segunda versión), con lo que no se toma; `lucide-react`, 2 columnas desde 768 px, `--color-scrim` y cómo se lleva a Tailwind.
 - v0.2: `amount-sm` (32 / 40 px) para el total en móvil, para no escribir el tamaño a mano.
+- v0.3: historial como lista en todos los anchos, con paginación y botón "Enviar"; detalle compacto en escritorio; campos numéricos sin flechas.

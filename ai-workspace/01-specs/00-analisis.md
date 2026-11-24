@@ -107,6 +107,16 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 - Sin login ni autenticación: herramienta interna. Como la demo se publica con un enlace abierto, la api limita las peticiones por IP para evitar abusos. Mejora futura: login, con la api solo accesible para usuarios autenticados.
 - Se aplica siempre el tipo general de IVA del país del cliente. No se aplica la inversión del sujeto pasivo entre empresas de distintos países de la UE (en la realidad, el IVA de esas ventas puede ser 0 %). Mejora futura: delegar en un servicio de impuestos.
 - El país se normaliza (recortar y mayúsculas), igual que el identificador fiscal.
+- Identificador fiscal de otros países: solo se comprueba el formato básico, porque el enunciado solo exige el algoritmo de España. Por eso un DNI español con el país Irlanda se acepta.
+- Simulaciones repetidas: el front no deja guardar una simulación con los mismos usuarios, almacenamiento y llamadas que otra del mismo cliente, porque daría el mismo importe. La api no lo impide.
+- Enviar una simulación: el front abre el programa de correo (`mailto:`) con un resumen en texto plano. No hay enlace a la simulación porque la app es interna y el cliente no podría abrirlo.
+
+### Mejoras futuras (para el README)
+
+- Validar el identificador fiscal de cada país de la UE (por ejemplo, con la librería jsvat o el servicio VIES de la Comisión Europea).
+- Login, con la api solo accesible para usuarios autenticados.
+- Enviar el correo de una simulación desde la api, con HTML (por ejemplo, con Resend), en lugar de `mailto:`.
+- Delegar el IVA en un servicio de impuestos (inversión del sujeto pasivo).
 
 ## 8. Frontend
 
@@ -164,3 +174,4 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 - v1.8: tope de 100 000 usuarios; almacenamiento y llamadas como enteros seguros; la entrada se valida antes de buscar al cliente.
 - v1.9: frontend detallado en `02-interfaz.md` (estilo de Roams, tema claro y oscuro); tests de lógica pura en `web`; CORS en la api.
 - v1.10: límite de peticiones por IP en la api, porque la demo se publica con un enlace abierto.
+- v1.11: supuestos del identificador de otros países, simulaciones repetidas y envío por correo; lista de mejoras futuras para el README.

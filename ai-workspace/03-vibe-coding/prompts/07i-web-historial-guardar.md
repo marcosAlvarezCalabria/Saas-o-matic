@@ -64,3 +64,11 @@ Tras guardar, la simulación nueva aparece arriba del historial sin recargar la 
 En móvil cada simulación es una mini tarjeta con el total arriba a la derecha.
 
 Después, la lista completa de la sección 11 de `02-interfaz.md`, en claro y en oscuro.
+
+&nbsp;
+
+**Resultado de la revisión**
+
+Hecho en `37fb6ff`. Historial en tabla desde `md` y en mini tarjetas en móvil; vacío, cargando y error con "Reintentar". Guardar usa los usuarios al momento (no los del debounce), se desactiva con valores no válidos o mientras guarda, y al terminar recarga el historial y muestra "Simulación guardada".
+
+Detalle: al recargar el historial tras guardar, la lista se sustituye un instante por "Cargando historial…" en vez de mantenerse.

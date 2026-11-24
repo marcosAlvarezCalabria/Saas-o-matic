@@ -63,3 +63,9 @@ Cada error de la api sale en su campo, con `aria-invalid`.
 Pulsar "Guardar cliente" dos veces seguidas no lanza dos peticiones.
 
 En móvil el modal sale desde abajo y se puede cerrar con Escape y con la X.
+
+&nbsp;
+
+**Resultado de la revisión**
+
+Hecho en `241ca9c`, repartido en `CustomerFormDialog`, `CustomerFormFields`, `CustomerPlanField` y `customerFormErrors`. `<dialog>` nativo, hoja desde abajo en móvil y centrado desde `md`. País antes que el identificador; el plan como grupo de radios accesible con el teclado. Cada error de la api va a su campo según la tabla de la spec (429 incluido). Un `ref` impide el doble envío, y Escape no cierra el modal mientras guarda.
