@@ -1,14 +1,18 @@
-import type { ButtonHTMLAttributes, ComponentProps } from 'react';
+import type {
+  AnchorHTMLAttributes,
+  ButtonHTMLAttributes,
+  ComponentProps,
+} from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { Link } from 'react-router';
 
 import { Icon } from './Icon';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'soft';
-export type ButtonSize = 'md' | 'lg';
+export type ButtonSize = 'md' | 'lg' | 'compact';
 
 const BASE_STYLES =
-  'inline-flex cursor-pointer items-center justify-center gap-2 rounded-full px-6 font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50';
+  'inline-flex cursor-pointer items-center justify-center gap-2 rounded-full font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50';
 
 const VARIANT_STYLES: Record<ButtonVariant, string> = {
   primary: 'bg-primary text-on-primary hover:bg-primary-hover',
@@ -19,8 +23,9 @@ const VARIANT_STYLES: Record<ButtonVariant, string> = {
 };
 
 const SIZE_STYLES: Record<ButtonSize, string> = {
-  md: 'h-11',
-  lg: 'h-12',
+  md: 'h-11 px-6',
+  lg: 'h-12 px-6',
+  compact: 'h-11 px-4',
 };
 
 function getButtonStyles(
@@ -79,5 +84,27 @@ export function LinkButton({
       {icon ? <Icon icon={icon} size={18} /> : null}
       {children}
     </Link>
+  );
+}
+
+interface AnchorButtonProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  icon?: LucideIcon;
+}
+
+export function AnchorButton({
+  variant = 'primary',
+  size = 'md',
+  icon,
+  className,
+  children,
+  ...props
+}: AnchorButtonProps) {
+  return (
+    <a className={getButtonStyles(variant, size, className)} {...props}>
+      {icon ? <Icon icon={icon} size={18} /> : null}
+      {children}
+    </a>
   );
 }

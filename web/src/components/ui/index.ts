@@ -1,5 +1,5 @@
 export { Badge, CountryBadge, PlanBadge } from './Badge';
-export { Button, LinkButton } from './Button';
+export { AnchorButton, Button, LinkButton } from './Button';
 export { Card } from './Card';
 export { NumberField, SelectField, TextField } from './Field';
 export { Icon } from './Icon';

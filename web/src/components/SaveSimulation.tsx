@@ -1,8 +1,10 @@
-import { useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { Save } from 'lucide-react';
 
 import { ApiError } from '../api/apiClient';
 import { createSimulation } from '../api/simulations';
+import type { Simulation } from '../api/types';
+import { isSimulationSaved } from '../lib/duplicates';
 import { Button, InlineAlert } from './ui';
 
 interface SaveSimulationProps {
@@ -10,6 +12,8 @@ interface SaveSimulationProps {
   users: number | null;
   storageGb: number | null;
   apiCalls: number | null;
+  historyReady: boolean;
+  simulations: Simulation[];
   onSaved: () => void;
 }
 
@@ -20,11 +24,27 @@ export function SaveSimulation({
   users,
   storageGb,
   apiCalls,
+  historyReady,
+  simulations,
   onSaved,
 }: SaveSimulationProps) {
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState<SaveNotice>(null);
+  const [savedSimulations, setSavedSimulations] = useState<Simulation[]>([]);
   const savingRef = useRef(false);
+  const duplicateMessageId = useId();
+  const values =
+    users === null || storageGb === null || apiCalls === null
+      ? null
+      : { users, storageGb, apiCalls };
+  const duplicate =
+    values !== null &&
+    isSimulationSaved(
+      savedSimulations.length === 0
+        ? simulations
+        : [...simulations, ...savedSimulations],
+      values,
+    );
 
   async function handleSave() {
     if (
@@ -41,12 +61,16 @@ export function SaveSimulation({
     setNotice(null);
 
     try {
-      await createSimulation({
+      const createdSimulation = await createSimulation({
         customerId,
         users,
         storageGb,
         apiCalls,
       });
+      setSavedSimulations((currentSimulations) => [
+        ...currentSimulations,
+        createdSimulation,
+      ]);
       setNotice('success');
       onSaved();
     } catch (error) {
@@ -75,9 +99,15 @@ export function SaveSimulation({
       ) : null}
 
       <Button
+        aria-describedby={duplicate ? duplicateMessageId : undefined}
         className="w-full self-end md:w-auto"
         disabled={
-          saving || users === null || storageGb === null || apiCalls === null
+          saving ||
+          !historyReady ||
+          users === null ||
+          storageGb === null ||
+          apiCalls === null ||
+          duplicate
         }
         icon={Save}
         size="lg"
@@ -85,6 +115,14 @@ export function SaveSimulation({
       >
         {saving ? 'Guardando…' : 'Guardar simulación'}
       </Button>
+      {duplicate ? (
+        <p
+          className="text-center text-caption text-text-muted md:text-right"
+          id={duplicateMessageId}
+        >
+          Ya hay una simulación guardada con estos valores.
+        </p>
+      ) : null}
     </div>
   );
 }

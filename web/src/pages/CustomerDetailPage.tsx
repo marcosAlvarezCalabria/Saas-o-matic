@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { UserX } from 'lucide-react';
 import { Link, useParams } from 'react-router';
 
@@ -22,6 +23,12 @@ export function CustomerDetailPage() {
   const customerId = parseCustomerId(id);
   const { status, customer, retry } = useCustomer(customerId);
   const simulations = useSimulations(customerId);
+  const [historyPageKey, setHistoryPageKey] = useState(0);
+
+  function handleSimulationSaved() {
+    setHistoryPageKey((currentKey) => currentKey + 1);
+    simulations.reload();
+  }
 
   if (status === 'loading') {
     return (
@@ -83,11 +90,18 @@ export function CustomerDetailPage() {
         <div className="lg:col-span-7">
           <Simulator
             customerId={customerId}
-            onSimulationSaved={simulations.reload}
+            historyReady={
+              simulations.status === 'success' ||
+              simulations.simulations.length > 0
+            }
+            simulations={simulations.simulations}
+            onSimulationSaved={handleSimulationSaved}
           />
         </div>
         <SimulationHistory
           className="lg:col-span-5"
+          customer={customer}
+          key={historyPageKey}
           simulations={simulations.simulations}
           status={simulations.status}
           onRetry={simulations.reload}

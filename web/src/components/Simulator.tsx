@@ -3,6 +3,7 @@ import { Info, Settings2 } from 'lucide-react';
 
 import { useDebouncedValue } from '../hooks/useDebouncedValue';
 import { usePreview } from '../hooks/usePreview';
+import type { Simulation } from '../api/types';
 import { formatVatRate } from '../lib/vatRate';
 import { Money } from './Money';
 import { SaveSimulation } from './SaveSimulation';
@@ -31,11 +32,15 @@ function parseUsage(value: string): number | null {
 
 interface SimulatorProps {
   customerId: number;
+  historyReady: boolean;
+  simulations: Simulation[];
   onSimulationSaved: () => void;
 }
 
 export function Simulator({
   customerId,
+  historyReady,
+  simulations,
   onSimulationSaved,
 }: SimulatorProps) {
   const [users, setUsers] = useState('15');
@@ -146,6 +151,8 @@ export function Simulator({
         <SaveSimulation
           apiCalls={validApiCalls}
           customerId={customerId}
+          historyReady={historyReady}
+          simulations={simulations}
           storageGb={validStorageGb}
           users={validUsers}
           onSaved={onSimulationSaved}
