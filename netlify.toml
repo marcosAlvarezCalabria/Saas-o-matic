@@ -1,0 +1,13 @@
+"$schema" = "https://open-api.netlify.com/netlify.schema.json"
+
+[build]
+  command = "pnpm --filter web build"
+  publish = "web/dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

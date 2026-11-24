@@ -2,6 +2,7 @@
   "name": "saas-o-matic",
   "version": "0.0.0",
   "private": true,
+  "packageManager": "pnpm@10.22.0",
   "scripts": {
     "dev": "pnpm -r --parallel dev",
     "test": "pnpm -r test",
