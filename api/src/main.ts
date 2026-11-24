@@ -2,8 +2,10 @@ import { CreateCustomer } from './application/use-cases/customers/createCustomer
 import { GetCustomer } from './application/use-cases/customers/getCustomer.js';
 import { SearchCustomers } from './application/use-cases/customers/searchCustomers.js';
 import { CreateSimulation } from './application/use-cases/simulations/createSimulation.js';
+import { ArchiveSimulation } from './application/use-cases/simulations/archiveSimulation.js';
 import { ListCustomerSimulations } from './application/use-cases/simulations/listCustomerSimulations.js';
 import { PreviewSimulation } from './application/use-cases/simulations/previewSimulation.js';
+import { RestoreSimulation } from './application/use-cases/simulations/restoreSimulation.js';
 import { createDatabase } from './infrastructure/db/connection.js';
 import { SqliteCustomerRepository } from './infrastructure/db/SqliteCustomerRepository.js';
 import { SqliteSimulationRepository } from './infrastructure/db/SqliteSimulationRepository.js';
@@ -20,8 +22,10 @@ const app = createApp(
     getCustomer: new GetCustomer(customers),
     searchCustomers: new SearchCustomers(customers),
     createSimulation: new CreateSimulation(customers, simulations),
+    archiveSimulation: new ArchiveSimulation(simulations),
     listCustomerSimulations: new ListCustomerSimulations(customers, simulations),
     previewSimulation: new PreviewSimulation(customers),
+    restoreSimulation: new RestoreSimulation(simulations),
   },
   {
     corsOrigins: parseCorsOrigins(process.env.CORS_ORIGINS),

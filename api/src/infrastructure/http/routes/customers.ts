@@ -4,7 +4,7 @@ import type { CreateCustomer } from '../../../application/use-cases/customers/cr
 import type { GetCustomer } from '../../../application/use-cases/customers/getCustomer.js';
 import type { SearchCustomers } from '../../../application/use-cases/customers/searchCustomers.js';
 import { validationErrorBody } from '../errorHandler.js';
-import { parseCreateCustomerInput, parseCustomerId } from '../inputValidation.js';
+import { parseCreateCustomerInput, parsePositiveId } from '../inputValidation.js';
 
 export interface CustomerUseCases {
   createCustomer: CreateCustomer;
@@ -38,7 +38,7 @@ export function createCustomerRouter(useCases: CustomerUseCases): Router {
   });
 
   router.get('/:id', (request, response) => {
-    const id = parseCustomerId(request.params.id ?? '');
+    const id = parsePositiveId(request.params.id ?? '');
 
     if (id === null) {
       response.status(400).json(validationErrorBody('El id debe ser un entero positivo'));

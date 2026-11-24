@@ -8,7 +8,13 @@ export interface SimulationToCreate extends CostBreakdown {
   apiCalls: number;
 }
 
+export interface SimulationListOptions {
+  archived: boolean;
+}
+
 export interface SimulationRepository {
   create(simulation: SimulationToCreate): Simulation;
-  findByCustomerId(customerId: number): Simulation[];
+  findByCustomerId(customerId: number, options?: SimulationListOptions): Simulation[];
+  archive(id: number): Simulation | null;
+  restore(id: number): Simulation | null;
 }

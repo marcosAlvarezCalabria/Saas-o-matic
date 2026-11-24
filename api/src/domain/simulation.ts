@@ -8,6 +8,7 @@ export interface Simulation extends CostBreakdown {
   storageGb: number;
   apiCalls: number;
   createdAt: string;
+  archivedAt: string | null;
 }
 
 export interface UsageInput {

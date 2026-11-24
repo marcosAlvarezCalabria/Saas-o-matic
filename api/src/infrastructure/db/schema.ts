@@ -23,7 +23,8 @@ CREATE TABLE IF NOT EXISTS simulations (
   vat_rate_basis_points INTEGER NOT NULL CHECK (vat_rate_basis_points >= 0),
   vat_cents   INTEGER NOT NULL CHECK (vat_cents >= 0),
   total_cents INTEGER NOT NULL CHECK (total_cents = base_cents + vat_cents),
-  created_at  TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+  created_at  TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
+  archived_at TEXT
 );
 
 CREATE INDEX IF NOT EXISTS idx_simulations_customer ON simulations (customer_id, created_at DESC);

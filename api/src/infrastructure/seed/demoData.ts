@@ -2,6 +2,7 @@ export interface DemoSimulation {
   users: number;
   storageGb: number;
   apiCalls: number;
+  archived?: boolean;
 }
 
 export interface DemoCustomer {
@@ -21,7 +22,7 @@ export const DEMO_CUSTOMERS: readonly DemoCustomer[] = [
     country: 'ES',
     plan: 'pro',
     simulations: [
-      { users: 5, storageGb: 20, apiCalls: 10_000 },
+      { users: 5, storageGb: 20, apiCalls: 10_000, archived: true },
       { users: 10, storageGb: 50, apiCalls: 25_000 },
       { users: 12, storageGb: 80, apiCalls: 40_000 },
       { users: 25, storageGb: 150, apiCalls: 90_000 },

@@ -36,6 +36,8 @@ export function createApp(useCases: CustomerUseCases & SimulationUseCases, optio
   app.use(express.json());
   app.post('/customers', writeLimiter);
   app.post('/simulations', writeLimiter);
+  app.post('/simulations/:id/archive', writeLimiter);
+  app.post('/simulations/:id/restore', writeLimiter);
   app.use('/customers', createCustomerRouter(useCases));
   app.use(createSimulationRouter(useCases));
   app.use(notFoundHandler);

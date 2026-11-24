@@ -1,6 +1,7 @@
 import type Database from 'better-sqlite3';
 
 import type {
+  SimulationListOptions,
   SimulationRepository,
   SimulationToCreate,
 } from '../../application/ports/SimulationRepository.js';
@@ -17,6 +18,7 @@ interface SimulationRow {
   vat_cents: number;
   total_cents: number;
   created_at: string;
+  archived_at: string | null;
 }
 
 export class SqliteSimulationRepository implements SimulationRepository {
@@ -49,16 +51,45 @@ export class SqliteSimulationRepository implements SimulationRepository {
     return mapSimulation(row);
   }
 
-  findByCustomerId(customerId: number): Simulation[] {
+  findByCustomerId(
+    customerId: number,
+    { archived }: SimulationListOptions = { archived: false },
+  ): Simulation[] {
     const rows = this.database
       .prepare(
         `SELECT * FROM simulations
-         WHERE customer_id = ?
+         WHERE customer_id = ? AND archived_at IS ${archived ? 'NOT NULL' : 'NULL'}
          ORDER BY created_at DESC, id DESC`,
       )
       .all(customerId) as SimulationRow[];
 
     return rows.map(mapSimulation);
+  }
+
+  archive(id: number): Simulation | null {
+    const row = this.database
+      .prepare(
+        `UPDATE simulations
+         SET archived_at = COALESCE(archived_at, strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+         WHERE id = ?
+         RETURNING *`,
+      )
+      .get(id) as SimulationRow | undefined;
+
+    return row === undefined ? null : mapSimulation(row);
+  }
+
+  restore(id: number): Simulation | null {
+    const row = this.database
+      .prepare(
+        `UPDATE simulations
+         SET archived_at = NULL
+         WHERE id = ?
+         RETURNING *`,
+      )
+      .get(id) as SimulationRow | undefined;
+
+    return row === undefined ? null : mapSimulation(row);
   }
 }
 
@@ -74,5 +105,6 @@ function mapSimulation(row: SimulationRow): Simulation {
     vatCents: row.vat_cents,
     totalCents: row.total_cents,
     createdAt: row.created_at,
+    archivedAt: row.archived_at,
   };
 }

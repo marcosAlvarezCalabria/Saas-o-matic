@@ -1,4 +1,7 @@
-export type ApplicationErrorCode = 'CUSTOMER_NOT_FOUND' | 'TAX_ID_ALREADY_EXISTS';
+export type ApplicationErrorCode =
+  | 'CUSTOMER_NOT_FOUND'
+  | 'SIMULATION_NOT_FOUND'
+  | 'TAX_ID_ALREADY_EXISTS';
 
 export class ApplicationError extends Error {
   constructor(

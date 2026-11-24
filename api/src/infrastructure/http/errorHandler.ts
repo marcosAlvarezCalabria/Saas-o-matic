@@ -21,7 +21,7 @@ export const errorHandler: ErrorRequestHandler = (error, _request, response, nex
   }
 
   if (error instanceof ApplicationError) {
-    const status = error.code === 'CUSTOMER_NOT_FOUND' ? 404 : 409;
+    const status = error.code === 'TAX_ID_ALREADY_EXISTS' ? 409 : 404;
     response.status(status).json(errorBody(error.code, error.message));
     return;
   }

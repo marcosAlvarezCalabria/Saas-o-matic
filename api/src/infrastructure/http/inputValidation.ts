@@ -22,7 +22,7 @@ export function parseCreateCustomerInput(body: unknown): CreateCustomerInput | n
   };
 }
 
-export function parseCustomerId(value: string): number | null {
+export function parsePositiveId(value: string): number | null {
   return /^[1-9]\d*$/.test(value) ? Number(value) : null;
 }
 
