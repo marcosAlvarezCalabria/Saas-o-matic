@@ -41,10 +41,10 @@ Haz solo este prompt y para.
      · Empieza por "mailto:compras@acme.es?subject=".
      · Al decodificar el asunto: "Simulación de SaaS-O-Matic para Acme Ibérica S.L.".
      · Al decodificar el cuerpo: las líneas de 02-interfaz.md, sección 6 bis,
-       separadas por "\r\n", con "Total mensual: 169,40 €".
+       separadas por "\r\n", con "Total mensual: 169,40\u00a0€".
      · conversion null → sin la línea "Equivale a".
      · conversion { currency: "USD", rate: 1.09, ratesDate: "22 de noviembre
-       de 2026" } → con "Equivale a ≈ 184,65 US$ al tipo de cambio del
+       de 2026" } → con "Equivale a ≈ 184,65\u00a0US$ al tipo de cambio del
        22 de noviembre de 2026.".
    Ejecuta y comprueba que fallan.
    Commit: test(web): paginación, duplicados y correo de una simulación
