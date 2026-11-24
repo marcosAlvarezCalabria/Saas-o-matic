@@ -1,10 +1,12 @@
-import { History, UserX } from 'lucide-react';
+import { UserX } from 'lucide-react';
 import { Link, useParams } from 'react-router';
 
 import { CustomerSummary } from '../components/CustomerSummary';
+import { SimulationHistory } from '../components/SimulationHistory';
 import { Simulator } from '../components/Simulator';
-import { Button, Card, Icon, Spinner, StatusPanel } from '../components/ui';
+import { Button, Icon, Spinner, StatusPanel } from '../components/ui';
 import { useCustomer } from '../hooks/useCustomer';
+import { useSimulations } from '../hooks/useSimulations';
 
 function parseCustomerId(id: string | undefined): number | null {
   if (!id || !/^[1-9]\d*$/.test(id)) {
@@ -19,6 +21,7 @@ export function CustomerDetailPage() {
   const { id } = useParams();
   const customerId = parseCustomerId(id);
   const { status, customer, retry } = useCustomer(customerId);
+  const simulations = useSimulations(customerId);
 
   if (status === 'loading') {
     return (
@@ -78,14 +81,17 @@ export function CustomerDetailPage() {
       </div>
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-12">
         <div className="lg:col-span-7">
-          <Simulator customerId={customerId} />
+          <Simulator
+            customerId={customerId}
+            onSimulationSaved={simulations.reload}
+          />
         </div>
-        <Card className="lg:col-span-5">
-          <div className="flex items-center gap-3 border-b border-border pb-4">
-            <Icon className="text-text-muted" icon={History} size={24} />
-            <h2 className="text-title-md text-text">Historial</h2>
-          </div>
-        </Card>
+        <SimulationHistory
+          className="lg:col-span-5"
+          simulations={simulations.simulations}
+          status={simulations.status}
+          onRetry={simulations.reload}
+        />
       </div>
     </div>
   );

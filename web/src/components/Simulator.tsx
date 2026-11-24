@@ -5,6 +5,7 @@ import { useDebouncedValue } from '../hooks/useDebouncedValue';
 import { usePreview } from '../hooks/usePreview';
 import { formatVatRate } from '../lib/vatRate';
 import { Money } from './Money';
+import { SaveSimulation } from './SaveSimulation';
 import { UsersSlider } from './UsersSlider';
 import { Card, Icon, InlineAlert, NumberField } from './ui';
 
@@ -19,15 +20,30 @@ function parseUsers(value: string): number | null {
     : null;
 }
 
-interface SimulatorProps {
-  customerId: number;
+function parseUsage(value: string): number | null {
+  if (value.trim() === '') {
+    return 0;
+  }
+
+  const usage = Number(value);
+  return Number.isSafeInteger(usage) && usage >= 0 ? usage : null;
 }
 
-export function Simulator({ customerId }: SimulatorProps) {
+interface SimulatorProps {
+  customerId: number;
+  onSimulationSaved: () => void;
+}
+
+export function Simulator({
+  customerId,
+  onSimulationSaved,
+}: SimulatorProps) {
   const [users, setUsers] = useState('15');
   const [storageGb, setStorageGb] = useState('');
   const [apiCalls, setApiCalls] = useState('');
   const validUsers = parseUsers(users);
+  const validStorageGb = parseUsage(storageGb);
+  const validApiCalls = parseUsage(apiCalls);
   const debouncedUsers = useDebouncedValue(validUsers, 250);
   const { status, result, rateLimited, retry } = usePreview(
     customerId,
@@ -49,6 +65,11 @@ export function Simulator({ customerId }: SimulatorProps) {
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <NumberField
+            error={
+              validStorageGb === null
+                ? 'Introduce un entero mayor o igual que 0'
+                : undefined
+            }
             label="Almacenamiento (GB)"
             min="0"
             name="storageGb"
@@ -58,6 +79,11 @@ export function Simulator({ customerId }: SimulatorProps) {
             onChange={(event) => setStorageGb(event.target.value)}
           />
           <NumberField
+            error={
+              validApiCalls === null
+                ? 'Introduce un entero mayor o igual que 0'
+                : undefined
+            }
             label="Llamadas a la API / mes"
             min="0"
             name="apiCalls"
@@ -117,7 +143,13 @@ export function Simulator({ customerId }: SimulatorProps) {
           </div>
         )}
 
-        <div className="flex min-h-12 justify-end" data-simulation-actions />
+        <SaveSimulation
+          apiCalls={validApiCalls}
+          customerId={customerId}
+          storageGb={validStorageGb}
+          users={validUsers}
+          onSaved={onSimulationSaved}
+        />
       </div>
     </Card>
   );
