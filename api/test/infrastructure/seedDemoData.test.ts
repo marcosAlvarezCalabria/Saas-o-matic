@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { CreateCustomer } from '../../src/application/use-cases/customers/createCustomer.js';
 import { SearchCustomers } from '../../src/application/use-cases/customers/searchCustomers.js';
+import { ArchiveSimulation } from '../../src/application/use-cases/simulations/archiveSimulation.js';
 import { CreateSimulation } from '../../src/application/use-cases/simulations/createSimulation.js';
 import type { Customer } from '../../src/domain/customer.js';
 import { createDatabase } from '../../src/infrastructure/db/connection.js';
@@ -15,6 +16,7 @@ interface SeedTestContext {
   createCustomer: CreateCustomer;
   searchCustomers: SearchCustomers;
   createSimulation: CreateSimulation;
+  archiveSimulation: ArchiveSimulation;
   simulations: SqliteSimulationRepository;
 }
 
@@ -39,9 +41,13 @@ describe('seedDemoData', () => {
       status: 'seeded',
       customers: 9,
       simulations: 19,
+      archived: 1,
     });
     expect(customers).toHaveLength(9);
-    expect(context.simulations.findByCustomerId(nubeNorte.id)).toHaveLength(7);
+    expect(context.simulations.findByCustomerId(nubeNorte.id)).toHaveLength(6);
+    expect(
+      context.simulations.findByCustomerId(nubeNorte.id, { archived: true }),
+    ).toEqual([expect.objectContaining({ users: 5 })]);
     expect(context.simulations.findByCustomerId(tallerIberico.id)).toHaveLength(0);
     expect(context.searchCustomers.execute('nube')).toHaveLength(2);
     expect(context.searchCustomers.execute('iberico')).toHaveLength(1);
@@ -81,6 +87,7 @@ function createSeedTestContext(): SeedTestContext {
     createCustomer: new CreateCustomer(customers),
     searchCustomers: new SearchCustomers(customers),
     createSimulation: new CreateSimulation(customers, simulations),
+    archiveSimulation: new ArchiveSimulation(simulations),
     simulations,
   };
 }
@@ -90,6 +97,7 @@ function runSeed(context: SeedTestContext) {
     createCustomer: context.createCustomer,
     searchCustomers: context.searchCustomers,
     createSimulation: context.createSimulation,
+    archiveSimulation: context.archiveSimulation,
   });
 }
 
@@ -108,7 +116,9 @@ function countSimulations(context: SeedTestContext): number {
     .execute('')
     .reduce(
       (total, customer) =>
-        total + context.simulations.findByCustomerId(customer.id).length,
+        total +
+        context.simulations.findByCustomerId(customer.id).length +
+        context.simulations.findByCustomerId(customer.id, { archived: true }).length,
       0,
     );
 }

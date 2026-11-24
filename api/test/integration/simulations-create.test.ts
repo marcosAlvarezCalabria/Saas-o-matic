@@ -35,6 +35,7 @@ describe('POST /simulations', () => {
       vatRateBasisPoints: 2_100,
       vatCents: 2_940,
       totalCents: 16_940,
+      archivedAt: null,
     });
     expect(response.body.id).toEqual(expect.any(Number));
     expect(response.body.createdAt).toEqual(expect.any(String));

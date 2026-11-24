@@ -46,6 +46,7 @@ describe('GET /customers/:id/simulations', () => {
       vatRateBasisPoints: 2_100,
       vatCents: 2_940,
       totalCents: 16_940,
+      archivedAt: null,
     });
   });
 
