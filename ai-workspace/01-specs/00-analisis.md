@@ -122,6 +122,7 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 - Delegar el IVA en un servicio de impuestos (inversión del sujeto pasivo).
 - Borrado real de simulaciones, solo para un rol de administrador, cuando haya login.
 - Paginar los clientes en la api (`?page=&limit=`) cuando haya miles; hoy se pagina en el front.
+- Correo de la simulación en el idioma del cliente, con el nombre local del impuesto (VAT, MwSt., TVA…). Hoy la interfaz y el correo van en español y el impuesto se llama "IVA", con el tipo del país del cliente.
 
 ## 8. Frontend
 

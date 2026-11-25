@@ -157,7 +157,7 @@ Principio: **el frontend casi no tiene lógica**. No calcula precios ni valida r
 - Estados: "Cargando historial…", vacío "Todavía no hay simulaciones guardadas.", error con "Reintentar". Al recargar después de guardar, la lista se mantiene a la vista (atenuada) en vez de cambiar a "Cargando historial…".
 - **Activas y archivadas:** en la cabecera, un interruptor "Ver archivadas" (`role="switch"`, `aria-checked`, se activa con espacio o Enter). Apagado (por defecto) muestra las activas; encendido, las archivadas. Las archivadas se piden (`?archived=true`) solo al abrir esa vista, y otra vez cada vez que se abre. Al cambiar de vista se vuelve a la página 1 y se quita el aviso. El contador "{n} simulaciones" es el de la vista abierta. Vacío en archivadas: "No hay simulaciones archivadas.".
 - **Archivar:** en cada simulación activa, un botón "Archivar" junto a "Enviar" (`aria-label` "Archivar la simulación del {fecha}"). Archiva al momento, sin confirmación: el botón se desactiva mientras tanto y, al terminar, sobre la lista sale "Simulación archivada." con el botón "Deshacer", que la recupera. El aviso se queda hasta que se cierra, se archiva otra o se cambia de vista. Después se vuelve a pedir el historial, sin volver a la página 1 (si la página se queda vacía, `paginate` pasa a la anterior).
-- **Recuperar:** en la vista "Archivadas", cada simulación muestra "Archivada el {fecha}" en lugar de "Enviar" y un botón "Recuperar". Al terminar: "Simulación recuperada." y se vuelven a pedir las dos listas.
+- **Recuperar:** en la vista "Archivadas", cada simulación muestra un botón "Recuperar" en lugar de "Enviar" y "Archivar", y "Archivada el {fecha}" como última línea de sus datos (debajo de base e IVA), nunca en la fila del total, donde no cabe. Al terminar: "Simulación recuperada." y se vuelven a pedir las dos listas.
 - Si archivar o recuperar falla: "No se pudo archivar la simulación. Inténtalo de nuevo." o "No se pudo recuperar la simulación. Inténtalo de nuevo." en el mismo sitio. Un 429, con el mensaje de la sección 10.
 
 ### 6 bis. Correo de una simulación
@@ -288,6 +288,7 @@ La demo se publica con un enlace abierto y la api no tiene login: sin límite, c
 - v0.1: vistas, estados, tipos de cambio, alta, simulador, historial, estilo de Roams con tema claro y oscuro, tests de lógica pura y CORS.
 - v0.2: fuera MXN; límite de peticiones en la api (429 y su mensaje en el front) y `TRUST_PROXY`.
 - v0.3: Tailwind para los estilos (ADR-008); medidas y componentes en `../04-design/00-diseno.md`; 2 columnas desde 768 px; país antes que el identificador; plan como grupo de opciones; modal como hoja en móvil; "Limpiar búsqueda"; país sin bandera; `lucide-react`; `--color-scrim`.
+- v0.9: "Archivada el {fecha}" pasa a la última línea de los datos de la fila (se montaba sobre el total).
 - v0.8: en otra divisa, el euro ya no va debajo de cada importe, sino en una sola línea "Se factura en euros" (opción B, elegida en la prueba en producción).
 - v0.7: sin la nota de "informativos" (ahora un botón "i" con el texto en cada campo); interruptor "Ver archivadas" en lugar de dos botones.
 - v0.6: importes en otra divisa sin cortes (`≈` unido, base e IVA del historial en una línea, caja del precio en dos zonas); buscador fijo y paginación de 6 en el dashboard; cabecera de 48 px en móvil.

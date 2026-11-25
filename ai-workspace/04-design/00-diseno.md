@@ -188,7 +188,7 @@ Todos centrados en un panel de 12 px de radio, máximo 576 px de ancho, relleno 
   - Fila 1: fecha en `small` 500 a la izquierda; total en `title-sm` a la derecha.
   - Fila 2, en `caption` muted: "15 usuarios · 250 GB · 50.000 / mes" a la izquierda; "Base 140,00 € · IVA (21 %) 29,40 €" a la derecha (en móvil, debajo).
   - A la derecha de la fila 2, el botón "Enviar": suave, 44 px de alto, con el icono de correo (en móvil, a todo el ancho debajo).
-  - Junto a "Enviar", el botón "Archivar": secundario, 44 px de alto, con el icono `Archive` de lucide. En archivadas, en su lugar: "Archivada el {fecha}" en `caption` muted y el botón secundario "Recuperar" con el icono `ArchiveRestore`.
+  - Junto a "Enviar", el botón "Archivar": secundario, 44 px de alto, con el icono `Archive` de lucide. En archivadas, en lugar de "Enviar" y "Archivar": el botón secundario "Recuperar" con el icono `ArchiveRestore`. "Archivada el {fecha}" va en `caption` muted como última línea de los datos de la fila, debajo de base e IVA; nunca junto al total.
 - Bajo la cabecera, a la izquierda: el interruptor "Ver archivadas". Pista de 44 × 24 px, redondeada; apagado, `--color-border` con el círculo en `--color-surface`; encendido, `--color-primary` con el círculo a la derecha. La etiqueta, a su derecha, en `small` 500. Con foco, el contorno común.
 - El aviso de "Simulación archivada." con "Deshacer" usa `InlineAlert` (éxito) sobre la lista.
 - **Paginación** bajo la lista, centrada: botón secundario "Anterior", "Página 1 de 3" en `caption` muted y botón secundario "Siguiente"; desactivados en los extremos. Solo con más de 5 simulaciones.
