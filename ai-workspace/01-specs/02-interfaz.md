@@ -153,6 +153,7 @@ Principio: **el frontend casi no tiene lógica**. No calcula precios ni valida r
 - **Una lista, en todos los anchos** (no una tabla): cada simulación es una fila compacta con la fecha y el total arriba, y debajo los usuarios, GB, llamadas, base e IVA. Así nunca hay scroll lateral, también con importes en otra divisa, que ocupan dos líneas.
 - **Paginación de 5 en 5**, en el front (la api devuelve todas). Debajo de la lista: "Anterior", "Página {n} de {total}" y "Siguiente"; los botones se desactivan en la primera y en la última página. Con 5 o menos, no se muestra. Al guardar una simulación se vuelve a la página 1.
 - **Botón "Enviar" en cada simulación:** un enlace `mailto:` al email del cliente que abre el programa de correo con el asunto y el cuerpo ya escritos (texto plano, el formato está en la sección 6 bis). No pasa por la api.
+- **Botón "Copiar" en cada simulación activa**, junto a "Enviar": copia al portapapeles el destinatario, el asunto y el cuerpo del correo (el mismo texto de la sección 6 bis), para pegarlo en cualquier programa de correo. Es la alternativa para los equipos sin programa de correo configurado, donde `mailto:` no hace nada (detectado en la prueba en producción). Al copiar, el icono pasa a una marca de verificación durante 2 s y se anuncia "Texto copiado" (`aria-live`). Si el navegador no deja copiar: "No se pudo copiar el texto." en el aviso del historial. En escritorio, solo el icono (`aria-label` "Copiar la simulación del {fecha}"); en móvil, con el texto.
 - Importes en la divisa elegida, con la misma regla de la sección 4.
 - Estados: "Cargando historial…", vacío "Todavía no hay simulaciones guardadas.", error con "Reintentar". Al recargar después de guardar, la lista se mantiene a la vista (atenuada) en vez de cambiar a "Cargando historial…".
 - **Activas y archivadas:** en la cabecera, un interruptor "Ver archivadas" (`role="switch"`, `aria-checked`, se activa con espacio o Enter). Apagado (por defecto) muestra las activas; encendido, las archivadas. Las archivadas se piden (`?archived=true`) solo al abrir esa vista, y otra vez cada vez que se abre. Al cambiar de vista se vuelve a la página 1 y se quita el aviso. El contador "{n} simulaciones" es el de la vista abierta. Vacío en archivadas: "No hay simulaciones archivadas.".
@@ -184,7 +185,7 @@ Un saludo
 ```
 
 - Los importes van siempre en euros, que es lo que se factura. Si en la app está elegida otra divisa, debajo del total va una línea más: `Equivale a ≈ {total convertido} al tipo de cambio del {fecha de los tipos}.`
-- Se construye con una función pura de `lib/` (sección 9).
+- Se construye con una función pura de `lib/` (sección 9). La misma función da el texto de "Copiar": "Para: {email}", "Asunto: {asunto}", una línea en blanco y el cuerpo.
 
 ## 7. Estilo
 
@@ -288,6 +289,7 @@ La demo se publica con un enlace abierto y la api no tiene login: sin límite, c
 - v0.1: vistas, estados, tipos de cambio, alta, simulador, historial, estilo de Roams con tema claro y oscuro, tests de lógica pura y CORS.
 - v0.2: fuera MXN; límite de peticiones en la api (429 y su mensaje en el front) y `TRUST_PROXY`.
 - v0.3: Tailwind para los estilos (ADR-008); medidas y componentes en `../04-design/00-diseno.md`; 2 columnas desde 768 px; país antes que el identificador; plan como grupo de opciones; modal como hoja en móvil; "Limpiar búsqueda"; país sin bandera; `lucide-react`; `--color-scrim`.
+- v0.10: botón "Copiar" junto a "Enviar"; un solo selector de divisa con solo el código.
 - v0.9: "Archivada el {fecha}" pasa a la última línea de los datos de la fila (se montaba sobre el total).
 - v0.8: en otra divisa, el euro ya no va debajo de cada importe, sino en una sola línea "Se factura en euros" (opción B, elegida en la prueba en producción).
 - v0.7: sin la nota de "informativos" (ahora un botón "i" con el texto en cada campo); interruptor "Ver archivadas" en lugar de dos botones.

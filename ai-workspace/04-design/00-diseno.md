@@ -57,7 +57,7 @@ Documento vivo. Cómo se ve cada pieza del frontend: medidas, tipografía, compo
 - Fija arriba, 64 px (48 px en móvil), fondo `--color-surface` y borde inferior `--color-border`.
 - Izquierda: "SaaS-O-Matic" en `title-md` y `--color-link`, enlace a `/`.
 - Derecha, separados 16 px:
-  - Selector de divisa: `<select>` de 44 px, radio 8 px, borde `--color-input-border`, `label`. Opciones con símbolo: "EUR (€)", "USD ($)", "GBP (£)", "CHF (Fr.)", "SEK (kr)", "PLN (zł)". En móvil solo el código.
+  - Selector de divisa: `<select>` de 44 px, radio 8 px, borde `--color-input-border`, `label`. Un solo `<select>` en todos los anchos, con las opciones solo con el código: "EUR", "USD", "GBP", "CHF", "SEK", "PLN" (antes había dos, uno con símbolo para escritorio).
   - Botón de tema: círculo de 44 px, solo icono (luna en claro, sol en oscuro), color `--color-text-muted`; al pasar el ratón, fondo `--color-bg`.
 
 ### Aviso global (tipos de cambio)
@@ -188,6 +188,7 @@ Todos centrados en un panel de 12 px de radio, máximo 576 px de ancho, relleno 
   - Fila 1: fecha en `small` 500 a la izquierda; total en `title-sm` a la derecha.
   - Fila 2, en `caption` muted: "15 usuarios · 250 GB · 50.000 / mes" a la izquierda; "Base 140,00 € · IVA (21 %) 29,40 €" a la derecha (en móvil, debajo).
   - A la derecha de la fila 2, el botón "Enviar": suave, 44 px de alto, con el icono de correo (en móvil, a todo el ancho debajo).
+  - Junto a "Enviar", el botón "Copiar": suave, 44 px, icono `Copy`; al copiar, icono `Check` 2 s. En escritorio solo el icono, como "Enviar".
   - Junto a "Enviar", el botón "Archivar": secundario, 44 px de alto, con el icono `Archive` de lucide. En archivadas, en lugar de "Enviar" y "Archivar": el botón secundario "Recuperar" con el icono `ArchiveRestore`. "Archivada el {fecha}" va en `caption` muted como última línea de los datos de la fila, debajo de base e IVA; nunca junto al total.
 - Bajo la cabecera, a la izquierda: el interruptor "Ver archivadas". Pista de 44 × 24 px, redondeada; apagado, `--color-border` con el círculo en `--color-surface`; encendido, `--color-primary` con el círculo a la derecha. La etiqueta, a su derecha, en `small` 500. Con foco, el contorno común.
 - El aviso de "Simulación archivada." con "Deshacer" usa `InlineAlert` (éxito) sobre la lista.
