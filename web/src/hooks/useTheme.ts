@@ -18,13 +18,11 @@ export function useTheme() {
   const [theme, setTheme] = useState<Theme>(readDocumentTheme);
 
   const toggle = useCallback(() => {
-    setTheme((currentTheme) => {
-      const nextTheme = currentTheme === 'light' ? 'dark' : 'light';
-      document.documentElement.dataset.theme = nextTheme;
-      persistTheme(nextTheme);
-      return nextTheme;
-    });
-  }, []);
+    const nextTheme = theme === 'light' ? 'dark' : 'light';
+    document.documentElement.dataset.theme = nextTheme;
+    persistTheme(nextTheme);
+    setTheme(nextTheme);
+  }, [theme]);
 
   return { theme, toggle };
 }
