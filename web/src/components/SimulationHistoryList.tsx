@@ -5,6 +5,7 @@ import type { SimulationConversion } from '../lib/simulationEmail';
 import { buildSimulationMailto } from '../lib/simulationEmail';
 import { formatVatRate } from '../lib/vatRate';
 import { BilledInEuros } from './BilledInEuros';
+import { CopySimulationButton } from './CopySimulationButton';
 import { Money } from './Money';
 import {
   formatSimulationDate,
@@ -22,6 +23,7 @@ interface SimulationHistoryListProps {
   view: SimulationHistoryView;
   busyId: number | null;
   onArchive: (simulation: Simulation) => void;
+  onCopyError: () => void;
   onRestore: (simulation: Simulation) => void;
 }
 
@@ -33,6 +35,7 @@ export function SimulationHistoryList({
   view,
   busyId,
   onArchive,
+  onCopyError,
   onRestore,
 }: SimulationHistoryListProps) {
   return (
@@ -95,6 +98,12 @@ export function SimulationHistoryList({
                     <Icon icon={Mail} size={18} />
                     <span className="lg:sr-only">Enviar</span>
                   </AnchorButton>
+                  <CopySimulationButton
+                    conversion={conversion}
+                    customer={customer}
+                    simulation={simulation}
+                    onError={onCopyError}
+                  />
                   <Button
                     aria-label={`Archivar la simulación del ${formatSimulationDate(simulation.createdAt)}`}
                     disabled={busyId !== null}

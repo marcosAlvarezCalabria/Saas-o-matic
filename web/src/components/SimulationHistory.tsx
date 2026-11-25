@@ -43,6 +43,7 @@ export function SimulationHistory({
 }: SimulationHistoryProps) {
   const [view, setView] = useState<SimulationHistoryView>('active');
   const [page, setPage] = useState(1);
+  const [copyError, setCopyError] = useState(false);
   const archived = useSimulations(
     view === 'archived' ? customer.id : null,
     true,
@@ -75,6 +76,7 @@ export function SimulationHistory({
     if (nextView === 'archived') archived.reload();
     setView(nextView);
     setPage(1);
+    setCopyError(false);
     actions.closeNotice();
   }
 
@@ -87,7 +89,15 @@ export function SimulationHistory({
       />
 
       <div className="mt-4 lg:mt-1">
-        {actions.notice ? (
+        {copyError ? (
+          <InlineAlert
+            className="mb-4"
+            variant="error"
+            onClose={() => setCopyError(false)}
+          >
+            No se pudo copiar el texto.
+          </InlineAlert>
+        ) : actions.notice ? (
           <InlineAlert
             action={
               undoSimulation
@@ -121,6 +131,7 @@ export function SimulationHistory({
               simulations={paginated.items}
               view={view}
               onArchive={actions.archive}
+              onCopyError={() => setCopyError(true)}
               onRestore={actions.restore}
             />
             <Pagination

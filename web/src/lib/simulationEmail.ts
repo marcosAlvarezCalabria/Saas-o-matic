@@ -8,6 +8,12 @@ export interface SimulationConversion {
   ratesDate: string;
 }
 
+interface SimulationEmail {
+  to: string;
+  subject: string;
+  body: string;
+}
+
 const dateFormatter = new Intl.DateTimeFormat('es-ES');
 
 export function buildSimulationMailto(
@@ -15,6 +21,36 @@ export function buildSimulationMailto(
   simulation: Simulation,
   conversion: SimulationConversion | null,
 ): string {
+  const { to, subject, body } = buildSimulationEmail(
+    customer,
+    simulation,
+    conversion,
+  );
+
+  return `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+export function buildSimulationClipboardText(
+  customer: Customer,
+  simulation: Simulation,
+  conversion: SimulationConversion | null,
+): string {
+  const { to, subject, body } = buildSimulationEmail(
+    customer,
+    simulation,
+    conversion,
+  );
+
+  return [`Para: ${to}`, `Asunto: ${subject}`, '', body.replaceAll('\r\n', '\n')].join(
+    '\n',
+  );
+}
+
+function buildSimulationEmail(
+  customer: Customer,
+  simulation: Simulation,
+  conversion: SimulationConversion | null,
+): SimulationEmail {
   const subject = `Simulación de SaaS-O-Matic para ${customer.companyName}`;
   const lines = [
     'Hola,',
@@ -40,5 +76,5 @@ export function buildSimulationMailto(
   lines.push('', 'Un saludo');
   const body = lines.join('\r\n');
 
-  return `mailto:${customer.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  return { to: customer.email, subject, body };
 }

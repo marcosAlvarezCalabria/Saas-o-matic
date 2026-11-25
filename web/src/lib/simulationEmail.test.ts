@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
 import type { Customer, Simulation } from '../api/types';
-import { buildSimulationMailto } from './simulationEmail';
+import {
+  buildSimulationClipboardText,
+  buildSimulationMailto,
+} from './simulationEmail';
 
 const customer: Customer = {
   id: 1,
@@ -78,6 +81,19 @@ describe('buildSimulationMailto', () => {
         '\r\n\r\nUn saludo',
         '\r\nEquivale a ≈ 184,65\u00a0US$ al tipo de cambio del 22 de noviembre de 2026.\r\n\r\nUn saludo',
       ),
+    );
+  });
+});
+
+describe('buildSimulationClipboardText', () => {
+  it('includes the recipient, subject and the same body as the email', () => {
+    expect(buildSimulationClipboardText(customer, simulation, null)).toBe(
+      [
+        'Para: compras@acme.es',
+        'Asunto: Simulación de SaaS-O-Matic para Acme Ibérica S.L.',
+        '',
+        expectedBody.replaceAll('\r\n', '\n'),
+      ].join('\n'),
     );
   });
 });
