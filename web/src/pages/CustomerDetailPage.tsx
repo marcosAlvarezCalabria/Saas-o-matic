@@ -90,6 +90,7 @@ export function CustomerDetailPage() {
         <div className="lg:col-span-7">
           <Simulator
             customerId={customerId}
+            historyLoading={simulations.status === 'loading'}
             historyReady={
               simulations.status === 'success' ||
               simulations.simulations.length > 0

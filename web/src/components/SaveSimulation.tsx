@@ -13,6 +13,7 @@ interface SaveSimulationProps {
   storageGb: number | null;
   apiCalls: number | null;
   historyReady: boolean;
+  historyLoading: boolean;
   simulations: Simulation[];
   onSaved: () => void;
 }
@@ -25,12 +26,12 @@ export function SaveSimulation({
   storageGb,
   apiCalls,
   historyReady,
+  historyLoading,
   simulations,
   onSaved,
 }: SaveSimulationProps) {
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState<SaveNotice>(null);
-  const [savedSimulations, setSavedSimulations] = useState<Simulation[]>([]);
   const savingRef = useRef(false);
   const duplicateMessageId = useId();
   const values =
@@ -38,13 +39,7 @@ export function SaveSimulation({
       ? null
       : { users, storageGb, apiCalls };
   const duplicate =
-    values !== null &&
-    isSimulationSaved(
-      savedSimulations.length === 0
-        ? simulations
-        : [...simulations, ...savedSimulations],
-      values,
-    );
+    values !== null && isSimulationSaved(simulations, values);
 
   async function handleSave() {
     if (
@@ -61,16 +56,12 @@ export function SaveSimulation({
     setNotice(null);
 
     try {
-      const createdSimulation = await createSimulation({
+      await createSimulation({
         customerId,
         users,
         storageGb,
         apiCalls,
       });
-      setSavedSimulations((currentSimulations) => [
-        ...currentSimulations,
-        createdSimulation,
-      ]);
       setNotice('success');
       onSaved();
     } catch (error) {
@@ -104,6 +95,7 @@ export function SaveSimulation({
         disabled={
           saving ||
           !historyReady ||
+          historyLoading ||
           users === null ||
           storageGb === null ||
           apiCalls === null ||

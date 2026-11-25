@@ -37,6 +37,7 @@ function parseUsage(value: string): number | null {
 interface SimulatorProps {
   customerId: number;
   historyReady: boolean;
+  historyLoading: boolean;
   simulations: Simulation[];
   onSimulationSaved: () => void;
 }
@@ -44,6 +45,7 @@ interface SimulatorProps {
 export function Simulator({
   customerId,
   historyReady,
+  historyLoading,
   simulations,
   onSimulationSaved,
 }: SimulatorProps) {
@@ -119,6 +121,7 @@ export function Simulator({
         <SaveSimulation
           apiCalls={validApiCalls}
           customerId={customerId}
+          historyLoading={historyLoading}
           historyReady={historyReady}
           simulations={simulations}
           storageGb={validStorageGb}
