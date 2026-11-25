@@ -1,7 +1,9 @@
 export { Badge, CountryBadge, PlanBadge } from './Badge';
 export { AnchorButton, Button, LinkButton } from './Button';
 export { Card } from './Card';
-export { NumberField, SelectField, TextField } from './Field';
+export { NumberField } from './NumberField';
+export { SelectField } from './SelectField';
+export { TextField } from './TextField';
 export { Icon } from './Icon';
 export { InfoTip } from './InfoTip';
 export { InlineAlert } from './InlineAlert';
