@@ -440,6 +440,51 @@ No enseñar la traza al usuario no quiere decir no guardarla. Un error tiene que
 
 ---
 
+## 10. Un valor a mano en Tailwind pasó la revisión
+
+**Fecha:** 2026-11-25
+
+**IA:** Codex (código) · Claude (revisión) · **Detectado por:** yo, en la prueba manual en producción
+
+&nbsp;
+
+**Qué pasó**
+
+En una divisa que no es EUR, el total del simulador se salía de su caja en escritorio y en el historial la base y el IVA quedaban descolocados.
+
+Al buscar la causa apareció también `lg:grid-cols-[minmax(0,1fr)_auto]` en `SimulationHistoryList.tsx`. Es un valor a mano, y el ADR-008 los prohíbe. Entró en el 09c, y la revisión de Claude lo dio por bueno.
+
+&nbsp;
+
+**Cómo lo detecté**
+
+Probando la app desplegada con CHF a 1280 px de ancho. La spec pedía comprobar "sin scroll lateral en ninguna divisa", y no había scroll, pero nadie había mirado si el total cabía en su caja.
+
+&nbsp;
+
+**Por qué pasó**
+
+- La caja del precio tenía tres columnas iguales. En EUR cabía, pero en otra divisa el total ocupa dos líneas más, y no.
+- La revisión buscaba valores a mano con un patrón que solo encontraba colores y medidas (`[#…]`, `[13px]`), no plantillas de rejilla.
+
+&nbsp;
+
+**Corrección**
+
+- La spec dice ahora cómo se reparte la caja del precio, que `≈` y el número van unidos y que la base y el IVA del historial van en una línea.
+- Prompt 13a con los cambios y sin valores a mano.
+- La revisión de estilos busca **cualquier** `[` dentro de una clase.
+
+&nbsp;
+
+**Lección**
+
+Las pruebas visuales se hacen en el caso más largo, no en el habitual: otra divisa, nombres largos y números grandes. Y una regla que se revisa con un patrón solo es tan buena como el patrón.
+
+&nbsp;
+
+---
+
 ## Patrones que voy viendo
 
 Cuando una tarea mezcla una parte grande (mover carpetas) y una pequeña (una línea de configuración), la pequeña se pierde.

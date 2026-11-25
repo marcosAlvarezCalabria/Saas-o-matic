@@ -34,6 +34,7 @@ Principio: **el frontend casi no tiene lógica**. No calcula precios ni valida r
 - A la izquierda, "SaaS-O-Matic" (Montserrat 800), que enlaza a `/`. Sin logo de Roams.
 - A la derecha, el selector de divisa y el selector de tema.
 - En móvil se mantiene en una sola fila; el nombre puede reducirse.
+- Alto: **48 px en móvil** (< 768 px) y 64 px desde tablet. Los controles siguen midiendo 44 px. El contenido empieza justo debajo, con el mismo alto.
 
 ### Selector de divisa
 
@@ -55,6 +56,9 @@ Principio: **el frontend casi no tiene lógica**. No calcula precios ni valida r
 - La api devuelve céntimos de euro. Conversión: `céntimos / 100 × tipo`. Se redondea solo al formatear.
 - Formato con `Intl.NumberFormat('es-ES', { style: 'currency', currency })`: `169,40 €`, `183,12 US$`.
 - En una divisa distinta de EUR, el importe va precedido de `≈` y debajo, en pequeño, el importe en euros: es el que se guarda y el que vale para presupuestar.
+- Entre `≈` y el número va un espacio que no se parte (`\u00a0`): nunca quedan en líneas distintas.
+- **Importes secundarios** (la base y el IVA de cada fila del historial): en una sola línea, con `≈` y sin el importe en euros debajo. El total de la fila sí lo lleva.
+- Ningún importe se corta ni se sale de su caja: si no cabe, "/ mes" y los euros bajan de línea.
 
 ### Selector de tema
 
@@ -71,12 +75,16 @@ Principio: **el frontend casi no tiene lógica**. No calcula precios ni valida r
 - Un solo campo: "Buscar por nombre o identificador fiscal". Llama a `GET /customers?search=` 300 ms después de la última tecla.
 - Cada búsqueda cancela la anterior (`AbortController`): una respuesta antigua nunca pisa a una nueva.
 - Vacío = todos los clientes, los más recientes primero (lo ordena la api).
+- **Fijo arriba:** la barra con el buscador y "Nuevo cliente" se queda pegada justo debajo de la cabecera al hacer scroll, con fondo y borde inferior. El título "Clientes" no es fijo: sube con el scroll.
+- En móvil, "Nuevo cliente" es un botón redondo solo con el icono "+" (`aria-label` "Nuevo cliente"), al lado del buscador, para que la barra fija ocupe una sola fila.
 
 ### Tarjetas de clientes
 
 - Rejilla: 1 columna en móvil (< 768 px), 2 en tablet (768–1023 px), 3 en escritorio (≥ 1024 px).
 - Cada tarjeta: país (código y nombre en español, sin bandera), plan (pastilla), nombre de la empresa, identificador fiscal y email.
 - Toda la tarjeta es un enlace al detalle, accesible con teclado.
+- **Paginación de 6 en 6**, en el front (la api devuelve todos), con el mismo componente que el historial: "Anterior", "Página {n} de {total}" y "Siguiente". Solo con más de 6. Al cambiar la búsqueda, se vuelve a la página 1. Al cambiar de página, la vista sube al principio de la lista.
+- Por qué en el front: es una herramienta interna con decenas de clientes. Con miles, se paginaría en la api (`?page=&limit=`); está en las mejoras futuras.
 
 ### Estados de la lista
 
@@ -124,6 +132,7 @@ Principio: **el frontend casi no tiene lógica**. No calcula precios ni valida r
 - Usuarios: slider de 1 a 500 y, al lado, un campo numérico de 1 a 100 000, sincronizados. Por encima de 500, el slider se queda al final y manda el campo.
 - Almacenamiento (GB) y llamadas a la API al mes: campos numéricos opcionales, enteros ≥ 0, vacíos = 0. Se indica que son informativos y no cambian el precio.
 - Resultado en vivo: base, IVA (con su porcentaje, a partir de `vatRateBasisPoints`) y total, en la divisa elegida. El total, destacado y con `aria-live="polite"`.
+- En escritorio, la caja del precio tiene dos zonas: base e IVA uno debajo del otro a la izquierda, y el total a la derecha, con el ancho que necesite. Así cabe también en otra divisa, que ocupa dos líneas.
 - Llama a `POST /simulations/preview` 250 ms después del último cambio en usuarios, cancelando la petición anterior. Almacenamiento y llamadas no disparan el preview: no cambian el precio.
 - Si el campo de usuarios está vacío o fuera de 1–100 000: no se llama a la api y se muestra "Entre 1 y 100 000 usuarios".
 - Estados:
@@ -266,6 +275,8 @@ La demo se publica con un enlace abierto y la api no tiene login: sin límite, c
 - Con 6 simulaciones o más aparece la paginación, y guardar vuelve a la página 1.
 - Pulsar "Guardar simulación" dos veces con los mismos valores solo guarda una.
 - "Enviar" abre el correo con el destinatario, el asunto y el cuerpo bien escritos (tildes y € incluidos).
+- En CHF, a 1280 px: el total del simulador y las filas del historial caben en sus cajas, sin cortes.
+- En el dashboard, al hacer scroll, el buscador sigue visible; con más de 6 clientes hay paginación. En 375 px, la cabecera mide 48 px y la barra fija es una sola fila.
 - Archivar quita la simulación de "Activas" y "Deshacer" la devuelve. En "Archivadas" se ve con su fecha y "Recuperar" la devuelve a "Activas". Una archivada no bloquea guardar los mismos valores.
 
 ## Registro de cambios
@@ -273,5 +284,6 @@ La demo se publica con un enlace abierto y la api no tiene login: sin límite, c
 - v0.1: vistas, estados, tipos de cambio, alta, simulador, historial, estilo de Roams con tema claro y oscuro, tests de lógica pura y CORS.
 - v0.2: fuera MXN; límite de peticiones en la api (429 y su mensaje en el front) y `TRUST_PROXY`.
 - v0.3: Tailwind para los estilos (ADR-008); medidas y componentes en `../04-design/00-diseno.md`; 2 columnas desde 768 px; país antes que el identificador; plan como grupo de opciones; modal como hoja en móvil; "Limpiar búsqueda"; país sin bandera; `lucide-react`; `--color-scrim`.
+- v0.6: importes en otra divisa sin cortes (`≈` unido, base e IVA del historial en una línea, caja del precio en dos zonas); buscador fijo y paginación de 6 en el dashboard; cabecera de 48 px en móvil.
 - v0.5: archivar (con "Deshacer") y recuperar simulaciones, con las vistas "Activas" y "Archivadas" en el historial.
 - v0.4: detalle en una pantalla en escritorio; historial como lista en todos los anchos, paginado de 5 en 5 y con botón "Enviar" (`mailto:`); sin duplicados al guardar; campos numéricos sin flechas.

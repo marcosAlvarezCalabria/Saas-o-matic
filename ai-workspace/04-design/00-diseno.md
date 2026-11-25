@@ -31,7 +31,7 @@ Documento vivo. Cómo se ve cada pieza del frontend: medidas, tipografía, compo
 - Contenedor de página: máximo 1280 px, centrado. Márgenes laterales de 16 px en móvil, 24 px en tablet y 48 px en escritorio.
 - Separación entre tarjetas: 24 px.
 - Altura de controles (campos, botones, selectores): 44 px. Botón "Guardar simulación": 48 px.
-- Cabecera: 64 px de alto.
+- Cabecera: 64 px de alto; 48 px en móvil.
 - Radios: tarjetas y paneles 12 px; campos 8 px; caja de error de un campo 6 px; botones y pastillas, píldora (`9999px`).
 - Bordes de 1 px. Sin sombras en ningún sitio.
 - Relleno de las tarjetas: 32 px en escritorio, 24 px en tablet y 16 px en móvil.
@@ -54,7 +54,7 @@ Documento vivo. Cómo se ve cada pieza del frontend: medidas, tipografía, compo
 
 ### Cabecera
 
-- Fija arriba, 64 px, fondo `--color-surface` y borde inferior `--color-border`.
+- Fija arriba, 64 px (48 px en móvil), fondo `--color-surface` y borde inferior `--color-border`.
 - Izquierda: "SaaS-O-Matic" en `title-md` y `--color-link`, enlace a `/`.
 - Derecha, separados 16 px:
   - Selector de divisa: `<select>` de 44 px, radio 8 px, borde `--color-input-border`, `label`. Opciones con símbolo: "EUR (€)", "USD ($)", "GBP (£)", "CHF (Fr.)", "SEK (kr)", "PLN (zł)". En móvil solo el código.
@@ -107,7 +107,9 @@ Pastilla de país: fondo `--color-bg`, texto `--color-text-muted`, con el códig
 - Izquierda: "Clientes" en `title-lg` y debajo "Alta de clientes y simulación de su coste mensual." en `small` `--color-text-muted`.
 - Derecha (en móvil, debajo y a todo el ancho): buscador y "Nuevo cliente".
   - Buscador: campo de 44 px con la lupa dentro, a la izquierda; mínimo 340 px de ancho en escritorio.
-  - "Nuevo cliente": botón principal con el icono de añadir.
+  - "Nuevo cliente": botón principal con el icono de añadir. En móvil, botón redondo de 44 px solo con el icono.
+- La fila del buscador y "Nuevo cliente" es **fija** (`sticky`) justo debajo de la cabecera: fondo `--color-bg`, borde inferior `--color-border` y 12 px de relleno vertical. El título queda fuera de lo fijo.
+- Bajo la rejilla de tarjetas, la paginación del historial (sección 6), centrada, con 32 px de margen superior.
 
 ### Tarjeta de cliente
 
@@ -201,6 +203,7 @@ Para que el detalle quepa en 1280 × 800 px sin scroll (`02-interfaz.md`, secci�
 - Las tarjetas del detalle con 24 px de relleno (en vez de 32).
 - Tarjeta del cliente en una sola fila: iniciales, nombre (`title-md`) y plan a la izquierda; NIF, país, email y fecha de alta a la derecha, sin separador.
 - Simulador: usuarios a todo el ancho; almacenamiento y llamadas en una fila; la nota informativa en una línea; la caja del precio con 16 px de relleno; el total en `amount-sm`.
+- Caja del precio: base e IVA apilados a la izquierda (ocupan lo que sobra) y el total a la derecha (ocupa lo que necesita), separados por un borde vertical `--color-border`. Nunca tres columnas iguales: en otra divisa el total no cabría.
 - Separación de 16 px entre bloques del simulador (en vez de 24).
 
 ### Cliente no encontrado

@@ -121,6 +121,7 @@ Detalle de cada uno en `01-casos-de-uso.md`.
 - Enviar el correo de una simulación desde la api, con HTML (por ejemplo, con Resend), en lugar de `mailto:`.
 - Delegar el IVA en un servicio de impuestos (inversión del sujeto pasivo).
 - Borrado real de simulaciones, solo para un rol de administrador, cuando haya login.
+- Paginar los clientes en la api (`?page=&limit=`) cuando haya miles; hoy se pagina en el front.
 
 ## 8. Frontend
 
