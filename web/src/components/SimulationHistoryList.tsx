@@ -108,6 +108,7 @@ export function SimulationHistoryList({
                 </>
               ) : (
                 <Button
+                  aria-label={`Recuperar la simulación del ${formatSimulationDate(simulation.createdAt)}`}
                   disabled={busyId !== null}
                   size="compact"
                   variant="secondary"
