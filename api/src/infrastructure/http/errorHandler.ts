@@ -1,7 +1,16 @@
 import type { ErrorRequestHandler, RequestHandler } from 'express';
 
-import { ApplicationError } from '../../application/errors.js';
+import {
+  ApplicationError,
+  type ApplicationErrorCode,
+} from '../../application/errors.js';
 import { DomainError } from '../../domain/errors.js';
+
+const APPLICATION_ERROR_STATUS: Record<ApplicationErrorCode, number> = {
+  CUSTOMER_NOT_FOUND: 404,
+  SIMULATION_NOT_FOUND: 404,
+  TAX_ID_ALREADY_EXISTS: 409,
+};
 
 export const notFoundHandler: RequestHandler = (_request, response) => {
   response.status(404).json(errorBody('NOT_FOUND', 'Ruta no encontrada'));
@@ -21,8 +30,9 @@ export const errorHandler: ErrorRequestHandler = (error, _request, response, nex
   }
 
   if (error instanceof ApplicationError) {
-    const status = error.code === 'TAX_ID_ALREADY_EXISTS' ? 409 : 404;
-    response.status(status).json(errorBody(error.code, error.message));
+    response
+      .status(APPLICATION_ERROR_STATUS[error.code])
+      .json(errorBody(error.code, error.message));
     return;
   }
 
