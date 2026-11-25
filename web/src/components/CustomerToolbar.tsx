@@ -41,13 +41,11 @@ export function CustomerToolbar({
           size="icon"
           onClick={onNewCustomer}
         />
-        <Button
-          className="hidden md:inline-flex"
-          icon={Plus}
-          onClick={onNewCustomer}
-        >
-          Nuevo cliente
-        </Button>
+        <div className="hidden md:block">
+          <Button icon={Plus} onClick={onNewCustomer}>
+            Nuevo cliente
+          </Button>
+        </div>
       </div>
     </div>
   );
