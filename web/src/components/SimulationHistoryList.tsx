@@ -78,49 +78,49 @@ export function SimulationHistoryList({
                 IVA ({formatVatRate(simulation.vatRateBasisPoints)}){' '}
                 <Money cents={simulation.vatCents} />
               </p>
+              {view === 'archived' ? (
+                <p className="mt-1">
+                  {archivedDateLabel(simulation.archivedAt)}
+                </p>
+              ) : null}
             </div>
             <div className="mt-3 flex w-full flex-col gap-2 md:w-auto lg:order-2 lg:mt-0 lg:shrink-0 lg:flex-row lg:items-center lg:gap-1">
-                {view === 'active' ? (
-                  <>
-                    <AnchorButton
-                      href={buildSimulationMailto(customer, simulation, conversion)}
-                      size="compact"
-                      variant="soft"
-                    >
-                      <Icon icon={Mail} size={18} />
-                      <span className="lg:sr-only">Enviar</span>
-                    </AnchorButton>
-                    <Button
-                      aria-label={`Archivar la simulación del ${formatSimulationDate(simulation.createdAt)}`}
-                      disabled={busyId !== null}
-                      size="compact"
-                      variant="secondary"
-                      onClick={() => onArchive(simulation)}
-                    >
-                      <Icon className="lg:hidden" icon={Archive} size={18} />
-                      <span>Archivar</span>
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <span className="text-center text-caption text-text-muted">
-                      {archivedDateLabel(simulation.archivedAt)}
-                    </span>
-                    <Button
-                      disabled={busyId !== null}
-                      size="compact"
-                      variant="secondary"
-                      onClick={() => onRestore(simulation)}
-                    >
-                      <Icon
-                        className="lg:hidden"
-                        icon={ArchiveRestore}
-                        size={18}
-                      />
-                      <span>Recuperar</span>
-                    </Button>
-                  </>
-                )}
+              {view === 'active' ? (
+                <>
+                  <AnchorButton
+                    href={buildSimulationMailto(customer, simulation, conversion)}
+                    size="compact"
+                    variant="soft"
+                  >
+                    <Icon icon={Mail} size={18} />
+                    <span className="lg:sr-only">Enviar</span>
+                  </AnchorButton>
+                  <Button
+                    aria-label={`Archivar la simulación del ${formatSimulationDate(simulation.createdAt)}`}
+                    disabled={busyId !== null}
+                    size="compact"
+                    variant="secondary"
+                    onClick={() => onArchive(simulation)}
+                  >
+                    <Icon className="lg:hidden" icon={Archive} size={18} />
+                    <span>Archivar</span>
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  disabled={busyId !== null}
+                  size="compact"
+                  variant="secondary"
+                  onClick={() => onRestore(simulation)}
+                >
+                  <Icon
+                    className="lg:hidden"
+                    icon={ArchiveRestore}
+                    size={18}
+                  />
+                  <span>Recuperar</span>
+                </Button>
+              )}
             </div>
           </li>
         ))}

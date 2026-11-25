@@ -184,3 +184,4 @@ Detalle y pasos a mano en `ai-workspace/02-architecture/02-despliegue.md`.
 - Borrado real de simulaciones, solo para un rol de administrador.
 - Construir la imagen en el CI y subirla a un registro, en lugar de construirla en el VPS.
 - Paginar los clientes en la api (`?page=&limit=`) cuando haya miles; hoy se pagina en el front.
+- Correo de la simulación en el idioma del cliente, con el nombre local del impuesto (VAT, MwSt., TVA…).
