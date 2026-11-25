@@ -165,7 +165,7 @@ Todos centrados en un panel de 12 px de radio, máximo 576 px de ancho, relleno 
 - **Usuarios**: etiqueta "Usuarios" a la izquierda y "Slider de 1 a 500" en `caption` muted a la derecha. Debajo, en escritorio y tablet, el slider (8/12) y el campo numérico con sufijo "usuarios" (4/12); en móvil, el campo arriba y el slider debajo.
 - Marcas bajo el slider: 1, 250 y 500, en `caption` muted.
 - **Almacenamiento (GB)** y **Llamadas a la API / mes**: dos campos con sufijo ("GB", "/ mes"), en dos columnas (una en móvil).
-- Nota informativa: caja `--color-primary-soft`, radio 8 px, icono de información y "Almacenamiento y llamadas son **informativos**: no cambian el precio." en `small`.
+- Sin nota informativa. Detrás de las etiquetas de almacenamiento y llamadas, un botón "i" (icono `Info` de 16 px, `--color-text-muted`; zona táctil de 24 px). Su texto sale en un globo debajo: fondo `--color-surface`, borde `--color-border`, radio 8 px, `small`, ancho máximo 256 px, por encima del resto (z como los menús).
 - **Caja del precio**: radio 12 px, fondo `--color-primary-soft`, borde `--color-border`, relleno 24 px.
   - "Base" y su importe; "IVA ({porcentaje} %)" y su importe. Etiquetas en `small` 500 muted, importes en `body-medium`.
   - Separador.
@@ -189,7 +189,7 @@ Todos centrados en un panel de 12 px de radio, máximo 576 px de ancho, relleno 
   - Fila 2, en `caption` muted: "15 usuarios · 250 GB · 50.000 / mes" a la izquierda; "Base 140,00 € · IVA (21 %) 29,40 €" a la derecha (en móvil, debajo).
   - A la derecha de la fila 2, el botón "Enviar": suave, 44 px de alto, con el icono de correo (en móvil, a todo el ancho debajo).
   - Junto a "Enviar", el botón "Archivar": secundario, 44 px de alto, con el icono `Archive` de lucide. En archivadas, en su lugar: "Archivada el {fecha}" en `caption` muted y el botón secundario "Recuperar" con el icono `ArchiveRestore`.
-- Bajo la cabecera, a la izquierda: "Activas" y "Archivadas" como dos botones juntos (el elegido, suave; el otro, secundario).
+- Bajo la cabecera, a la izquierda: el interruptor "Ver archivadas". Pista de 44 × 24 px, redondeada; apagado, `--color-border` con el círculo en `--color-surface`; encendido, `--color-primary` con el círculo a la derecha. La etiqueta, a su derecha, en `small` 500. Con foco, el contorno común.
 - El aviso de "Simulación archivada." con "Deshacer" usa `InlineAlert` (éxito) sobre la lista.
 - **Paginación** bajo la lista, centrada: botón secundario "Anterior", "Página 1 de 3" en `caption` muted y botón secundario "Siguiente"; desactivados en los extremos. Solo con más de 5 simulaciones.
 - Recargando tras guardar: la lista al 50 % de opacidad, como el precio del simulador.
@@ -202,7 +202,7 @@ Para que el detalle quepa en 1280 × 800 px sin scroll (`02-interfaz.md`, secci�
 - Márgenes verticales de la página de 24 px (en vez de 48).
 - Las tarjetas del detalle con 24 px de relleno (en vez de 32).
 - Tarjeta del cliente en una sola fila: iniciales, nombre (`title-md`) y plan a la izquierda; NIF, país, email y fecha de alta a la derecha, sin separador.
-- Simulador: usuarios a todo el ancho; almacenamiento y llamadas en una fila; la nota informativa en una línea; la caja del precio con 16 px de relleno; el total en `amount-sm`.
+- Simulador: usuarios a todo el ancho; almacenamiento y llamadas en una fila; la caja del precio con 16 px de relleno; el total en `amount-sm`.
 - Caja del precio: base e IVA apilados a la izquierda (ocupan lo que sobra) y el total a la derecha (ocupa lo que necesita), separados por un borde vertical `--color-border`. Nunca tres columnas iguales: en otra divisa el total no cabría.
 - Separación de 16 px entre bloques del simulador (en vez de 24).
 

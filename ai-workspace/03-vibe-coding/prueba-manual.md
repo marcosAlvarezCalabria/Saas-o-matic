@@ -79,7 +79,7 @@ Borra antes `api/saas-o-matic.sqlite` y lanza `pnpm --filter api seed`: la BD vi
 - [ ] En "Archivadas", "Recuperar" la devuelve a "Activas".
 - [ ] Archiva una y guarda en el simulador sus mismos valores: deja guardar (la archivada no cuenta como duplicada).
 - [ ] Con la api parada, "Archivar" muestra el error y la lista sigue igual.
-- [ ] Todo con teclado: Tab hasta "Activas/Archivadas", "Archivar", "Deshacer" y "Recuperar".
+- [ ] Todo con teclado: Tab hasta el interruptor "Ver archivadas" (espacio para cambiarlo), "Archivar", "Deshacer" y "Recuperar".
 
 &nbsp;
 
