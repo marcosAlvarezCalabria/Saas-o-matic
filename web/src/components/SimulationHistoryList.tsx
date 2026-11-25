@@ -46,10 +46,10 @@ export function SimulationHistoryList({
       >
         {simulations.map((simulation) => (
           <li
-            className="py-3 first:pt-0 last:pb-0 lg:grid lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-x-3 lg:gap-y-0"
+            className="py-3 first:pt-0 last:pb-0 lg:flex lg:flex-wrap lg:items-center lg:gap-x-3"
             key={simulation.id}
           >
-            <div className="flex items-start justify-between gap-4 lg:items-center">
+            <div className="flex min-w-0 items-start justify-between gap-4 lg:flex-1 lg:items-center">
               <time
                 className="text-sm font-medium text-text"
                 dateTime={simulation.createdAt}
@@ -60,27 +60,21 @@ export function SimulationHistoryList({
                 <Money cents={simulation.totalCents} />
               </span>
             </div>
-
-            <div className="mt-2 flex flex-wrap items-end justify-between gap-3 lg:contents">
-              <div className="min-w-0 text-caption text-text-muted lg:row-start-2 lg:block">
-                <p>
-                  {simulation.users} usuarios ·{' '}
-                  {formatSimulationUsage(
-                    simulation.storageGb,
-                    simulation.apiCalls,
-                  )}
-                </p>
-                <p className="mt-1 flex flex-wrap gap-x-3 gap-y-1 lg:mt-0 lg:flex-nowrap">
-                  <span>
-                    Base <Money cents={simulation.baseCents} />
-                  </span>
-                  <span>
-                    IVA ({formatVatRate(simulation.vatRateBasisPoints)}){' '}
-                    <Money cents={simulation.vatCents} />
-                  </span>
-                </p>
-              </div>
-              <div className="flex w-full flex-col gap-2 md:w-auto lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:flex-row lg:items-center lg:gap-1">
+            <div className="mt-2 min-w-0 text-caption text-text-muted lg:order-3 lg:w-full lg:mt-0">
+              <p>
+                {simulation.users} usuarios ·{' '}
+                {formatSimulationUsage(
+                  simulation.storageGb,
+                  simulation.apiCalls,
+                )}
+              </p>
+              <p className="mt-1 lg:mt-0">
+                Base <Money cents={simulation.baseCents} variant="inline" /> ·{' '}
+                IVA ({formatVatRate(simulation.vatRateBasisPoints)}){' '}
+                <Money cents={simulation.vatCents} variant="inline" />
+              </p>
+            </div>
+            <div className="mt-3 flex w-full flex-col gap-2 md:w-auto lg:order-2 lg:mt-0 lg:shrink-0 lg:flex-row lg:items-center lg:gap-1">
                 {view === 'active' ? (
                   <>
                     <AnchorButton
@@ -122,7 +116,6 @@ export function SimulationHistoryList({
                     </Button>
                   </>
                 )}
-              </div>
             </div>
           </li>
         ))}

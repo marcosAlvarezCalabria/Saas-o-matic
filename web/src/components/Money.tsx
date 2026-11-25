@@ -4,15 +4,16 @@ import { convertCents, formatMoney } from '../lib/money';
 interface MoneyProps {
   cents: number;
   suffix?: string;
+  variant?: 'stacked' | 'inline';
 }
 
-export function Money({ cents, suffix }: MoneyProps) {
+export function Money({ cents, suffix, variant = 'stacked' }: MoneyProps) {
   const { currency, rate } = useCurrency();
   const euroAmount = convertCents(cents, 1);
 
   if (currency === 'EUR') {
     return (
-      <span className="inline-flex items-baseline gap-2 tabular-nums">
+      <span className="inline-flex max-w-full flex-wrap items-baseline justify-end gap-x-2 tabular-nums">
         <span>{formatMoney(euroAmount, 'EUR')}</span>
         {suffix ? (
           <span className="text-base font-normal text-text-muted">{suffix}</span>
@@ -21,10 +22,19 @@ export function Money({ cents, suffix }: MoneyProps) {
     );
   }
 
+  const convertedAmount = `≈\u00a0${formatMoney(
+    convertCents(cents, rate),
+    currency,
+  )}`;
+
+  if (variant === 'inline') {
+    return <span className="tabular-nums">{convertedAmount}</span>;
+  }
+
   return (
-    <span className="inline-flex flex-col items-end tabular-nums">
-      <span className="inline-flex items-baseline gap-2">
-        <span>≈ {formatMoney(convertCents(cents, rate), currency)}</span>
+    <span className="inline-flex max-w-full flex-col items-end tabular-nums">
+      <span className="flex max-w-full flex-wrap items-baseline justify-end gap-x-2">
+        <span>{convertedAmount}</span>
         {suffix ? (
           <span className="text-base font-normal text-text-muted">{suffix}</span>
         ) : null}

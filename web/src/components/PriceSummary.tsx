@@ -38,21 +38,23 @@ export function PriceSummary({
   return (
     <div
       aria-live="polite"
-      className={`rounded-card border border-border bg-primary-soft p-6 transition-opacity duration-150 lg:grid lg:grid-cols-3 lg:items-center lg:gap-4 lg:p-4 ${status === 'refreshing' ? 'opacity-50' : ''}`}
+      className={`rounded-card border border-border bg-primary-soft p-6 transition-opacity duration-150 lg:flex lg:items-center lg:gap-4 lg:p-4 ${status === 'refreshing' ? 'opacity-50' : ''}`}
     >
-      <div className="flex justify-between gap-4 text-sm font-medium text-text-muted">
-        <span>Base</span>
-        <span className="text-text">
-          <Money cents={result.baseCents} />
-        </span>
+      <div className="min-w-0 flex-1">
+        <div className="flex justify-between gap-4 text-sm font-medium text-text-muted">
+          <span>Base</span>
+          <span className="min-w-0 text-right text-text">
+            <Money cents={result.baseCents} />
+          </span>
+        </div>
+        <div className="mt-3 flex justify-between gap-4 text-sm font-medium text-text-muted">
+          <span>IVA ({formatVatRate(result.vatRateBasisPoints)})</span>
+          <span className="min-w-0 text-right text-text">
+            <Money cents={result.vatCents} />
+          </span>
+        </div>
       </div>
-      <div className="mt-3 flex justify-between gap-4 text-sm font-medium text-text-muted lg:mt-0">
-        <span>IVA ({formatVatRate(result.vatRateBasisPoints)})</span>
-        <span className="text-text">
-          <Money cents={result.vatCents} />
-        </span>
-      </div>
-      <div className="mt-5 flex flex-wrap items-end justify-between gap-4 border-t border-border pt-5 lg:mt-0 lg:border-l lg:border-t-0 lg:pl-4 lg:pt-0">
+      <div className="mt-5 flex min-w-0 flex-wrap items-end justify-between gap-4 border-t border-border pt-5 lg:mt-0 lg:shrink-0 lg:border-l lg:border-t-0 lg:pl-4 lg:pt-0">
         <span className="text-caption uppercase text-text-muted">
           Total mensual
         </span>
