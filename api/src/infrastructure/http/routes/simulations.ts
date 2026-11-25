@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import type { Response } from 'express';
 
 import type { CreateSimulation } from '../../../application/use-cases/simulations/createSimulation.js';
 import type { ArchiveSimulation } from '../../../application/use-cases/simulations/archiveSimulation.js';
@@ -82,7 +83,7 @@ function parseArchived(value: unknown): boolean | null {
 
 function executeSimulationAction(
   rawId: string | undefined,
-  response: import('express').Response,
+  response: Response,
   useCase: { execute(id: number): unknown },
 ): void {
   const id = parsePositiveId(rawId ?? '');
