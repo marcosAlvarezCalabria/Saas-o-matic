@@ -26,7 +26,7 @@ const SIZE_STYLES: Record<ButtonSize, string> = {
   md: 'h-11 px-6',
   lg: 'h-12 px-6',
   compact: 'h-11 px-4',
-  icon: 'h-11 w-11 p-0',
+  icon: 'h-10 w-10 p-0 md:h-11 md:w-11',
 };
 
 function getButtonStyles(

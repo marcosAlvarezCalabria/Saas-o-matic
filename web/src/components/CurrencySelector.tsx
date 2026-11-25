@@ -18,7 +18,7 @@ export function CurrencySelector() {
   return (
     <select
       aria-label="Divisa"
-      className="h-11 w-20 rounded-field border border-input-border bg-surface px-3 text-label text-text disabled:cursor-not-allowed disabled:opacity-50 md:w-24"
+      className="h-9 w-20 rounded-field border border-input-border bg-surface px-3 text-label text-text disabled:cursor-not-allowed disabled:opacity-50 md:h-11 md:w-24"
       disabled={disabled}
       id="currency"
       value={currency}

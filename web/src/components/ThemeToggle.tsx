@@ -10,15 +10,15 @@ export function ThemeToggle() {
   return (
     <button
       aria-label={label}
-      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-text-muted hover:bg-bg"
+      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-text-muted hover:bg-bg md:h-11 md:w-11"
       title={label}
       type="button"
       onClick={toggle}
     >
       {isDark ? (
-        <Sun aria-hidden="true" size={20} />
+        <Sun aria-hidden="true" size={18} />
       ) : (
-        <Moon aria-hidden="true" size={20} />
+        <Moon aria-hidden="true" size={18} />
       )}
     </button>
   );
