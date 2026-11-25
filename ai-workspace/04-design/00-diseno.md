@@ -58,6 +58,7 @@ Documento vivo. Cómo se ve cada pieza del frontend: medidas, tipografía, compo
 - Izquierda: "SaaS-O-Matic" en `title-md` y `--color-link`, enlace a `/`.
 - Derecha, separados 16 px:
   - Selector de divisa: `<select>` de 44 px, radio 8 px, borde `--color-input-border`, `label`. Un solo `<select>` en todos los anchos, con las opciones solo con el código: "EUR", "USD", "GBP", "CHF", "SEK", "PLN" (antes había dos, uno con símbolo para escritorio).
+  - En móvil, el selector de divisa mide 36 px de alto y el botón de tema es un círculo de 36 px con el icono de 18 px; desde tablet, 44 px y 20 px.
   - Botón de tema: círculo de 44 px, solo icono (luna en claro, sol en oscuro), color `--color-text-muted`; al pasar el ratón, fondo `--color-bg`.
 
 ### Aviso global (tipos de cambio)
@@ -107,7 +108,7 @@ Pastilla de país: fondo `--color-bg`, texto `--color-text-muted`, con el códig
 - Izquierda: "Clientes" en `title-lg` y debajo "Alta de clientes y simulación de su coste mensual." en `small` `--color-text-muted`.
 - Derecha (en móvil, debajo y a todo el ancho): buscador y "Nuevo cliente".
   - Buscador: campo de 44 px con la lupa dentro, a la izquierda; mínimo 340 px de ancho en escritorio.
-  - "Nuevo cliente": botón principal con el icono de añadir. En móvil, botón redondo de 44 px solo con el icono.
+  - "Nuevo cliente": botón principal con el icono de añadir. En móvil, botón redondo de 40 px solo con el icono, de 18 px.
 - La fila del buscador y "Nuevo cliente" es **fija** (`sticky`) justo debajo de la cabecera: fondo `--color-bg`, borde inferior `--color-border` y 12 px de relleno vertical. El título queda fuera de lo fijo.
 - Bajo la rejilla de tarjetas, la paginación del historial (sección 6), centrada, con 32 px de margen superior.
 

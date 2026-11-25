@@ -34,7 +34,7 @@ Principio: **el frontend casi no tiene lógica**. No calcula precios ni valida r
 - A la izquierda, "SaaS-O-Matic" (Montserrat 800), que enlaza a `/`. Sin logo de Roams.
 - A la derecha, el selector de divisa y el selector de tema.
 - En móvil se mantiene en una sola fila; el nombre puede reducirse.
-- Alto: **48 px en móvil** (< 768 px) y 64 px desde tablet. Los controles siguen midiendo 44 px. El contenido empieza justo debajo, con el mismo alto.
+- Alto: **48 px en móvil** (< 768 px) y 64 px desde tablet. En móvil, los controles de la cabecera miden 36 px (por encima del mínimo de 24 px de WCAG 2.2) y desde tablet, 44 px. El contenido empieza justo debajo, con el mismo alto.
 
 ### Selector de divisa
 
@@ -289,6 +289,7 @@ La demo se publica con un enlace abierto y la api no tiene login: sin límite, c
 - v0.1: vistas, estados, tipos de cambio, alta, simulador, historial, estilo de Roams con tema claro y oscuro, tests de lógica pura y CORS.
 - v0.2: fuera MXN; límite de peticiones en la api (429 y su mensaje en el front) y `TRUST_PROXY`.
 - v0.3: Tailwind para los estilos (ADR-008); medidas y componentes en `../04-design/00-diseno.md`; 2 columnas desde 768 px; país antes que el identificador; plan como grupo de opciones; modal como hoja en móvil; "Limpiar búsqueda"; país sin bandera; `lucide-react`; `--color-scrim`.
+- v0.11: controles más pequeños en móvil: cabecera a 36 px y el "+" a 40 px (se veían demasiado grandes en el iPhone).
 - v0.10: botón "Copiar" junto a "Enviar"; un solo selector de divisa con solo el código.
 - v0.9: "Archivada el {fecha}" pasa a la última línea de los datos de la fila (se montaba sobre el total).
 - v0.8: en otra divisa, el euro ya no va debajo de cada importe, sino en una sola línea "Se factura en euros" (opción B, elegida en la prueba en producción).
