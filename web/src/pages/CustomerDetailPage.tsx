@@ -101,7 +101,6 @@ export function CustomerDetailPage() {
         <SimulationHistory
           className="lg:col-span-5"
           customer={customer}
-          customerId={customerId}
           key={historyPageKey}
           simulations={simulations.simulations}
           status={simulations.status}

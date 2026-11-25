@@ -23,7 +23,6 @@ interface SimulationHistoryProps {
   status: SimulationsStatus;
   simulations: Simulation[];
   customer: Customer;
-  customerId: number;
   onRetry: () => void;
   onActiveChanged: () => void;
   className?: string;
@@ -38,14 +37,16 @@ export function SimulationHistory({
   status: activeStatus,
   simulations: activeSimulations,
   customer,
-  customerId,
   onRetry: retryActive,
   onActiveChanged,
   className,
 }: SimulationHistoryProps) {
   const [view, setView] = useState<SimulationHistoryView>('active');
   const [page, setPage] = useState(1);
-  const archived = useSimulations(view === 'archived' ? customerId : null, true);
+  const archived = useSimulations(
+    view === 'archived' ? customer.id : null,
+    true,
+  );
   const actions = useSimulationArchive(handleChanged);
   const { currency, rate, updatedAt } = useCurrency();
   const simulations = view === 'active' ? activeSimulations : archived.simulations;
