@@ -21,6 +21,14 @@ interface SimulationRow {
   archived_at: string | null;
 }
 
+const ACTIVE_SIMULATIONS_SQL = `SELECT * FROM simulations
+  WHERE customer_id = ? AND archived_at IS NULL
+  ORDER BY created_at DESC, id DESC`;
+
+const ARCHIVED_SIMULATIONS_SQL = `SELECT * FROM simulations
+  WHERE customer_id = ? AND archived_at IS NOT NULL
+  ORDER BY created_at DESC, id DESC`;
+
 export class SqliteSimulationRepository implements SimulationRepository {
   constructor(private readonly database: Database.Database) {}
 
@@ -55,12 +63,9 @@ export class SqliteSimulationRepository implements SimulationRepository {
     customerId: number,
     { archived }: SimulationListOptions = { archived: false },
   ): Simulation[] {
+    const sql = archived ? ARCHIVED_SIMULATIONS_SQL : ACTIVE_SIMULATIONS_SQL;
     const rows = this.database
-      .prepare(
-        `SELECT * FROM simulations
-         WHERE customer_id = ? AND archived_at IS ${archived ? 'NOT NULL' : 'NULL'}
-         ORDER BY created_at DESC, id DESC`,
-      )
+      .prepare(sql)
       .all(customerId) as SimulationRow[];
 
     return rows.map(mapSimulation);
