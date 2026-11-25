@@ -1,7 +1,7 @@
 import { History } from 'lucide-react';
 
 import type { SimulationHistoryView } from './SimulationHistoryList';
-import { Button, Icon } from './ui';
+import { Icon, Switch } from './ui';
 
 interface SimulationHistoryHeaderProps {
   count: number;
@@ -26,18 +26,14 @@ export function SimulationHistoryHeader({
         </span>
       </div>
 
-      <div className="mt-3 flex gap-2 lg:mt-2">
-        {(['active', 'archived'] as const).map((option) => (
-          <Button
-            aria-pressed={view === option}
-            key={option}
-            size="compact"
-            variant={view === option ? 'soft' : 'secondary'}
-            onClick={() => onViewChange(option)}
-          >
-            {option === 'active' ? 'Activas' : 'Archivadas'}
-          </Button>
-        ))}
+      <div className="mt-3 lg:mt-2">
+        <Switch
+          checked={view === 'archived'}
+          label="Ver archivadas"
+          onCheckedChange={(checked) =>
+            onViewChange(checked ? 'archived' : 'active')
+          }
+        />
       </div>
     </>
   );

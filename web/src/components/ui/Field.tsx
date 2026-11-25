@@ -11,6 +11,7 @@ import { Icon } from './Icon';
 interface FieldShellProps {
   id?: string;
   label: ReactNode;
+  labelAction?: ReactNode;
   error?: string;
   className?: string;
   children: (details: {
@@ -22,6 +23,7 @@ interface FieldShellProps {
 function FieldShell({
   id,
   label,
+  labelAction,
   error,
   className,
   children,
@@ -32,9 +34,12 @@ function FieldShell({
 
   return (
     <div className={`flex flex-col gap-1.5 ${className ?? ''}`}>
-      <label className="text-label text-text" htmlFor={inputId}>
-        {label}
-      </label>
+      <div className="flex items-center gap-1">
+        <label className="text-label text-text" htmlFor={inputId}>
+          {label}
+        </label>
+        {labelAction}
+      </div>
       {children({ inputId, errorId })}
       {error ? (
         <div
@@ -110,6 +115,7 @@ interface NumberFieldProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, 'id' | 'type'> {
   id?: string;
   label: ReactNode;
+  labelAction?: ReactNode;
   error?: string;
   suffix?: string;
   containerClassName?: string;
@@ -118,6 +124,7 @@ interface NumberFieldProps
 export function NumberField({
   id,
   label,
+  labelAction,
   error,
   suffix,
   containerClassName,
@@ -132,6 +139,7 @@ export function NumberField({
       error={error}
       id={id}
       label={label}
+      labelAction={labelAction}
     >
       {({ inputId, errorId }) => (
         <div className="relative">
