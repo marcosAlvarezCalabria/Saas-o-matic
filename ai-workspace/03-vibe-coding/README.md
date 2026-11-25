@@ -6,7 +6,8 @@ Cómo fue el desarrollo con IA, no solo el resultado.
 |---|---|
 | `bitacora.md` | Correcciones a la IA: qué pedí, qué hizo, cómo lo detecté y qué cambié |
 | `prompts/` | Prompts clave que se pasaron a Codex, en orden |
-| `conversaciones/` | Hilos exportados con Claude (planificación y revisión) |
+| `conversaciones/` | Un resumen por cada conversación con Claude: decisiones, correcciones y errores de la IA |
+| `prueba-manual.md` | La lista de la prueba en el navegador, paso a paso, con la tabla de resultados |
 
 ## Reparto de roles
 
