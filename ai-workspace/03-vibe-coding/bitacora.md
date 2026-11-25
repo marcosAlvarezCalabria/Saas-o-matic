@@ -485,6 +485,46 @@ Las pruebas visuales se hacen en el caso más largo, no en el habitual: otra div
 
 ---
 
+## 11. El test y el código en el mismo commit
+
+**Fecha:** 2026-11-25
+
+**IA:** Codex · **Detectado por:** Claude, al revisar el bloque 14
+
+&nbsp;
+
+**Qué pasó**
+
+En una tanda de once prompts de correcciones (14a a 14k), dos pedían dos commits: primero el test, comprobando que falla, y después el código. Son el 14b (mensaje de `?archived=`) y el 14k (botón "Copiar"). Codex los hizo en un solo commit cada uno (`4ef0131` y `8a3f2a2`).
+
+&nbsp;
+
+**Cómo lo detecté**
+
+Revisando la lista de commits del bloque con `git log`: los dos que tenían que ir en pareja aparecían solos, y su diff mezclaba el test y el código.
+
+&nbsp;
+
+**Por qué importa**
+
+El código está bien y los tests pasan. Pero el historial ya no demuestra que el test fallara antes de escribir el código, que es la prueba de que se hizo TDD y no un test a medida del código ya escrito.
+
+&nbsp;
+
+**Corrección**
+
+No se reescribe el historial, que ya está en la rama principal. A partir de aquí, cuando un prompt pide test y código, el resumen de la revisión lo comprueba commit a commit. En las tandas largas, los prompts con TDD se pasan sueltos y no en bloque.
+
+&nbsp;
+
+**Lección**
+
+Cuanto más larga es la tanda, más se pierden los pasos intermedios, como en la corrección #1. El TDD también tiene que verse en el historial, no solo en el resultado.
+
+&nbsp;
+
+---
+
 ## Patrones que voy viendo
 
 Cuando una tarea mezcla una parte grande (mover carpetas) y una pequeña (una línea de configuración), la pequeña se pierde.

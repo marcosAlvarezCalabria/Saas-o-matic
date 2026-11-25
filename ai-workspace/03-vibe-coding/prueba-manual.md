@@ -87,4 +87,11 @@ Borra antes `api/saas-o-matic.sqlite` y lanza `pnpm --filter api seed`: la BD vi
 
 | Paso | Qué falló | Gravedad (bloquea / molesta / detalle) |
 |---|---|---|
-| | | |
+| 6 · Enviar | En un ordenador sin programa de correo, "Enviar" no hace nada (en móvil sí funciona). | molesta → prompt 14k ("Copiar") |
+| 9 · Archivar | Una simulación recién guardada y archivada sigue bloqueando "Guardar" con los mismos valores. | bloquea → prompt 15a |
+| 1 · Dashboard | A 375 px se ven dos botones "Nuevo cliente". | molesta → prompt 15b |
+| 8 · Tamaños | A 1280 × 800 el detalle no cabe entero, sobre todo en CHF. | molesta → v1.1 |
+| 9 · Archivar | "Recuperar" se anunciaba sin fecha. | detalle → prompt 14i |
+| 8 · Tamaños | Email y fecha de alta recortados con "…" (es a propósito, con el texto completo al pasar el ratón). | detalle → se deja |
+
+Resultados del 25/11, en producción (versión hasta el 13e), con un agente en el navegador más mis pruebas. Lo que el agente no pudo medir (destello del tema, caída de las divisas, api parada) queda para la prueba a mano.
