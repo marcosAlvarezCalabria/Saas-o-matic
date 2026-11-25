@@ -46,8 +46,13 @@ export function createSimulationRouter(useCases: SimulationUseCases): Router {
     const customerId = parsePositiveId(request.params.id ?? '');
     const archived = parseArchived(request.query.archived);
 
-    if (customerId === null || archived === null) {
+    if (customerId === null) {
       response.status(400).json(validationErrorBody('El id debe ser un entero positivo'));
+      return;
+    }
+
+    if (archived === null) {
+      response.status(400).json(validationErrorBody('archived debe ser true o false'));
       return;
     }
 

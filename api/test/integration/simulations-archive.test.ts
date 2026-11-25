@@ -88,6 +88,7 @@ describe('archive and restore simulations', () => {
       .expect(400);
 
     expect(response.body.error.code).toBe('VALIDATION_ERROR');
+    expect(response.body.error.message).toBe('archived debe ser true o false');
   });
 
   it('counts archive requests against the write limit', async () => {
