@@ -96,6 +96,53 @@ Cada requisito del enunciado, dónde verlo y qué lo comprueba.
 
 ## Arquitectura y decisiones
 
+### Recorrido de una petición
+
+Así viaja "Guardar simulación" por las carpetas del proyecto. Cada capa solo conoce a la de debajo, y solo `errorHandler.ts` sabe de códigos HTTP.
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor U as Comercial
+  participant C as web/src/components<br/>SaveSimulation.tsx
+  participant W as web/src/api<br/>simulations.ts y apiClient.ts
+  participant X as Caddy<br/>HTTPS
+  participant H as api/src/infrastructure/http<br/>app.ts y routes/
+  participant A as api/src/application<br/>use-cases/simulations
+  participant D as api/src/domain<br/>pricing/
+  participant R as api/src/infrastructure/db<br/>repositorios SQLite
+  participant S as SQLite
+
+  U->>C: pulsa "Guardar simulación"
+  C->>W: createSimulation(customerId, users, storageGb, apiCalls)
+  W->>X: POST /simulations con JSON
+  X->>H: reenvía a api:3000
+  H->>H: logger, CORS, límite de peticiones y forma del cuerpo
+  H->>A: CreateSimulation.execute(input)
+  A->>R: busca el cliente
+  R-->>A: cliente con su país
+  A->>D: calculateMonthlyCost(país, usuarios)
+  D-->>A: base, IVA y total en céntimos
+  A->>R: guarda la simulación
+  R->>S: INSERT
+  S-->>R: fila guardada
+  R-->>A: Simulation
+  A-->>H: Simulation
+  H-->>W: 201 con JSON
+  W-->>C: la simulación guardada
+  C-->>U: "Simulación guardada" y el historial se recarga
+  Note over H,D: Si algo falla, el dominio lanza DomainError y la aplicación ApplicationError.<br/>errorHandler.ts los convierte en 400, 404 o 409, y cualquier otro error en 500 sin traza.
+```
+
+| Capa | Carpeta | Qué hace | Conoce a |
+|---|---|---|---|
+| Interfaz | `web/src/components`, `pages`, `hooks` | pinta y recoge lo que hace el usuario | `web/src/api` |
+| Cliente HTTP | `web/src/api` | el único sitio del front que habla con el exterior | — |
+| HTTP | `api/src/infrastructure/http` | rutas, forma de la entrada y traducción de errores | `application` |
+| Aplicación | `api/src/application` | un caso de uso por acción; define los puertos | `domain` y `ports` |
+| Dominio | `api/src/domain` | reglas puras: tramos, IVA, NIF | nada |
+| Datos | `api/src/infrastructure/db` | implementa los puertos con SQLite | `application/ports` |
+
 - **Clean Architecture ligera** en la api: `domain/` (funciones puras, sin dependencias) → `application/` (casos de uso y puertos) → `infrastructure/` (SQLite y HTTP). Solo `main.ts` conecta las piezas. Detalle en `ai-workspace/02-architecture/00-estructura.md`.
 - **El cálculo vive solo en el backend.** El slider usa `POST /simulations/preview`, que calcula sin guardar, así que el precio nunca se duplica en el front (ADR-004).
 - **Importes en céntimos** (enteros) e **IVA en puntos básicos** (2100 = 21 %), para no tener errores de coma flotante (ADR-003).
