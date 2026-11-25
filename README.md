@@ -183,3 +183,4 @@ Detalle y pasos a mano en `ai-workspace/02-architecture/02-despliegue.md`.
 - Enviar el correo desde la api, en HTML, en lugar de `mailto:`.
 - Borrado real de simulaciones, solo para un rol de administrador.
 - Construir la imagen en el CI y subirla a un registro, en lugar de construirla en el VPS.
+- Paginar los clientes en la api (`?page=&limit=`) cuando haya miles; hoy se pagina en el front.

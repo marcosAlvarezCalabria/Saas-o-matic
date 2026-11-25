@@ -1,24 +1,28 @@
 import { Button } from './ui';
 
-interface SimulationHistoryPaginationProps {
+interface PaginationProps {
+  ariaLabel: string;
   page: number;
   pageCount: number;
   onPageChange: (page: number) => void;
+  className?: string;
 }
 
-export function SimulationHistoryPagination({
+export function Pagination({
+  ariaLabel,
   page,
   pageCount,
   onPageChange,
-}: SimulationHistoryPaginationProps) {
+  className,
+}: PaginationProps) {
   if (pageCount <= 1) {
     return null;
   }
 
   return (
     <nav
-      aria-label="Paginación del historial"
-      className="mt-4 flex items-center justify-center gap-2 lg:mt-1"
+      aria-label={ariaLabel}
+      className={`flex items-center justify-center gap-2 ${className ?? ''}`}
     >
       <Button
         disabled={page === 1}

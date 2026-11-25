@@ -12,7 +12,7 @@ export function Layout({ children }: LayoutProps) {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
-      <div className="pt-16">
+      <div className="pt-12 md:pt-16">
         <RatesBanner />
       </div>
       <main className="flex-1">{children}</main>

@@ -11,7 +11,7 @@ import { paginate } from '../lib/pagination';
 import { SimulationHistoryList } from './SimulationHistoryList';
 import type { SimulationHistoryView } from './SimulationHistoryList';
 import { SimulationHistoryHeader } from './SimulationHistoryHeader';
-import { SimulationHistoryPagination } from './SimulationHistoryPagination';
+import { Pagination } from './Pagination';
 import {
   EmptyHistory,
   HistoryError,
@@ -122,7 +122,9 @@ export function SimulationHistory({
               onArchive={actions.archive}
               onRestore={actions.restore}
             />
-            <SimulationHistoryPagination
+            <Pagination
+              ariaLabel="Paginación del historial"
+              className="mt-4 lg:mt-1"
               page={paginated.page}
               pageCount={paginated.pageCount}
               onPageChange={setPage}
