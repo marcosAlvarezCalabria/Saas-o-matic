@@ -9,7 +9,7 @@ import { Link } from 'react-router';
 import { Icon } from './Icon';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'soft';
-export type ButtonSize = 'md' | 'lg' | 'compact';
+export type ButtonSize = 'md' | 'lg' | 'compact' | 'icon';
 
 const BASE_STYLES =
   'inline-flex cursor-pointer items-center justify-center gap-2 rounded-full font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50';
@@ -26,6 +26,7 @@ const SIZE_STYLES: Record<ButtonSize, string> = {
   md: 'h-11 px-6',
   lg: 'h-12 px-6',
   compact: 'h-11 px-4',
+  icon: 'h-11 w-11 p-0',
 };
 
 function getButtonStyles(

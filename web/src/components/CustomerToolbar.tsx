@@ -26,7 +26,6 @@ export function CustomerToolbar({
             size={20}
           />
           <input
-            aria-label="Buscar por nombre o identificador fiscal"
             className="h-11 w-full rounded-field border border-input-border bg-surface pl-12 pr-4 text-base text-text placeholder:text-text-muted"
             id="customer-search"
             placeholder="Buscar por nombre o identificador fiscal"
@@ -35,14 +34,13 @@ export function CustomerToolbar({
             onChange={(event) => onSearchChange(event.target.value)}
           />
         </div>
-        <button
+        <Button
           aria-label="Nuevo cliente"
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary text-on-primary hover:bg-primary-hover md:hidden"
-          type="button"
+          className="shrink-0 md:hidden"
+          icon={Plus}
+          size="icon"
           onClick={onNewCustomer}
-        >
-          <Icon icon={Plus} size={20} />
-        </button>
+        />
         <Button
           className="hidden md:inline-flex"
           icon={Plus}
