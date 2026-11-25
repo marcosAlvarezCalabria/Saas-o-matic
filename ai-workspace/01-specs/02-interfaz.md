@@ -55,10 +55,14 @@ Principio: **el frontend casi no tiene lógica**. No calcula precios ni valida r
 
 - La api devuelve céntimos de euro. Conversión: `céntimos / 100 × tipo`. Se redondea solo al formatear.
 - Formato con `Intl.NumberFormat('es-ES', { style: 'currency', currency })`: `169,40 €`, `183,12 US$`.
-- En una divisa distinta de EUR, el importe va precedido de `≈` y debajo, en pequeño, el importe en euros: es el que se guarda y el que vale para presupuestar.
+- En una divisa distinta de EUR, **todos los importes van en esa divisa**, precedidos de `≈`, y **sin el importe en euros debajo de cada uno**.
+- **El euro sale una sola vez, explicado**, porque es lo que se guarda y lo que vale para presupuestar:
+  - en la caja del precio, debajo del total, una línea: "Se factura en euros: 166,60 € / mes";
+  - en cada fila del historial, debajo del total: "se factura 3177,30 €".
+
+  En EUR esas líneas no salen.
 - Entre `≈` y el número va un espacio que no se parte (`\u00a0`): nunca quedan en líneas distintas.
-- **Importes secundarios** (la base y el IVA de cada fila del historial): en una sola línea, con `≈` y sin el importe en euros debajo. El total de la fila sí lo lleva.
-- Ningún importe se corta ni se sale de su caja: si no cabe, "/ mes" y los euros bajan de línea.
+- Ningún importe se corta ni se sale de su caja: si no cabe, "/ mes" baja de línea.
 
 ### Selector de tema
 
@@ -284,6 +288,7 @@ La demo se publica con un enlace abierto y la api no tiene login: sin límite, c
 - v0.1: vistas, estados, tipos de cambio, alta, simulador, historial, estilo de Roams con tema claro y oscuro, tests de lógica pura y CORS.
 - v0.2: fuera MXN; límite de peticiones en la api (429 y su mensaje en el front) y `TRUST_PROXY`.
 - v0.3: Tailwind para los estilos (ADR-008); medidas y componentes en `../04-design/00-diseno.md`; 2 columnas desde 768 px; país antes que el identificador; plan como grupo de opciones; modal como hoja en móvil; "Limpiar búsqueda"; país sin bandera; `lucide-react`; `--color-scrim`.
+- v0.8: en otra divisa, el euro ya no va debajo de cada importe, sino en una sola línea "Se factura en euros" (opción B, elegida en la prueba en producción).
 - v0.7: sin la nota de "informativos" (ahora un botón "i" con el texto en cada campo); interruptor "Ver archivadas" en lugar de dos botones.
 - v0.6: importes en otra divisa sin cortes (`≈` unido, base e IVA del historial en una línea, caja del precio en dos zonas); buscador fijo y paginación de 6 en el dashboard; cabecera de 48 px en móvil.
 - v0.5: archivar (con "Deshacer") y recuperar simulaciones, con las vistas "Activas" y "Archivadas" en el historial.

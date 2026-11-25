@@ -203,6 +203,7 @@ Para que el detalle quepa en 1280 × 800 px sin scroll (`02-interfaz.md`, secci�
 - Las tarjetas del detalle con 24 px de relleno (en vez de 32).
 - Tarjeta del cliente en una sola fila: iniciales, nombre (`title-md`) y plan a la izquierda; NIF, país, email y fecha de alta a la derecha, sin separador.
 - Simulador: usuarios a todo el ancho; almacenamiento y llamadas en una fila; la caja del precio con 16 px de relleno; el total en `amount-sm`.
+- En otra divisa, bajo el total de la caja del precio: "Se factura en euros: **166,60 € / mes**" en `small` y `--color-text-muted` (el importe en `--color-text`, 500), con un borde superior discontinuo `--color-border` y 8 px de separación. En el historial, bajo el total de cada fila: "se factura 3177,30 €" en `caption` muted. En EUR no aparecen.
 - Caja del precio: base e IVA apilados a la izquierda (ocupan lo que sobra) y el total a la derecha (ocupa lo que necesita), separados por un borde vertical `--color-border`. Nunca tres columnas iguales: en otra divisa el total no cabría.
 - Separación de 16 px entre bloques del simulador (en vez de 24).
 
