@@ -2,21 +2,7 @@ import type { ChangeEvent } from 'react';
 
 import { type Currency, useCurrency } from '../context/CurrencyContext';
 
-const CURRENCY_LABELS: Record<Currency, string> = {
-  EUR: 'EUR (€)',
-  USD: 'USD ($)',
-  GBP: 'GBP (£)',
-  CHF: 'CHF (Fr.)',
-  SEK: 'SEK (kr)',
-  PLN: 'PLN (zł)',
-};
-
-interface SelectProps {
-  compact: boolean;
-  className: string;
-}
-
-function CurrencySelect({ compact, className }: SelectProps) {
+export function CurrencySelector() {
   const {
     currency,
     availableCurrencies,
@@ -32,9 +18,9 @@ function CurrencySelect({ compact, className }: SelectProps) {
   return (
     <select
       aria-label="Divisa"
-      className={`h-11 rounded-field border border-input-border bg-surface px-3 text-label text-text disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+      className="h-11 w-20 rounded-field border border-input-border bg-surface px-3 text-label text-text disabled:cursor-not-allowed disabled:opacity-50 md:w-24"
       disabled={disabled}
-      id={compact ? 'currency-mobile' : 'currency-desktop'}
+      id="currency"
       value={currency}
       onChange={handleChange}
     >
@@ -43,21 +29,10 @@ function CurrencySelect({ compact, className }: SelectProps) {
       ) : (
         availableCurrencies.map((availableCurrency) => (
           <option key={availableCurrency} value={availableCurrency}>
-            {compact
-              ? availableCurrency
-              : CURRENCY_LABELS[availableCurrency]}
+            {availableCurrency}
           </option>
         ))
       )}
     </select>
-  );
-}
-
-export function CurrencySelector() {
-  return (
-    <>
-      <CurrencySelect compact className="w-20 md:hidden" />
-      <CurrencySelect compact={false} className="hidden md:block" />
-    </>
   );
 }
