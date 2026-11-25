@@ -4,6 +4,7 @@ import type { Customer, Simulation } from '../api/types';
 import type { SimulationConversion } from '../lib/simulationEmail';
 import { buildSimulationMailto } from '../lib/simulationEmail';
 import { formatVatRate } from '../lib/vatRate';
+import { BilledInEuros } from './BilledInEuros';
 import { Money } from './Money';
 import {
   formatSimulationDate,
@@ -56,9 +57,13 @@ export function SimulationHistoryList({
               >
                 {formatSimulationDate(simulation.createdAt)}
               </time>
-              <span className="text-right text-title-sm text-text">
+              <div className="text-right text-title-sm text-text">
                 <Money cents={simulation.totalCents} />
-              </span>
+                <BilledInEuros
+                  cents={simulation.totalCents}
+                  variant="short"
+                />
+              </div>
             </div>
             <div className="mt-2 min-w-0 text-caption text-text-muted lg:order-3 lg:w-full lg:mt-0">
               <p>
@@ -69,9 +74,9 @@ export function SimulationHistoryList({
                 )}
               </p>
               <p className="mt-1 lg:mt-0">
-                Base <Money cents={simulation.baseCents} variant="inline" /> ·{' '}
+                Base <Money cents={simulation.baseCents} /> ·{' '}
                 IVA ({formatVatRate(simulation.vatRateBasisPoints)}){' '}
-                <Money cents={simulation.vatCents} variant="inline" />
+                <Money cents={simulation.vatCents} />
               </p>
             </div>
             <div className="mt-3 flex w-full flex-col gap-2 md:w-auto lg:order-2 lg:mt-0 lg:shrink-0 lg:flex-row lg:items-center lg:gap-1">

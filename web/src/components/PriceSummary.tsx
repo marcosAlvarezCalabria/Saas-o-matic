@@ -1,6 +1,7 @@
 import type { CostBreakdown } from '../api/types';
 import type { PreviewStatus } from '../hooks/usePreview';
 import { formatVatRate } from '../lib/vatRate';
+import { BilledInEuros } from './BilledInEuros';
 import { Money } from './Money';
 import { InlineAlert } from './ui';
 
@@ -54,13 +55,20 @@ export function PriceSummary({
           </span>
         </div>
       </div>
-      <div className="mt-5 flex min-w-0 flex-wrap items-end justify-between gap-4 border-t border-border pt-5 lg:mt-0 lg:shrink-0 lg:border-l lg:border-t-0 lg:pl-4 lg:pt-0">
-        <span className="text-caption uppercase text-text-muted">
-          Total mensual
-        </span>
-        <span className="ml-auto max-w-full text-right text-amount-sm text-text">
-          <Money cents={result.totalCents} suffix="/ mes" />
-        </span>
+      <div className="mt-5 min-w-0 border-t border-border pt-5 lg:mt-0 lg:shrink-0 lg:border-l lg:border-t-0 lg:pl-4 lg:pt-0">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <span className="text-caption uppercase text-text-muted">
+            Total mensual
+          </span>
+          <span className="ml-auto max-w-full text-right text-amount-sm text-text">
+            <Money cents={result.totalCents} suffix="/ mes" />
+          </span>
+        </div>
+        <BilledInEuros
+          cents={result.totalCents}
+          suffix="/ mes"
+          variant="full"
+        />
       </div>
     </div>
   );
