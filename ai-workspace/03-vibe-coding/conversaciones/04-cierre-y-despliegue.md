@@ -23,6 +23,15 @@ Revisar las últimas mejoras del historial, probarlo todo, ponerlo en producció
   - la api en Docker en el VPS, con Caddy para el HTTPS;
   - CI y CD con GitHub Actions: si el CI pasa, se despliega por SSH y se comprueba `/health`.
 
+- **Mejoras tras probar en producción (25/11):**
+  - en otra divisa, el total se salía de su caja. Elegí, entre tres maquetas, poner todo en esa divisa y el euro una sola vez: "Se factura en euros" (13a, 13d);
+  - el buscador queda fijo arriba, la lista de clientes pagina de 6 en 6 y la cabecera es más fina en el móvil (13b);
+  - un interruptor "Ver archivadas", porque los dos botones no dejaban ver cuál estaba elegido, y una "i" en lugar de la nota de "informativos" (13c);
+  - la fecha de archivado se pintaba encima del total (13e).
+- **Correcciones de las revisiones, un prompt por cada una (14a–14k):** errores de la api con un `Record`, SQL sin texto interpolado, `Field.tsx` dividido, `useTheme` sin efectos en `setTheme`, un solo selector de divisa, accesibilidad, y un botón **"Copiar"** para los equipos sin programa de correo.
+- **Prueba en producción con un agente en el navegador**, sobre una versión fija y con reglas para no ensuciar los datos de la demo. Encontró dos fallos que arreglé antes de entregar: una simulación archivada seguía bloqueando "Guardar" (15a) y en el móvil salían dos botones "Nuevo cliente" (15b). Lo demás quedó para la v1.1.
+- **Releases:** la entrega es la `v1.0.0`; la guía de primera visita, en su propia rama, saldrá como `v1.1.0` con pull request y CI.
+
 &nbsp;
 
 **Qué corregí o rechacé**
@@ -47,10 +56,13 @@ Revisar las últimas mejoras del historial, probarlo todo, ponerlo en producció
   - dio un comando con `&&`, que no funciona en el PowerShell de Windows;
   - con un `git rm --cached` dejó un `.git/index.lock` colgado, que habría roto mis siguientes commits. Lo detectó y lo deshizo él mismo.
 
+- **Mi revisión del 09c dejó pasar una clase con un valor a mano** (`lg:grid-cols-[minmax(0,1fr)_auto]`), porque solo buscaba colores y medidas entre corchetes. Lo destapó la prueba en producción (bitácora #10).
+- **Codex juntó el test y el código en un solo commit en el 14b y el 14k**, en una tanda de once prompts. El código estaba bien, pero el historial ya no demuestra que el test fallara primero (bitácora #11).
+
 &nbsp;
 
 **Qué salió de aquí**
 
 - `01-specs/03-datos-demo.md`, UC7 y UC8 en `01-casos-de-uso.md` y la regla de archivar en `features/simulations.feature`.
 - `02-architecture/02-despliegue.md` y el ADR-009.
-- `../prueba-manual.md` y los prompts 08a a 11a.
+- `../prueba-manual.md`, con los resultados de la prueba en producción, la bitácora #10 y #11, y los prompts 08a a 15b.
