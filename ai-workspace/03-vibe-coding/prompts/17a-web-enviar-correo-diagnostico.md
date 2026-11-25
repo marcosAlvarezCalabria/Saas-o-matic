@@ -65,3 +65,11 @@ LO QUE TE PIDO
 Que el diagnóstico separa lo que es de la web y lo que es del equipo.
 
 Que la propuesta no envía correos desde la api ni guarda claves.
+
+&nbsp;
+
+**Resultado**
+
+Mientras Codex lo diagnosticaba, el problema se resolvió en la configuración del equipo, sin cambiar código: en Chrome, `mail.google.com` estaba en la lista de sitios bloqueados para gestionar protocolos. Al quitarlo y permitir que Gmail abra los enlaces `mailto:`, "Enviar" abre el correo con todo relleno, igual que en el móvil.
+
+Confirma el diagnóstico de la prueba en producción: el código estaba bien y depende de que el equipo tenga una app asociada a `mailto:`. Para quien no la tenga, está "Copiar" (14k).
